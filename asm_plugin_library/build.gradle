@@ -1,0 +1,57 @@
+apply plugin: 'maven'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+
+dependencies {
+    implementation files('src/main/libs/booster-android-api.jar')
+    implementation files('src/main/libs/booster-android-instrument.jar')
+
+    implementation project(path: ':privacy_method_annotation')
+    api 'org.ow2.asm:asm:7.1'
+
+    implementation rootProject.ext.dependencies["core_ktx"]
+    implementation rootProject.ext.dependencies["kotlin_stdlib_jdk7"]
+}
+
+
+
+//上传到nexus私服
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../local_repo'))
+            pom.version = "1.0.1"
+            pom.artifactId = "asm_plugin_library"
+            pom.groupId = "lanshifu.plugin.library"
+            pom.name = "asm_plugin_library"
+            pom.packaging = 'aar'
+        }
+    }
+}
