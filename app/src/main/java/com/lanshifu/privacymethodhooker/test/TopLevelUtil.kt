@@ -14,7 +14,9 @@ fun Context.getCurrentProcessName(): String? {
     var processName = ""
     val manager: ActivityManager =
         applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-    for (process in manager.getRunningAppProcesses()) {
+    val runningAppProcesses = manager.runningAppProcesses
+    for (process in runningAppProcesses) {
+
         if (process.pid == pid) {
             processName = process.processName
         }

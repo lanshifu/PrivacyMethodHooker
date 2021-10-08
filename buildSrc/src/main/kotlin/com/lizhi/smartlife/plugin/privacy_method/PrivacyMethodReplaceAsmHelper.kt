@@ -38,7 +38,8 @@ class PrivacyMethodReplaceAsmHelper : AsmHelper {
                 if (insnNode is MethodInsnNode) {
 
                     asmItems.forEach { asmItem ->
-                        //INVOKEVIRTUAL android/telephony/TelephonyManager.getDeviceId ()Ljava/lang/String;
+                        //INVOKEVIRTUAL android/app/ActivityManager.getRunningAppProcesses ()Ljava/util/List; ->
+                        //INVOKESTATIC  com/lanshifu/asm_plugin_library/privacy/PrivacyUtil.getRunningAppProcesses (Landroid/app/ActivityManager;)Ljava/util/List;
                         if (asmItem.oriDesc == insnNode.desc && asmItem.oriMethod == insnNode.name
                             && insnNode.opcode == asmItem.oriAccess &&
                             (insnNode.owner == asmItem.oriClass || asmItem.oriClass == "java/lang/Object")
@@ -47,9 +48,9 @@ class PrivacyMethodReplaceAsmHelper : AsmHelper {
                                     "opcode=${insnNode.opcode},owner=${insnNode.owner},desc=${insnNode.desc},name=${insnNode.name} ->\n"+
                                     "opcode=${asmItem.targetAccess},owner=${asmItem.targetClass},desc=${asmItem.targetDesc},name=${asmItem.targetMethod}")
                             insnNode.opcode = asmItem.targetAccess
-                            insnNode.name = asmItem.targetMethod
                             insnNode.desc = asmItem.targetDesc
                             insnNode.owner = asmItem.targetClass
+                            insnNode.name = asmItem.targetMethod
                         }
 //java.lang.IncompatibleClassChangeError:
 // The method 'java.util.List com.lanshifu.asm_plugin_library.privacy.PrivacyUtil.getRunningAppProcesses(android.app.ActivityManager)'

@@ -17,8 +17,7 @@ import java.lang.annotation.Target;
 public @interface AsmField {
     Class oriClass();
 
-    String oriMehod() default "";
+    String oriMethod() default "";
 
     int oriAccess() default Opcodes.INVOKESTATIC;
-
 }
