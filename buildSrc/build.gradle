@@ -73,10 +73,10 @@ dependencies {
   implementation 'org.ow2.asm:asm-commons:7.1'
   implementation "com.android.tools.build:gradle:$apg_Version"
 
-  // JAX-B dependencies for JDK 9+
-  implementation "javax.xml.bind:jaxb-api:2.3.0"
-  implementation "com.sun.xml.bind:jaxb-core:2.3.0"
-  implementation "com.sun.xml.bind:jaxb-impl:2.3.0"
-  implementation "javax.activation:activation:1.1.1"
+////  // JAX-B dependencies for JDK 9+
+//  implementation "javax.xml.bind:jaxb-api:2.3.0"
+//  implementation "com.sun.xml.bind:jaxb-core:2.3.0"
+//  implementation "com.sun.xml.bind:jaxb-impl:2.3.0"
+//  implementation "javax.activation:activation:1.1.1"
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * @author lanxiaobin
  * @date 2021/10/9
  */
-class PrivacyUtilJava {
+public class PrivacyUtilJava {
     @AsmField(oriClass = ActivityManager.class, oriAccess = Opcodes.INVOKEVIRTUAL)
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses(ActivityManager activityManager) {
 
