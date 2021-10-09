@@ -8,13 +8,17 @@ import android.location.LocationManager
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.annotation.Keep
 import com.lanshifu.privacy_method_annotation.AsmField
 import org.objectweb.asm.Opcodes
 
 /**
  * @author lanxiaobin
  * @date 2021/10/9
+ *
+ * 不要被混淆
  */
+@Keep
 object PrivacyUtil {
 
     val TAG = "PrivacyUtil"
