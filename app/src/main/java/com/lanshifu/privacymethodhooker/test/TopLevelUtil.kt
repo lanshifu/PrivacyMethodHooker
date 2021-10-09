@@ -1,6 +1,7 @@
 package com.lanshifu.privacymethodhooker.test
 
 import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.os.Process
 
@@ -22,4 +23,22 @@ fun Context.getCurrentProcessName(): String? {
         }
     }
     return processName
+}
+
+fun getRunningAppProcesses(context: Context): List<RunningAppProcessInfo?>? {
+    val manager: ActivityManager =
+        context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    return manager.runningAppProcesses
+}
+
+fun getRecentTasks(context: Context): List<ActivityManager.RecentTaskInfo?>? {
+    val manager: ActivityManager =
+        context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    return manager.getRecentTasks(100,ActivityManager.RECENT_WITH_EXCLUDED)
+}
+
+fun getRunningTasks(context: Context): List<ActivityManager.RunningTaskInfo?>? {
+    val manager: ActivityManager =
+        context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    return manager.getRunningTasks(100)
 }

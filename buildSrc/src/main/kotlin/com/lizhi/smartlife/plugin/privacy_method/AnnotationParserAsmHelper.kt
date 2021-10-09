@@ -15,6 +15,7 @@ class AnnotationParserAsmHelper : AsmHelper {
 
         var asmConfigs = mutableListOf<AsmItem>()
     }
+
     override fun modifyClass(srcClass: ByteArray?): ByteArray {
         val classNode = ClassNode(Opcodes.ASM5)
         val classReader = ClassReader(srcClass)
@@ -25,8 +26,11 @@ class AnnotationParserAsmHelper : AsmHelper {
         methods.forEach { method ->
             method.invisibleAnnotations?.forEach { node ->
                 if (node.desc == AsmFieldDesc) {
-                    info("add AsmItem,classNode.name=${classNode.name},node=$node")
-                    asmConfigs.add(AsmItem(classNode.name, method, node))
+                    val asmItem = AsmItem(classNode.name, method, node)
+                    if (!asmConfigs.contains(asmItem)) {
+                        info("add AsmItem:$asmItem")
+                        asmConfigs.add(asmItem)
+                    }
                 }
             }
         }

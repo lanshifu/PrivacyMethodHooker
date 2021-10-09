@@ -8,23 +8,23 @@ import java.lang.reflect.Method
  */
 object ReflectUtils {
 
-    fun <T> invokeSuperMethod(
-        obj: Any,
-        name: String,
-        types: Array<Class<*>>,
-        args: Array<Any?>?
-    ): Any? {
-        try {
-            val method: Method? = getMethod(obj.javaClass.superclass, name, types)
-            if (null != method) {
-                method.isAccessible = true
-                return method.invoke(obj, args)
-            }
-        } catch (t: Throwable) {
-            t.printStackTrace()
-        }
-        return null
-    }
+//    fun <T> invokeSuperMethod(
+//        obj: Any,
+//        name: String,
+//        types: Array<Class<*>>,
+//        args: Array<Any?>?
+//    ): Any? {
+//        try {
+//            val method: Method? = getMethod(obj.javaClass.superclass, name, types)
+//            if (null != method) {
+//                method.isAccessible = true
+//                return method.invoke(obj, args)
+//            }
+//        } catch (t: Throwable) {
+//            t.printStackTrace()
+//        }
+//        return null
+//    }
 
     private fun getMethod(klass: Class<*>, name: String, types: Array<Class<*>>): Method? {
         return try {

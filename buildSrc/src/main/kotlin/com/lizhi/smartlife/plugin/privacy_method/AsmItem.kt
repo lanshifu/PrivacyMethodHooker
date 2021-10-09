@@ -18,7 +18,7 @@ class AsmItem(
     var oriAccess = Opcodes.INVOKESTATIC
 
     var targetClass: String = ""
-    var targetMethod: String? = null
+    var targetMethod: String = ""
     var targetDesc: String = ""
     var targetAccess = Opcodes.INVOKESTATIC
 
@@ -42,21 +42,34 @@ class AsmItem(
         if (oriMethod == null) {
             oriMethod = targetMethod
         }
-        info("oriClass=$oriClass,oriAccess=$oriAccess,oriMethod=$oriMethod,targetDesc=$targetDesc,sourceName=$sourceName")
         if (oriAccess == Opcodes.INVOKESTATIC) { //静态方法，参数和返回值一致
             oriDesc = targetDesc
         } else {
             //targetDesc=(Landroid/telephony/TelephonyManager;)Ljava/lang/String;
             var param = targetDesc.split(")")[0] + ")" //(Landroid/telephony/TelephonyManager;)
-            info("param=$param")
             val returnValue = targetDesc.split(")")[1] //Ljava/lang/String;
-            info("returnValue=$returnValue")
             if (param.indexOf(sourceName) == 1) {
                 param = "(" + param.substring(param.indexOf(sourceName) + sourceName.length)
             }
             oriDesc = param + returnValue
-            info("oriDesc=$oriDesc")
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is AsmItem) {
+            return (other.oriAccess == oriAccess &&
+                    other.oriClass == oriClass &&
+                    other.oriDesc == oriDesc &&
+                    other.oriMethod == oriMethod
+                    )
+        }
+
+        return super.equals(other)
+    }
+
+    override fun toString(): String {
+        return "AsmItem(oriClass=$oriClass, oriMethod=$oriMethod, oriDesc=$oriDesc, oriAccess=$oriAccess, targetClass='$targetClass', targetMethod='$targetMethod', targetDesc='$targetDesc', targetAccess=$targetAccess)"
+    }
+
 
 }

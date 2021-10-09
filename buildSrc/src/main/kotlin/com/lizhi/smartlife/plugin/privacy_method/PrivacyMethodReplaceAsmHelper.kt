@@ -11,12 +11,12 @@ import org.objectweb.asm.tree.MethodInsnNode
 class PrivacyMethodReplaceAsmHelper : AsmHelper {
 
     private val asmItems = AnnotationParserAsmHelper.asmConfigs
-    private val asmItemsMap = HashMap<String,String>()
+    private val asmItemsClassMap = HashMap<String,String>()
     init {
         asmItems.forEach {
-            asmItemsMap[it.targetClass] = it.targetClass
+            asmItemsClassMap[it.targetClass] = it.targetClass
         }
-        info("asmItemsMap size=${asmItemsMap.size}")
+        info("asmItemsMap size=${asmItemsClassMap.size}，asmItems.size=${asmItems.size}")
     }
 
     override fun modifyClass(srcClass: ByteArray?): ByteArray? {
@@ -27,7 +27,7 @@ class PrivacyMethodReplaceAsmHelper : AsmHelper {
         //2 对classNode的处理逻辑
         val methods = classNode.methods
 
-        if (asmItemsMap.containsKey(classNode.name)){
+        if (asmItemsClassMap.contains(classNode.name)){
             info("PrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${classNode.name}")
             return srcClass
         }
