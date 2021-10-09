@@ -44,4 +44,22 @@
         android:text="getRunningTasks"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btnGetAllCellInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="getAllCellInfo"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnGetDeviceId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="getDeviceId"
+        android:textAllCaps="false" />
+
 </LinearLayout>

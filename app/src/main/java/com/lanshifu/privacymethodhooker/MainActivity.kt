@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.lanshifu.privacymethodhooker.test.getCurrentProcessName
-import com.lanshifu.privacymethodhooker.test.getRecentTasks
-import com.lanshifu.privacymethodhooker.test.getRunningAppProcesses
-import com.lanshifu.privacymethodhooker.test.getRunningTasks
+import com.lanshifu.privacymethodhooker.test.*
 import com.lanshifu.privacymethodhooker.utils.PrivacyUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -48,6 +45,16 @@ class MainActivity : AppCompatActivity() {
         btnGetRunningTasks.setOnClickListener {
             val getRunningTasks = getRunningTasks(this)
             Toast.makeText(this, "size=${getRunningTasks?.size}", Toast.LENGTH_SHORT).show()
+        }
+
+        btnGetAllCellInfo.setOnClickListener {
+            val getRunningTasks = getAllCellInfo(this)
+            Toast.makeText(this, "size=${getRunningTasks?.size}", Toast.LENGTH_SHORT).show()
+        }
+
+        btnGetDeviceId.setOnClickListener {
+            val getDeviceId = getDeviceId(this)
+            Toast.makeText(this, "$getDeviceId", Toast.LENGTH_SHORT).show()
         }
 
     }

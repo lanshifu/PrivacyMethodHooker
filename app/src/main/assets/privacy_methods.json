@@ -1,0 +1,106 @@
+{
+  "methods": [
+    {
+      "name_regex": "android.app.ActivityManager.getRunningAppProcesses",
+      "message": "读取当前运行应用进程"
+    },
+    {
+      "name_regex": "android.telephony.TelephonyManager.listen",
+      "message": "监听呼入电话信息"
+    },
+    {
+      "name_regex": "android.app.ActivityManager.getRecentTasks",
+      "message": "读取最近运行任务"
+    },
+    {
+      "name_regex": "android.app.ActivityManager.getRunningTasks",
+      "message": "读取当前运行任务"
+    },
+    {
+      "name_regex": "android.telephony.TelephonyManager.getAllCellInfo",
+      "message": "读取基站信息"
+    },
+    {
+      "name_regex": "android.location.LocationManager.getLastKnownLocation",
+      "message": "读取精细位置信息"
+    },
+    {
+      "name_regex": "android.location.LocationManager.getLastLocation",
+      "message": "读取粗略位置信息"
+    },
+    {
+      "name_regex": "android.location.LocationManager.requestLocationUpdates",
+      "message": "监视精细行动轨迹"
+    },
+    {
+      "name_regex": "android.media.AudioRecord.native_start",
+      "message": "音频录制"
+    },
+    {
+      "name_regex": "android.telephony.TelephonyManager.getDeviceId",
+      "message": "读取DEVICEID"
+    },
+    {
+      "name_regex": "android.net.wifi.WifiInfo.getSSID",
+      "message": "读取WIFI的SSID"
+    },
+    {
+      "name_regex": "android.net.wifi.WifiInfo.getBSSID",
+      "message": "读取WIFI的BSSID"
+    },
+    {
+      "name_regex": "android.hardware.SensorManager.getSensorList",
+      "message": "读取传感器列表"
+    },
+    {
+      "name_regex": "android.hardware.SystemSensorManager.registerListenerImpl",
+      "message": "监视传感器"
+    },
+    {
+      "name_regex": "android.net.wifi.WifiManager.getConfiguredNetworks",
+      "message": "读取已配置WIFI信息"
+    },
+    {
+      "name_regex": "android.telephony.TelephonyManager.getSubscriberId",
+      "message": "读取IMSI"
+    },
+    {
+      "name_regex": "android.telephony.TelephonyManager.getSimSerialNumber",
+      "message": "读取ICCID"
+    },
+    {
+      "name_regex": "android.net.wifi.WifiInfo.getMacAddress",
+      "message": "读取MAC地址"
+    },
+    {
+      "name_regex": "android.telephony.TelephonyManager.getImei",
+      "message": "读取IMEI"
+    },
+    {
+      "name_regex": "android.net.wifi.WifiManager.getScanResults",
+      "message": "读取WIFI扫描结果"
+    },
+    {
+      "name_regex": "android.net.wifi.WifiManager.getDhcpInfo",
+      "message": "读取DHCP信息"
+    },
+    {
+      "name_regex": "android.app.AlarmManager.setImpl",
+      "message": "定时启动->AlarmManager.setImpl"
+    },
+    {
+      "name_regex": "android.provider.Settings$Secure.getStringForUser",
+      "message": "读取AndroidID"
+    },
+    {
+      "name_regex": "android.content.ContentResolver.registerContentObserver",
+      "message": "registerContentObserver ->监视多媒体文件"
+    }
+  ],
+  "constructions": [
+    {
+      "name_regex": "",
+      "message": ""
+    }
+  ]
+}
