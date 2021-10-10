@@ -1,7 +1,5 @@
 package com.lanshifu.privacy_method_annotation;
 
-import org.objectweb.asm.Opcodes;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,5 +17,5 @@ public @interface AsmField {
 
     String oriMethod() default "";
 
-    int oriAccess() default Opcodes.INVOKESTATIC;
+    int oriAccess() default AsmMethodOpcodes.INVOKESTATIC;
 }

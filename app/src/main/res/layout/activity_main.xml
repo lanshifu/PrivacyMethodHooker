@@ -62,4 +62,13 @@
         android:text="getDeviceId"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btnGetIdAndroid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="getAndroidId"
+        android:textAllCaps="false" />
+
 </LinearLayout>

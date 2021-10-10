@@ -1,8 +1,10 @@
 package com.lanshifu.privacymethodhooker
 
 import android.Manifest
+import android.content.ContentResolver
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +57,12 @@ class MainActivity : AppCompatActivity() {
         btnGetDeviceId.setOnClickListener {
             val getDeviceId = getDeviceId(this)
             Toast.makeText(this, "$getDeviceId", Toast.LENGTH_SHORT).show()
+        }
+
+        btnGetIdAndroid.setOnClickListener {
+            val cr: ContentResolver = this.getContentResolver()
+            val androidId =  Settings.System.getString(cr,Settings.Secure.ANDROID_ID)
+            Toast.makeText(this, "$androidId", Toast.LENGTH_SHORT).show()
         }
 
     }

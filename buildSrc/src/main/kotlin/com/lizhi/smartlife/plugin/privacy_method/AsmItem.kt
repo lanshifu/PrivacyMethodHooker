@@ -27,6 +27,7 @@ class AsmItem(
         this.targetMethod = methodNode.name
         this.targetDesc = methodNode.desc
         var sourceName: String = ""
+        //注解是key value形式，
         for (i in 0 until node.values.size / 2) {
             val key = node.values[i * 2]
             val value = node.values[i * 2 + 1]

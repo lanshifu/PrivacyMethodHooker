@@ -5,10 +5,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
+import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
+import android.provider.Settings
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresApi
@@ -83,4 +85,10 @@ fun getDeviceId(context: Activity): String? {
         return null
     }
     return manager.getDeviceId()
+}
+
+fun getDeviceId(context: Context): String? {
+    val cr: ContentResolver = context.getContentResolver()
+    val androidId = Settings.System.getString(cr, Settings.Secure.ANDROID_ID)
+    return androidId
 }

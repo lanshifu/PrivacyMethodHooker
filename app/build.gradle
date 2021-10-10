@@ -65,5 +65,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(path: ':privacy_method_annotation')
-    implementation project(path: ':asm_plugin_library')
 }
