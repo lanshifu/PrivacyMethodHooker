@@ -6,69 +6,126 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="测试用例" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <CheckBox
-        android:id="@+id/cbAgree"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="同意隐私"
-        />
 
-    <Button
-        android:id="@+id/btnGetRunningAppProcesses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="getRunningAppProcesses"
-        android:textAllCaps="false" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试用例" />
 
-    <Button
-        android:id="@+id/btnGetRecentTasks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="getRecentTasks"
-        android:textAllCaps="false" />
-    <Button
-        android:id="@+id/btnGetRunningTasks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="getRunningTasks"
-        android:textAllCaps="false" />
+        <CheckBox
+            android:id="@+id/cbAgree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="同意隐私"
+            />
 
-    <Button
-        android:id="@+id/btnGetAllCellInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="getAllCellInfo"
-        android:textAllCaps="false" />
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/design_default_color_error"
+            android:text="输出：" />
 
-    <Button
-        android:id="@+id/btnGetDeviceId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="getDeviceId"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnGetRunningAppProcesses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getRunningAppProcesses"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btnGetIdAndroid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="getAndroidId"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnGetRecentTasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getRecentTasks"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnGetRunningTasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getRunningTasks"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnGetAllCellInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getAllCellInfo"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnGetDeviceId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getDeviceId"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnGetIdAndroid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getAndroidId"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getSSID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getSSID"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/getBSSID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getBSSID"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/getMacAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getMacAddress"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getSensorList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getSensorList"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/getImei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="getImei"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
 
 </LinearLayout>
