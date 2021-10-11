@@ -55,10 +55,9 @@ class MainActivity : AppCompatActivity() {
 
         getSensorList.text = ("getSensorList size=${getSensorList(this)?.size}")
         getImei.text = ("getImei=${getImei(this)}")
+
+        getScanResults.text = "getScanResults size=${getScanResults(this)?.size}"
+        getDhcpInfo.text = "getDhcpInfo=${getDhcpInfo(this)}"
     }
 
-
-    private fun print(text: String) {
-        tvResult.text = text
-    }
 }

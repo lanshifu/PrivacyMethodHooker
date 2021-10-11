@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,21 +20,19 @@
             android:id="@+id/cbAgree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="同意隐私"
-            />
+            android:text="同意隐私" />
 
         <TextView
-            android:id="@+id/tvResult"
+            android:text="ActivityManager"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/design_default_color_error"
-            android:text="输出：" />
+            android:layout_height="wrap_content"/>
+
 
         <Button
             android:id="@+id/btnGetRunningAppProcesses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getRunningAppProcesses"
             android:textAllCaps="false" />
@@ -44,7 +41,7 @@
             android:id="@+id/btnGetRecentTasks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getRecentTasks"
             android:textAllCaps="false" />
@@ -52,16 +49,23 @@
             android:id="@+id/btnGetRunningTasks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getRunningTasks"
             android:textAllCaps="false" />
+
+
+
+        <TextView
+            android:text="TelephonyManager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btnGetAllCellInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getAllCellInfo"
             android:textAllCaps="false" />
@@ -70,25 +74,45 @@
             android:id="@+id/btnGetDeviceId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getDeviceId"
             android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getImei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getImei"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            android:text="Settings.System"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btnGetIdAndroid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getAndroidId"
             android:textAllCaps="false" />
 
+        <TextView
+            android:text="WifiInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/getSSID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getSSID"
             android:textAllCaps="false" />
@@ -96,7 +120,7 @@
             android:id="@+id/getBSSID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getBSSID"
             android:textAllCaps="false" />
@@ -104,28 +128,50 @@
             android:id="@+id/getMacAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getMacAddress"
             android:textAllCaps="false" />
+
+
+        <TextView
+            android:text="SensorManager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 
         <Button
             android:id="@+id/getSensorList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="getSensorList"
             android:textAllCaps="false" />
-        <Button
-            android:id="@+id/getImei"
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:text="WifiManager" />
+
+        <Button
+            android:id="@+id/getScanResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:padding="8dp"
-            android:text="getImei"
+            android:text="getSensorList"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getDhcpInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSensorList"
             android:textAllCaps="false" />
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

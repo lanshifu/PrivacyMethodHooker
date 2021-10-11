@@ -10,6 +10,8 @@ import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.ConnectivityManager
+import android.net.DhcpInfo
+import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -146,4 +148,16 @@ fun getBSSID(context: Activity): String? {
 
 fun getMacAddress(context: Activity): String? {
     return getWifiInfo(context)?.macAddress
+}
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun getScanResults(context: Activity): MutableList<ScanResult>? {
+    val wifiManager = context.getSystemService(WifiManager::class.java) as WifiManager
+    return wifiManager.scanResults
+}
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun getDhcpInfo(context: Activity): DhcpInfo? {
+    val wifiManager = context.getSystemService(WifiManager::class.java) as WifiManager
+    return wifiManager.dhcpInfo
 }

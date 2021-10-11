@@ -8,7 +8,10 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.DhcpInfo
+import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
 import android.telephony.CellInfo
@@ -44,7 +47,7 @@ object PrivacyUtil {
 
     private fun putStringCache(key: String, value: String?) {
         value?.let {
-            stringCache.put(key, value)
+//            stringCache.put(key, value)
         }
     }
 
@@ -258,6 +261,35 @@ object PrivacyUtil {
 
         if (isAgreePrivacy) {
             return manager.getSensorList(type)
+        }
+        return null
+
+    }
+
+    /**
+     * 读取WIFI扫描结果
+     */
+    @JvmStatic
+    @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    fun getScanResults(manager: WifiManager): MutableList<ScanResult>? {
+        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
+
+        if (isAgreePrivacy) {
+            return manager.getScanResults()
+        }
+        return null
+
+    }
+    /**
+     * 读取DHCP信息
+     */
+    @JvmStatic
+    @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    fun getDhcpInfo(manager: WifiManager): DhcpInfo? {
+        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
+
+        if (isAgreePrivacy) {
+            return manager.getDhcpInfo()
         }
         return null
 
