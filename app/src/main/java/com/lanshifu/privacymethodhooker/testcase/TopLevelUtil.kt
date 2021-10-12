@@ -9,15 +9,21 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.DhcpInfo
 import android.net.wifi.ScanResult
+import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Bundle
 import android.os.Process
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 
@@ -50,7 +56,7 @@ fun getRunningAppProcesses(context: Context): MutableList<RunningAppProcessInfo?
 fun getRecentTasks(context: Context): MutableList<ActivityManager.RecentTaskInfo?>? {
     val manager: ActivityManager =
         context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-    return manager.getRecentTasks(100,ActivityManager.RECENT_WITH_EXCLUDED)
+    return manager.getRecentTasks(100, ActivityManager.RECENT_WITH_EXCLUDED)
 }
 
 fun getRunningTasks(context: Context): MutableList<ActivityManager.RunningTaskInfo?>? {
@@ -69,7 +75,7 @@ fun getAllCellInfo(context: Activity): MutableList<CellInfo>? {
         ) != PackageManager.PERMISSION_GRANTED
     ) {
 
-        context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),0)
+        context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
         return null
     }
     return manager.getAllCellInfo()
@@ -87,7 +93,7 @@ fun getDeviceId(context: Activity): String? {
         ) != PackageManager.PERMISSION_GRANTED
     ) {
 
-        context.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE),0)
+        context.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
         return null
     }
     return manager.getDeviceId()
@@ -104,6 +110,13 @@ fun getImei(context: Activity): String? {
     } else {
         "VERSION.SDK_INT < O"
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun getSimSerialNumber(context: Activity): String? {
+    val manager: TelephonyManager =
+        context.getSystemService(TelephonyManager::class.java) as TelephonyManager
+    return manager.getSimSerialNumber()
 }
 
 
@@ -124,7 +137,7 @@ private fun getWifiInfo(context: Activity): WifiInfo? {
     ) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),0)
+            context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
             return null
         }
     }
@@ -132,7 +145,8 @@ private fun getWifiInfo(context: Activity): WifiInfo? {
     val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
     if (networkInfo.isConnected) {
-        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         return wifiManager.connectionInfo
     }
     return null
@@ -161,3 +175,103 @@ fun getDhcpInfo(context: Activity): DhcpInfo? {
     val wifiManager = context.getSystemService(WifiManager::class.java) as WifiManager
     return wifiManager.dhcpInfo
 }
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun getConfiguredNetworks(context: Activity): MutableList<WifiConfiguration>? {
+    val wifiManager = context.getSystemService(WifiManager::class.java) as WifiManager
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
+        return null
+    }
+    return wifiManager.configuredNetworks
+}
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun requestLocationUpdates(context: Activity): Boolean {
+
+    val listener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+        }
+
+        override fun onProviderDisabled(provider: String) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+    }
+
+    val manager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val provider = manager.getProviders(true)
+
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        context.requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ), 0
+        )
+        return true
+    }
+
+    if (provider.size > 0) {
+    }
+    manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener)
+    return true
+}
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun getLastKnownLocation(context: Activity): Location? {
+
+    val manager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val provider = manager.getProviders(true)
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        context.requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ), 0
+        )
+        return null
+    }
+    Log.i("TAG", "getLastKnownLocation: provider.size=${provider.size}")
+    if (provider.size > 0) {
+    }
+    return manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+}
+//@RequiresApi(Build.VERSION_CODES.M)
+//fun getLastLocation(context: Activity):Location? {
+//
+//    val manager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//    val provider = manager.getProviders(true)
+//    if (ActivityCompat.checkSelfPermission(
+//            context,
+//            Manifest.permission.ACCESS_FINE_LOCATION
+//        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//            context,
+//            Manifest.permission.ACCESS_COARSE_LOCATION
+//        ) != PackageManager.PERMISSION_GRANTED
+//    ) {
+//        context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),0)
+//        return null
+//    }
+//    Log.i("TAG", "getLastKnownLocation: provider.size=${provider.size}")
+//    return manager.getLastLocation(LocationManager.GPS_PROVIDER)
+//
+//}

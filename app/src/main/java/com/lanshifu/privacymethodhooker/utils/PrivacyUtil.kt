@@ -7,9 +7,11 @@ import android.content.ContentResolver
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.net.DhcpInfo
 import android.net.wifi.ScanResult
+import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -154,17 +156,15 @@ object PrivacyUtil {
     }
 
     /**
-     * 读取位置信息
+     * 读取ICCID
      */
+    @SuppressLint("HardwareIds")
     @JvmStatic
-    @SuppressLint("MissingPermission")
-    @AsmField(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getLastKnownLocation(manager: LocationManager, provider: String): Location? {
-        log("getLastKnownLocation: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.getLastKnownLocation(provider)
-        }
-        return null
+    @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    fun getSimSerialNumber(manager: TelephonyManager): String? {
+        log("getSimSerialNumber: isAgreePrivacy=$isAgreePrivacy")
+        //不允许App读取，拦截调用
+        return ""
     }
 
     /**
@@ -252,7 +252,7 @@ object PrivacyUtil {
     }
 
     /**
-     * 读取AndroidId
+     * getSensorList
      */
     @JvmStatic
     @AsmField(oriClass = SensorManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
@@ -280,6 +280,7 @@ object PrivacyUtil {
         return null
 
     }
+
     /**
      * 读取DHCP信息
      */
@@ -295,19 +296,72 @@ object PrivacyUtil {
 
     }
 
+
+    /**
+     * 读取DHCP信息
+     */
+    @SuppressLint("MissingPermission")
+    @JvmStatic
+    @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    fun getConfiguredNetworks(manager: WifiManager): MutableList<WifiConfiguration>? {
+        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
+
+        if (isAgreePrivacy) {
+            return manager.getConfiguredNetworks()
+        }
+        return null
+
+    }
+
+
     /**
      * 读取位置信息
      */
-//    @SuppressLint("MissingPermission")
+    @JvmStatic
+    @SuppressLint("MissingPermission")
+    @AsmField(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    fun getLastKnownLocation(
+        manager: LocationManager, provider: String
+    ): Location? {
+        log("getLastKnownLocation: isAgreePrivacy=$isAgreePrivacy")
+        if (isAgreePrivacy) {
+            return manager.getLastKnownLocation(provider)
+        }
+        return null
+    }
+
+
+    /**
+     * 读取位置信息
+     */
 //    @JvmStatic
-//    @AsmField(oriClass = LocationManager::class, oriAccess = AsmOpcodes.INVOKEVIRTUAL)
-//    fun requestLocationUpdates(manager: LocationManager): Location? {
+//    @AsmField(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+//    fun getLastLocation(
+//        manager: LocationManager, provider: String
+//    ): Location? {
 //        log("getLastKnownLocation: isAgreePrivacy=$isAgreePrivacy")
 //        if (isAgreePrivacy) {
-//            return manager.requestLocationUpdates(provider)
+//            return manager.getLastLocation(provider)
 //        }
 //        return null
 //    }
+
+
+    /**
+     * 监视精细行动轨迹
+     */
+    @SuppressLint("MissingPermission")
+    @JvmStatic
+    @AsmField(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    fun requestLocationUpdates(
+        manager: LocationManager, provider: String, minTime: Long, minDistance: Float,
+        listener: LocationListener
+    ) {
+        log("requestLocationUpdates: isAgreePrivacy=$isAgreePrivacy")
+        if (isAgreePrivacy) {
+            return manager.requestLocationUpdates(provider, minTime, minDistance, listener)
+        }
+    }
 
 
     private fun log(log: String) {

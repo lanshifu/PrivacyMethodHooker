@@ -53,7 +53,7 @@
       "message": "读取传感器列表"
     },
     {
-      "name_regex": "android.hardware.SystemSensorManager.registerListenerImpl",
+      "name_regex": "android.hardware.SensorManager.registerListenerImpl",
       "message": "监视传感器"
     },
     {

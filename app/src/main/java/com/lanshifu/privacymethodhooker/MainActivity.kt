@@ -46,18 +46,26 @@ class MainActivity : AppCompatActivity() {
         val getDeviceId = getDeviceId(this)
         btnGetDeviceId.text = ("getDeviceId=$getDeviceId")
 
+        getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
+
         val androidId = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
         btnGetIdAndroid.text = ("androidId=$androidId")
 
         getSSID.text = ("getSSID=${getSSID(this)}")
         getBSSID.text = ("getBSSID=${getBSSID(this)}")
         getMacAddress.text = ("getMacAddress=${getMacAddress(this)}")
+        getConfiguredNetworks.text = ("getConfiguredNetworks,size=${getConfiguredNetworks(this)?.size}")
 
         getSensorList.text = ("getSensorList size=${getSensorList(this)?.size}")
         getImei.text = ("getImei=${getImei(this)}")
 
         getScanResults.text = "getScanResults size=${getScanResults(this)?.size}"
         getDhcpInfo.text = "getDhcpInfo=${getDhcpInfo(this)}"
+
+        getLastKnownLocation.text = "getLastKnownLocation=${getLastKnownLocation(this)}"
+
+        requestLocationUpdates(this)
+        requestLocationUpdates.text = "requestLocationUpdates"
     }
 
 }
