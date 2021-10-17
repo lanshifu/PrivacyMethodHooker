@@ -10,8 +10,7 @@ import com.lizhi.smartlife.plugin.base.TransformCallBack
 import org.gradle.api.Project
 
 /**
- * @Author LiABao
- * @Since 2020/10/12
+ * 生成一份配置，接着再交给 PrivacyMethodReplaceTransform
  */
 class AnnonationParserTransform(private val project: Project) : Transform() {
     override fun getName(): String {

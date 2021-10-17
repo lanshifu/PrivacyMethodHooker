@@ -12,9 +12,7 @@ class AnnotationParserAsmHelper : AsmHelper {
     companion object {
 
         private const val AsmFieldDesc = "Lcom/lanshifu/privacy_method_annotation/AsmField;"
-
         var asmConfigs = mutableListOf<AsmItem>()
-        var ignoreClassList = mutableListOf<String>()
     }
 
     override fun modifyClass(srcClass: ByteArray?): ByteArray {
@@ -23,11 +21,6 @@ class AnnotationParserAsmHelper : AsmHelper {
         //1 将读入的字节转为classNode
         classReader.accept(classNode, 0)
         //2 对classNode的处理逻辑
-
-        //todo AsmClass注解处理
-//        classNode.invisibleTypeAnnotations?.forEach { node ->
-////            if (node.desc == )
-//        }
 
         val methods = classNode.methods
         methods.forEach { method ->

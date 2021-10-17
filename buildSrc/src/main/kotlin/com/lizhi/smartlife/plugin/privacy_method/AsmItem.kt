@@ -1,6 +1,5 @@
 package com.lizhi.smartlife.plugin.privacy_method
 
-import com.lizhi.smartlife.plugin.base.Log.info
 import groovyjarjarasm.asm.Opcodes
 
 /**
@@ -43,9 +42,11 @@ class AsmItem(
         if (oriMethod == null) {
             oriMethod = targetMethod
         }
-        if (oriAccess == Opcodes.INVOKESTATIC) { //静态方法，参数和返回值一致
+        //静态方法，参数和返回值一致
+        if (oriAccess == Opcodes.INVOKESTATIC) {
             oriDesc = targetDesc
         } else {
+            //非静态方法，第一个参数是类名
             //targetDesc=(Landroid/telephony/TelephonyManager;)Ljava/lang/String;
             var param = targetDesc.split(")")[0] + ")" //(Landroid/telephony/TelephonyManager;)
             val returnValue = targetDesc.split(")")[1] //Ljava/lang/String;
