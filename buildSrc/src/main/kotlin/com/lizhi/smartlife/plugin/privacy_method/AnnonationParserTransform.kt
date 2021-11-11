@@ -1,45 +1,38 @@
 package com.lizhi.smartlife.plugin.privacy_method
 
-import com.android.build.api.transform.QualifiedContent
-import com.android.build.api.transform.Transform
-import com.android.build.api.transform.TransformInvocation
-import com.android.build.gradle.internal.pipeline.TransformManager
-import com.lizhi.smartlife.plugin.base.BaseTransform
-import com.lizhi.smartlife.plugin.base.ClassUtils
-import com.lizhi.smartlife.plugin.base.TransformCallBack
-import org.gradle.api.Project
+import com.didiglobal.booster.annotations.Priority
+import com.didiglobal.booster.transform.TransformContext
+import com.didiglobal.booster.transform.asm.ClassTransformer
+import com.google.auto.service.AutoService
+import org.objectweb.asm.tree.ClassNode
 
 /**
- * 生成一份配置，接着再交给 PrivacyMethodReplaceTransform
+ * @author lanxiaobin
+ * @date 2021/11/11
  */
-class AnnonationParserTransform(private val project: Project) : Transform() {
-    override fun getName(): String {
-        return "AnnonationParserTransform"
+@Priority(0)
+@AutoService(ClassTransformer::class)
+class AnnonationParserTransform : ClassTransformer {
+
+    companion object{
+        private const val AsmFieldDesc = "Lcom/lanshifu/privacy_method_annotation/AsmField;"
+        var asmConfigs = mutableListOf<AsmItem>()
+        var asmConfigsMap = HashMap<String,String>()
     }
 
-    override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> {
-        return TransformManager.CONTENT_JARS
-    }
-
-    override fun isIncremental(): Boolean {
-        return true
-    }
-
-    override fun getScopes(): MutableSet<in QualifiedContent.Scope> {
-        return TransformManager.SCOPE_FULL_PROJECT
-    }
-
-    override fun transform(transformInvocation: TransformInvocation?) {
-        val helper = AnnotationParserAsmHelper()
-        val baseTransform = BaseTransform(transformInvocation, object : TransformCallBack {
-            override fun process(className: String, classBytes: ByteArray?): ByteArray? {
-                return if (ClassUtils.checkClassName(className)) {
-                    helper.modifyClass(classBytes)
-                } else {
-                    null
+    override fun transform(context: TransformContext, klass: ClassNode) = klass.also {
+        klass.methods.forEach { method->
+            method.invisibleAnnotations?.forEach { node ->
+                print("\r\nAnnonationParserTransform invisibleAnnotations,desc=:${node.desc}")
+                if (node.desc == AsmFieldDesc) {
+                    val asmItem = AsmItem(klass.name, method, node)
+                    if (!asmConfigs.contains(asmItem)) {
+                        print("AnnonationParserTransform add AsmItem:$asmItem")
+                        asmConfigs.add(asmItem)
+                        asmConfigsMap.put(klass.name,klass.name)
+                    }
                 }
             }
-        })
-        baseTransform.startTransform()
+        }
     }
 }

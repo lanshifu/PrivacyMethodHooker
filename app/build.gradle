@@ -4,8 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.lizhi.smartlife.plugin'
-
+apply plugin: 'com.didiglobal.booster' // ③
 
 android {
 
