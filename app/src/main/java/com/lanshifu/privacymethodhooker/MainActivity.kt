@@ -1,10 +1,8 @@
 package com.lanshifu.privacymethodhooker
 
-import android.content.ContentResolver
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.lanshifu.privacymethodhooker.testcase.*

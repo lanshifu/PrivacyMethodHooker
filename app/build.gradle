@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.didiglobal.booster' // ③
+apply plugin: 'com.lizhi.privacy_method'
 
 android {
 
@@ -37,6 +37,10 @@ android {
 
     dataBinding {
         enabled true
+    }
+
+    buildFeatures {
+        dataBinding = true
     }
 
     compileOptions {

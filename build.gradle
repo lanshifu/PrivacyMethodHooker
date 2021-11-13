@@ -9,10 +9,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.1.0"
+        classpath "com.android.tools.build:gradle:4.0.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.ext.kotlin_version}"
-
-        classpath "com.didiglobal.booster:booster-gradle-plugin:$booster_version" // ①
     }
 }
 

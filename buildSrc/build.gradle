@@ -1,7 +1,8 @@
 buildscript {
+  apply from: "../config.gradle"
   ext {
-    kotlin_version = '1.5.21'
-    apg_Version = '3.6.3'
+    kotlin_version = '1.5.31'
+    apg_Version = '4.0.1'
     booster_version = '4.0.0'
   }
   repositories {
@@ -15,15 +16,13 @@ buildscript {
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "com.android.tools.build:gradle:$apg_Version"
-    classpath "com.didiglobal.booster:booster-gradle-plugin:$booster_version" // ①
-    // ② figure out the features you really need, then choose the right module for integration
-    // ② 弄清楚真正需要的特性，然后从下面的模块列表中选择正确的模块进行集成
   }
 }
 
 apply plugin: 'groovy'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 repositories {
   mavenLocal()
@@ -75,13 +74,7 @@ dependencies {
   //ASM相关依赖
   implementation 'org.ow2.asm:asm:7.1'
   implementation 'org.ow2.asm:asm-commons:7.1'
-  implementation "com.android.tools.build:gradle:$apg_Version"
-
-////  // JAX-B dependencies for JDK 9+
-//  implementation "javax.xml.bind:jaxb-api:2.3.0"
-//  implementation "com.sun.xml.bind:jaxb-core:2.3.0"
-//  implementation "com.sun.xml.bind:jaxb-impl:2.3.0"
-//  implementation "javax.activation:activation:1.1.1"
+  implementation "com.android.tools.build:gradle:4.0.1"
 
   kapt "com.google.auto.service:auto-service:1.0-rc6"
   api "com.didiglobal.booster:booster-api:$booster_version"

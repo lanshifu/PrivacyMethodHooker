@@ -1,4 +1,4 @@
-package com.lizhi.smartlife.plugin.privacy_method
+package com.lizhi.plugin.privacy_method
 
 import groovyjarjarasm.asm.Opcodes
 
