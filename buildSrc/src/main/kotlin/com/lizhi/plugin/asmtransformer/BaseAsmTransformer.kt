@@ -1,4 +1,4 @@
-package com.lizhi.plugin
+package com.lizhi.plugin.asmtransformer
 
 import com.didiglobal.booster.annotations.Priority
 import com.didiglobal.booster.transform.TransformContext
@@ -12,15 +12,10 @@ import java.lang.management.ThreadMXBean
 import java.util.*
 
 /**
- * ================================================
- * 作    者：jint（金台）
- * 版    本：1.0
- * 创建日期：2020/5/21-16:44
- * 描    述：
- * 修订历史：
- * ================================================
+ * BaseAsmTransformer，通过构造传参 transformers，
+ * 可以在一个Transformer中处理多个 ClassTransformer
  */
-open class BaseDoKitAsmTransformer : Transformer {
+open class BaseAsmTransformer : Transformer {
     private val threadMxBean = ManagementFactory.getThreadMXBean()
 
     private val durations = mutableMapOf<ClassTransformer, Long>()

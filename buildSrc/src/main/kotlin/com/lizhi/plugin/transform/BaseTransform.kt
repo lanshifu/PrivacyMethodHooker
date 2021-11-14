@@ -1,15 +1,14 @@
-package com.lizhi.plugin
+package com.lizhi.plugin.transform
 
 import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.android.ide.common.fonts.FontSource
 import com.didiglobal.booster.gradle.*
 import com.didiglobal.booster.transform.AbstractKlassPool
 import com.didiglobal.booster.transform.Transformer
-import com.google.wireless.android.sdk.stats.IntellijProjectSizeStats
+import com.lizhi.plugin.DelegateTransformInvocation
 import org.gradle.api.Project
 
 /**
@@ -17,7 +16,7 @@ import org.gradle.api.Project
  * DoKitCommTransform 作用于 CommTransformer、BigImgTransformer、UrlConnectionTransformer、GlobalSlowMethodTransformer
  * @author johnsonlee
  */
-open class DoKitBaseTransform protected constructor(val project: Project) : Transform() {
+open class BaseTransform protected constructor(val project: Project) : Transform() {
 
     /*transformers
      * Preload transformers as List to fix NoSuchElementException caused by ServiceLoader in parallel mode
@@ -46,29 +45,14 @@ open class DoKitBaseTransform protected constructor(val project: Project) : Tran
 
     override fun isCacheable() = !verifyEnabled
 
-    override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> =
-        TransformManager.CONTENT_CLASS
+    override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> = TransformManager.CONTENT_CLASS
 
-    override fun getScopes(): MutableSet<in QualifiedContent.Scope> = when {
-        transformers.isEmpty() -> mutableSetOf()
-        project.plugins.hasPlugin("com.android.library") -> TransformManager.PROJECT_ONLY
-        project.plugins.hasPlugin("com.android.application") -> TransformManager.SCOPE_FULL_PROJECT
-        project.plugins.hasPlugin("com.android.dynamic-feature") -> SCOPE_FULL_WITH_FEATURES
-        else -> TODO("Not an Android project")
-    }
+    override fun getScopes(): MutableSet<in QualifiedContent.Scope> = TransformManager.SCOPE_FULL_PROJECT
 
-    override fun getReferencedScopes(): MutableSet<in QualifiedContent.Scope> = when {
-        transformers.isEmpty() -> when {
-            project.plugins.hasPlugin("com.android.library") -> SCOPE_PROJECT
-            project.plugins.hasPlugin("com.android.application") -> SCOPE_FULL_PROJECT
-            project.plugins.hasPlugin("com.android.dynamic-feature") -> SCOPE_FULL_WITH_FEATURES
-            else -> TODO("Not an Android project")
-        }
-        else -> super.getReferencedScopes()
-    }
+    override fun getReferencedScopes(): MutableSet<in QualifiedContent.Scope> = TransformManager.SCOPE_FULL_PROJECT
 
     final override fun transform(invocation: TransformInvocation) {
-        DoKitTransformInvocation(invocation, this).apply {
+        DelegateTransformInvocation(invocation, this).apply {
             if (isIncremental) {
                 doIncrementalTransform()
             } else {

@@ -13,6 +13,10 @@ import com.didiglobal.booster.transform.ArtifactManager
 import com.didiglobal.booster.transform.TransformContext
 import com.didiglobal.booster.transform.artifacts
 import com.didiglobal.booster.transform.util.transform
+import com.lizhi.plugin.extension.dex
+import com.lizhi.plugin.extension.doTransform
+import com.lizhi.plugin.extension.println
+import com.lizhi.plugin.transform.BaseTransform
 import java.io.File
 import java.net.URI
 import java.util.concurrent.*
@@ -22,9 +26,9 @@ import java.util.concurrent.*
  *
  * @author johnsonlee
  */
-internal class DoKitTransformInvocation(
+internal class DelegateTransformInvocation(
     private val delegate: TransformInvocation,
-    internal val transform: DoKitBaseTransform
+    internal val transform: BaseTransform
 ) : TransformInvocation by delegate, TransformContext, ArtifactManager {
 
     val executor = Executors.newFixedThreadPool(NCPU)
@@ -94,9 +98,7 @@ internal class DoKitTransformInvocation(
         this.outputs.clear()
         this.onPreTransform()
 
-
         try {
-
             if (full){
                 transformFully()
             } else {
@@ -222,7 +224,7 @@ internal class DoKitTransformInvocation(
     private fun QualifiedContent.transform(output: File) {
         outputs += output
         try {
-            this.file.dokitTransform(output) { bytecode ->
+            this.file.doTransform(output) { bytecode ->
                 bytecode.transform()
             }
         } catch (e: Exception) {
@@ -234,7 +236,7 @@ internal class DoKitTransformInvocation(
 
     private fun ByteArray.transform(): ByteArray {
         return transform.transformers.fold(this) { bytes, transformer ->
-            transformer.transform(this@DoKitTransformInvocation, bytes)
+            transformer.transform(this@DelegateTransformInvocation, bytes)
         }
     }
 }

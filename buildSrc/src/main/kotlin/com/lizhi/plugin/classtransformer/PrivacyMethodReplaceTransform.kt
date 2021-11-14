@@ -1,11 +1,8 @@
-package com.lizhi.plugin.privacy_method
+package com.lizhi.plugin.classtransformer
 
-import com.didiglobal.booster.annotations.Priority
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
-import com.didiglobal.booster.transform.asm.ClassTransformer
-import com.google.auto.service.AutoService
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodInsnNode
 import java.io.File
@@ -16,27 +13,23 @@ import java.io.PrintWriter
  * @author lanxiaobin
  * @date 2021/11/11
  */
-class PrivacyMethodReplaceTransform : ClassTransformer {
+class PrivacyMethodReplaceTransform : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
-    private val asmItems = AnnonationParserTransform.asmConfigs
+    private val asmItems = AnnonationParserClassTransform.asmConfigs
     private var asmItemsClassMap: HashMap<String, String> = HashMap<String, String>()
-
-    companion object{
-    }
-
 
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
         this.logger = context.reportsDir.file("PrivacyMethodReplaceTransform").file(context.name)
             .file("report.txt").touch().printWriter()
-        logger.println("\n --start-- ${System.currentTimeMillis()}")
+        logger.println("--start-- ${System.currentTimeMillis()}")
 
-        AnnonationParserTransform.asmConfigs.forEach {
-            asmItemsClassMap!![it.targetClass] = it.targetClass
+        AnnonationParserClassTransform.asmConfigs.forEach {
+            asmItemsClassMap[it.targetClass] = it.targetClass
         }
-        logger.print("PrivacyMethodReplaceAsmHelper asmItemsMap size=${asmItemsClassMap!!.size}，asmItems.size=${asmItems.size}")
-
-
+        logger.print("\nasmItemsMap size=${asmItemsClassMap!!.size}，asmItems.size=${asmItems.size}\n\n")
+        logger.print("asmItemsClassMap=${asmItemsClassMap} \n\n")
+        logger.print("asmItems=${asmItems} \n\n")
     }
 
     override fun onPostTransform(context: TransformContext) {
@@ -46,8 +39,12 @@ class PrivacyMethodReplaceTransform : ClassTransformer {
 
     override fun transform(context: TransformContext, klass: ClassNode) = klass.also {
 
-        if (AnnonationParserTransform.asmConfigsMap.contains(klass.name)) {
-            logger.print("PrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${klass.name}")
+        if (onCommInterceptor(context, klass)) {
+            return klass
+        }
+
+        if (AnnonationParserClassTransform.asmConfigsMap.contains(klass.name)) {
+            logger.print("\nPrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${klass.name}\n")
             return@also
         }
 
@@ -65,16 +62,14 @@ class PrivacyMethodReplaceTransform : ClassTransformer {
                         ) {
 
                             logger.print(
-                                "\n\rPrivacyMethodReplaceAsmHelper hook:\n" +
+                                "\nhook:\n" +
                                         "opcode=${insnNode.opcode},owner=${insnNode.owner},desc=${insnNode.desc},name=${insnNode.name} ->\n" +
-                                        "opcode=${asmItem.targetAccess},owner=${asmItem.targetClass},desc=${asmItem.targetDesc},name=${asmItem.targetMethod}\n\r"
+                                        "opcode=${asmItem.targetAccess},owner=${asmItem.targetClass},desc=${asmItem.targetDesc},name=${asmItem.targetMethod}\n"
                             )
                             insnNode.opcode = asmItem.targetAccess
                             insnNode.desc = asmItem.targetDesc
                             insnNode.owner = asmItem.targetClass
                             insnNode.name = asmItem.targetMethod
-
-
                         }
                     }
                 }
@@ -82,13 +77,5 @@ class PrivacyMethodReplaceTransform : ClassTransformer {
         }
     }
 
-    fun getClassFilePath(clazz: Class<*>): String {
-        // file:/Users/zhy/hongyang/repo/BlogDemo/app/build/intermediates/javac/debug/classes/
-        val buildDir = clazz.protectionDomain.codeSource.location.file
-        val fileName = clazz.simpleName + ".class"
-        val file =
-            File(buildDir + clazz.getPackage().name.replace("[.]".toRegex(), "/") + "/", fileName)
-        return file.getAbsolutePath()
-    }
 
 }

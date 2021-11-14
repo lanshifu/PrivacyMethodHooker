@@ -23,6 +23,8 @@ import androidx.annotation.Keep
 import com.lanshifu.privacy_method_annotation.AsmClass
 import com.lanshifu.privacy_method_annotation.AsmField
 import com.lanshifu.privacy_method_annotation.AsmMethodOpcodes
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * @author lanxiaobin
@@ -47,9 +49,22 @@ object PrivacyUtil {
 
     private var stringCache = HashMap<String, String>()
 
+    private fun checkAgreePrivacy(name: String): Boolean {
+
+        //todo cache
+
+        if (!isAgreePrivacy) {
+            logW("$name: isAgreePrivacy=false")
+            //打印堆栈
+            return false
+        }
+
+        return true
+    }
+
     private fun putStringCache(key: String, value: String?) {
         value?.let {
-//            stringCache.put(key, value)
+            stringCache.put(key, value)
         }
     }
 
@@ -57,12 +72,10 @@ object PrivacyUtil {
     @AsmField(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRunningAppProcesses(manager: ActivityManager): List<RunningAppProcessInfo?> {
 
-        log("getRunningAppProcesses: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.runningAppProcesses
+        if (!checkAgreePrivacy("getRunningAppProcesses")) {
+            return emptyList()
         }
-
-        return emptyList()
+        return manager.runningAppProcesses
     }
 
     @JvmStatic
@@ -72,13 +85,12 @@ object PrivacyUtil {
         maxNum: Int,
         flags: Int
     ): List<ActivityManager.RecentTaskInfo>? {
-
-        log("getRecentTasks: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.getRecentTasks(maxNum, flags)
+        if (!checkAgreePrivacy("getRecentTasks")) {
+            return emptyList()
         }
 
-        return emptyList()
+        return manager.getRecentTasks(maxNum, flags)
+
     }
 
     @JvmStatic
@@ -87,13 +99,11 @@ object PrivacyUtil {
         manager: ActivityManager,
         maxNum: Int
     ): List<ActivityManager.RunningTaskInfo>? {
-
-        log("getRecentTasks: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.getRunningTasks(maxNum)
+        if (!checkAgreePrivacy("getRunningTasks")) {
+            return emptyList()
         }
+        return manager.getRunningTasks(maxNum)
 
-        return emptyList()
     }
 
     /**
@@ -103,12 +113,10 @@ object PrivacyUtil {
     @SuppressLint("MissingPermission")
     @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getAllCellInfo(manager: TelephonyManager): List<CellInfo>? {
-        log("getAllCellInfo: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.getAllCellInfo()
+        if (!checkAgreePrivacy("getAllCellInfo")) {
+            return emptyList()
         }
-
-        return emptyList()
+        return  manager.getAllCellInfo()
     }
 
     /**
@@ -118,17 +126,11 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getDeviceId(manager: TelephonyManager): String? {
-        log("getDeviceId: isAgreePrivacy=$isAgreePrivacy")
-        val key = "deviceId"
-        if (stringCache[key] != null) {
-            return stringCache[key]
+        if (!checkAgreePrivacy("getDeviceId")) {
+            return ""
         }
-        if (isAgreePrivacy) {
-            val value = manager.deviceId
-            putStringCache(key, value)
-            return value
-        }
-        return ""
+        return  manager.deviceId
+
     }
 
     /**
@@ -138,21 +140,15 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getImei(manager: TelephonyManager): String? {
-        log("getImei: isAgreePrivacy=$isAgreePrivacy")
-        val key = "getImei"
-        if (stringCache[key] != null) {
-            return stringCache[key]
+        if (!checkAgreePrivacy("getImei")) {
+            return ""
         }
-        if (isAgreePrivacy) {
-            val value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                manager.getImei()
-            } else {
-                "(api 要大于android O)"
-            }
-            putStringCache(key, value)
-            return value
+        return  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.getImei()
+        } else {
+            //"(api 要大于android O)"
+            ""
         }
-        return ""
     }
 
     /**
@@ -162,7 +158,9 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getSimSerialNumber(manager: TelephonyManager): String? {
-        log("getSimSerialNumber: isAgreePrivacy=$isAgreePrivacy")
+        if (!checkAgreePrivacy("getSimSerialNumber")) {
+            return ""
+        }
         //不允许App读取，拦截调用
         return ""
     }
@@ -173,17 +171,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getSSID(manager: WifiInfo): String? {
-        log("getSSID: isAgreePrivacy=$isAgreePrivacy")
-        val key = "ssid"
-        if (stringCache[key] != null) {
-            return stringCache[key]
+        if (!checkAgreePrivacy("getSSID")) {
+            return ""
         }
-        if (isAgreePrivacy) {
-            val value = manager.ssid
-            putStringCache(key, value)
-            return value
-        }
-        return null
+        return manager.ssid
     }
 
     /**
@@ -192,18 +183,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getBSSID(manager: WifiInfo): String? {
-        log("getBSSID: isAgreePrivacy=$isAgreePrivacy")
-        val key = "bssid"
-        if (stringCache[key] != null) {
-            return stringCache[key]
+        if (!checkAgreePrivacy("getBSSID")) {
+            return ""
         }
-        if (isAgreePrivacy) {
-            val value = manager.bssid
-            putStringCache(key, value)
-            return value
-        }
-
-        return null
+        return manager.bssid
     }
 
     /**
@@ -213,16 +196,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getMacAddress(manager: WifiInfo): String? {
-        log("getBSSID: isAgreePrivacy=$isAgreePrivacy")
-        if (stringCache["macAddress"] != null) {
-            return stringCache["macAddress"]
+        if (!checkAgreePrivacy("getMacAddress")) {
+            return ""
         }
-        if (isAgreePrivacy) {
-            val macAddress = manager.macAddress
-            putStringCache("macAddress", macAddress)
-            return macAddress
-        }
-        return null
+        return manager.macAddress
     }
 
     /**
@@ -231,21 +208,13 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = Settings.System::class, oriAccess = AsmMethodOpcodes.INVOKESTATIC)
     fun getString(resolver: ContentResolver, name: String): String? {
-        log("Settings.System.getString,name=$name,isAgreePrivacy=$isAgreePrivacy")
-
-
         //处理AndroidId
         if (Settings.Secure.ANDROID_ID == name) {
-            if (stringCache[Settings.Secure.ANDROID_ID] != null) {
-                log("Settings.System.getString cacheAndroidId=${stringCache[Settings.Secure.ANDROID_ID]}")
-                return stringCache[Settings.Secure.ANDROID_ID]
+
+            if (!checkAgreePrivacy("ANDROID_ID")) {
+                return ""
             }
-            if (isAgreePrivacy) {
-                val androidId = Settings.System.getString(resolver, name)
-                putStringCache(Settings.Secure.ANDROID_ID, androidId)
-                return androidId
-            }
-            return null
+            return Settings.System.getString(resolver, name)
         }
 
         return Settings.System.getString(resolver, name)
@@ -257,12 +226,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = SensorManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getSensorList(manager: SensorManager, type: Int): MutableList<Sensor>? {
-        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
-
-        if (isAgreePrivacy) {
-            return manager.getSensorList(type)
+        if (!checkAgreePrivacy("getSensorList")) {
+            return mutableListOf()
         }
-        return null
+        return manager.getSensorList(type)
 
     }
 
@@ -272,12 +239,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getScanResults(manager: WifiManager): MutableList<ScanResult>? {
-        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
-
-        if (isAgreePrivacy) {
-            return manager.getScanResults()
+        if (!checkAgreePrivacy("getScanResults")) {
+            return mutableListOf()
         }
-        return null
+        return manager.getScanResults()
 
     }
 
@@ -287,12 +252,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getDhcpInfo(manager: WifiManager): DhcpInfo? {
-        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
-
-        if (isAgreePrivacy) {
-            return manager.getDhcpInfo()
+        if (!checkAgreePrivacy("getDhcpInfo")) {
+            return null
         }
-        return null
+        return manager.getDhcpInfo()
 
     }
 
@@ -304,12 +267,10 @@ object PrivacyUtil {
     @JvmStatic
     @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getConfiguredNetworks(manager: WifiManager): MutableList<WifiConfiguration>? {
-        log("getSensorList,isAgreePrivacy=$isAgreePrivacy")
-
-        if (isAgreePrivacy) {
-            return manager.getConfiguredNetworks()
+        if (!checkAgreePrivacy("getConfiguredNetworks")) {
+            return mutableListOf()
         }
-        return null
+        return manager.getConfiguredNetworks()
 
     }
 
@@ -323,11 +284,10 @@ object PrivacyUtil {
     fun getLastKnownLocation(
         manager: LocationManager, provider: String
     ): Location? {
-        log("getLastKnownLocation: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.getLastKnownLocation(provider)
+        if (!checkAgreePrivacy("getLastKnownLocation")) {
+            return null
         }
-        return null
+        return manager.getLastKnownLocation(provider)
     }
 
 
@@ -357,14 +317,19 @@ object PrivacyUtil {
         manager: LocationManager, provider: String, minTime: Long, minDistance: Float,
         listener: LocationListener
     ) {
-        log("requestLocationUpdates: isAgreePrivacy=$isAgreePrivacy")
-        if (isAgreePrivacy) {
-            return manager.requestLocationUpdates(provider, minTime, minDistance, listener)
+        if (!checkAgreePrivacy("requestLocationUpdates")) {
+            return
         }
+        manager.requestLocationUpdates(provider, minTime, minDistance, listener)
+
     }
 
 
     private fun log(log: String) {
         Log.i(TAG, log)
     }
+    private fun logW(log: String) {
+        Log.w(TAG, log)
+    }
+
 }

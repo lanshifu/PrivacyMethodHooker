@@ -1,4 +1,4 @@
-package com.lizhi.plugin
+package com.lizhi.plugin.extension
 
 import com.android.build.gradle.api.BaseVariant
 import com.android.dex.DexFormat
@@ -124,9 +124,7 @@ fun TransformContext.isRelease(): Boolean {
 
 
 fun String.println() {
-//    if (DoKitExtUtil.dokitLogSwitchOpen()) {
-        println("[dokit plugin]===>$this")
-//    }
+    println("[lizhi plugin]===>$this")
 }
 
 fun File.lastPath(): String {
@@ -167,7 +165,7 @@ internal fun File.dex(output: File, api: Int = DexFormat.API_NO_EXTENDED_OPCODES
  * @param output The output location
  * @param transformer The byte data transformer
  */
-fun File.dokitTransform(output: File, transformer: (ByteArray) -> ByteArray = { it -> it }) {
+fun File.doTransform(output: File, transformer: (ByteArray) -> ByteArray = { it -> it }) {
     when {
         isDirectory -> this.toURI().let { base ->
             this.search().parallelStream().forEach {
@@ -176,7 +174,7 @@ fun File.dokitTransform(output: File, transformer: (ByteArray) -> ByteArray = { 
         }
         isFile -> when (extension.toLowerCase()) {
             "jar" -> JarFile(this).use {
-                it.dokitTransform(output, { JarArchiveEntry(it) }, transformer)
+                it.doTransform(output, { JarArchiveEntry(it) }, transformer)
             }
             "class" -> this.inputStream().use {
                 it.transform(transformer).redirect(output)
@@ -187,16 +185,16 @@ fun File.dokitTransform(output: File, transformer: (ByteArray) -> ByteArray = { 
     }
 }
 
-fun ZipFile.dokitTransform(
+fun ZipFile.doTransform(
     output: File,
     entryFactory: (ZipEntry) -> ZipArchiveEntry = ::ZipArchiveEntry,
     transformer: (ByteArray) -> ByteArray = { it -> it }
 ) = output.touch().outputStream().buffered().use {
-    this.dokitTransform(it, entryFactory, transformer)
+    this.doTransform(it, entryFactory, transformer)
 }
 
 
-fun ZipFile.dokitTransform(
+fun ZipFile.doTransform(
     output: OutputStream,
     entryFactory: (ZipEntry) -> ZipArchiveEntry = ::ZipArchiveEntry,
     transformer: (ByteArray) -> ByteArray = { it -> it }

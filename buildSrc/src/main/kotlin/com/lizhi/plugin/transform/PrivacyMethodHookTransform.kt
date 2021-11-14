@@ -1,11 +1,10 @@
-package com.lizhi.plugin
+package com.lizhi.plugin.transform
 
 import com.didiglobal.booster.transform.Transformer
 import com.didiglobal.booster.transform.asm.ClassTransformer
 import com.google.auto.service.AutoService
-import com.lizhi.plugin.privacy_method.AnnonationParserTransform
-import com.lizhi.plugin.privacy_method.DoKitAsmTransformer
-import com.lizhi.plugin.privacy_method.PrivacyMethodReplaceTransform
+import com.lizhi.plugin.asmtransformer.BaseAsmTransformer
+import com.lizhi.plugin.classtransformer.PrivacyMethodReplaceTransform
 import org.gradle.api.Project
 
 /**
@@ -13,9 +12,10 @@ import org.gradle.api.Project
  * @date 2021/11/13
  */
 @AutoService(ClassTransformer::class)
-class PrivacyMethodHookTransform(androidProject: Project) : DoKitBaseTransform(androidProject) {
+class PrivacyMethodHookTransform(androidProject: Project) : BaseTransform(androidProject) {
 
-    override val transformers = listOf<Transformer>(DoKitAsmTransformer(
+    override val transformers = listOf<Transformer>(
+        BaseAsmTransformer(
             listOf(
                 PrivacyMethodReplaceTransform()
             )
