@@ -22,6 +22,11 @@ class MainActivity : AppCompatActivity() {
             updateData()
         }
 
+        cbUseCache.setOnCheckedChangeListener { compoundButton, b ->
+            PrivacyUtil.isUseCache = b
+            updateData()
+        }
+
         updateData()
 
     }

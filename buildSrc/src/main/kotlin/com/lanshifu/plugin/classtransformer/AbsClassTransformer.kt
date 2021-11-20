@@ -1,9 +1,9 @@
-package com.lizhi.plugin.classtransformer
+package com.lanshifu.plugin.classtransformer
 
 import com.didiglobal.booster.transform.TransformContext
 import com.didiglobal.booster.transform.asm.ClassTransformer
 import com.didiglobal.booster.transform.asm.className
-import com.lizhi.plugin.extension.isRelease
+import com.lanshifu.plugin.extension.isRelease
 import org.objectweb.asm.tree.ClassNode
 
 /**

@@ -23,6 +23,12 @@
             android:layout_height="wrap_content"
             android:text="同意隐私" />
 
+        <CheckBox
+            android:id="@+id/cbUseCache"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用缓存" />
+
         <TextView
             android:text="ActivityManager"
             android:layout_width="wrap_content"

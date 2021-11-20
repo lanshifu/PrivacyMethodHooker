@@ -1,9 +1,9 @@
-package com.lizhi.plugin
+package com.lanshifu.plugin
 
 import com.android.build.gradle.AppExtension
 import com.didiglobal.booster.gradle.getAndroid
-import com.lizhi.plugin.transform.CommonTransform
-import com.lizhi.plugin.transform.PrivacyMethodHookTransform
+import com.lanshifu.plugin.transform.CommonTransform
+import com.lanshifu.plugin.transform.PrivacyMethodHookTransform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

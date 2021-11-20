@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.lizhi.privacy_method'
+apply plugin: 'com.lanshifu.privacy_method'
 
 android {
 

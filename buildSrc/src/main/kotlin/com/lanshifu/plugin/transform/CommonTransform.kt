@@ -1,8 +1,8 @@
-package com.lizhi.plugin.transform
+package com.lanshifu.plugin.transform
 
 import com.didiglobal.booster.transform.Transformer
-import com.lizhi.plugin.classtransformer.AnnonationParserClassTransform
-import com.lizhi.plugin.asmtransformer.BaseAsmTransformer
+import com.lanshifu.plugin.classtransformer.AnnonationParserClassTransform
+import com.lanshifu.plugin.asmtransformer.BaseAsmTransformer
 import org.gradle.api.Project
 
 /**

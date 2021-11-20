@@ -1,4 +1,4 @@
-package com.lizhi.plugin.asmtransformer
+package com.lanshifu.plugin.asmtransformer
 
 import com.didiglobal.booster.annotations.Priority
 import com.didiglobal.booster.transform.TransformContext

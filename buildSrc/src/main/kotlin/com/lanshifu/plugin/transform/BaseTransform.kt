@@ -1,4 +1,4 @@
-package com.lizhi.plugin.transform
+package com.lanshifu.plugin.transform
 
 import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.transform.Transform
@@ -8,7 +8,7 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.didiglobal.booster.gradle.*
 import com.didiglobal.booster.transform.AbstractKlassPool
 import com.didiglobal.booster.transform.Transformer
-import com.lizhi.plugin.DelegateTransformInvocation
+import com.lanshifu.plugin.DelegateTransformInvocation
 import org.gradle.api.Project
 
 /**

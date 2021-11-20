@@ -1,4 +1,4 @@
-package com.lizhi.plugin
+package com.lanshifu.plugin
 
 import com.android.build.api.transform.*
 import com.android.build.api.transform.Status.*
@@ -13,10 +13,10 @@ import com.didiglobal.booster.transform.ArtifactManager
 import com.didiglobal.booster.transform.TransformContext
 import com.didiglobal.booster.transform.artifacts
 import com.didiglobal.booster.transform.util.transform
-import com.lizhi.plugin.extension.dex
-import com.lizhi.plugin.extension.doTransform
-import com.lizhi.plugin.extension.println
-import com.lizhi.plugin.transform.BaseTransform
+import com.lanshifu.plugin.extension.dex
+import com.lanshifu.plugin.extension.doTransform
+import com.lanshifu.plugin.extension.println
+import com.lanshifu.plugin.transform.BaseTransform
 import java.io.File
 import java.net.URI
 import java.util.concurrent.*

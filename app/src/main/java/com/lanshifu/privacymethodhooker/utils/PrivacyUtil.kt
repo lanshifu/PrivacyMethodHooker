@@ -47,7 +47,8 @@ object PrivacyUtil {
 
     private const val TAG = "PrivacyUtil"
 
-    val isAgreePrivacy: Boolean = false
+    var isAgreePrivacy: Boolean = false
+    var isUseCache: Boolean = true
 
     private var anyCache = HashMap<String, Any>()
 
@@ -70,6 +71,9 @@ object PrivacyUtil {
     }
 
     private fun <T> getListCache(key: String): List<T>? {
+        if (!isUseCache){
+            return null
+        }
         val cache = anyCache[key]
         if (cache != null && cache is List<*>) {
             try {
@@ -83,6 +87,9 @@ object PrivacyUtil {
     }
 
     private fun <T> getCache(key: String): T? {
+        if (!isUseCache){
+            return null
+        }
         val cache = anyCache[key]
         if (cache != null) {
             try {

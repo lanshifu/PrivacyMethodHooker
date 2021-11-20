@@ -1,10 +1,10 @@
-package com.lizhi.plugin.transform
+package com.lanshifu.plugin.transform
 
 import com.didiglobal.booster.transform.Transformer
 import com.didiglobal.booster.transform.asm.ClassTransformer
 import com.google.auto.service.AutoService
-import com.lizhi.plugin.asmtransformer.BaseAsmTransformer
-import com.lizhi.plugin.classtransformer.PrivacyMethodReplaceTransform
+import com.lanshifu.plugin.asmtransformer.BaseAsmTransformer
+import com.lanshifu.plugin.classtransformer.PrivacyMethodReplaceTransform
 import org.gradle.api.Project
 
 /**

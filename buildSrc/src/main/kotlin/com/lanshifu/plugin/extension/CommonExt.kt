@@ -1,4 +1,4 @@
-package com.lizhi.plugin.extension
+package com.lanshifu.plugin.extension
 
 import com.android.build.gradle.api.BaseVariant
 import com.android.dex.DexFormat

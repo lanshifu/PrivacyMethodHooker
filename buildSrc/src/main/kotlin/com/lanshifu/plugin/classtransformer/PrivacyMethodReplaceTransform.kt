@@ -1,11 +1,10 @@
-package com.lizhi.plugin.classtransformer
+package com.lanshifu.plugin.classtransformer
 
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodInsnNode
-import java.io.File
 import java.io.PrintWriter
 
 

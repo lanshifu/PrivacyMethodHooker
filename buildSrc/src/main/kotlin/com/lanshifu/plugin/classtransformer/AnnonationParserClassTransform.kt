@@ -1,9 +1,9 @@
-package com.lizhi.plugin.classtransformer
+package com.lanshifu.plugin.classtransformer
 
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
-import com.lizhi.plugin.privacymethod.AsmItem
+import com.lanshifu.plugin.privacymethod.AsmItem
 import org.objectweb.asm.tree.ClassNode
 import java.io.PrintWriter
 
