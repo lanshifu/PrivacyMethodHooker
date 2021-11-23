@@ -16,6 +16,7 @@ class AnnonationParserClassTransform : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
 
     companion object{
+        const val AsmReplaceClass= "Lcom/lanshifu/privacy_method_annotation/AsmClass;"
         const val AsmFieldDesc = "Lcom/lanshifu/privacy_method_annotation/AsmField;"
         var asmConfigs = mutableListOf<AsmItem>()
         var asmConfigsMap = HashMap<String,String>()
@@ -35,6 +36,13 @@ class AnnonationParserClassTransform : AbsClassTransformer() {
     override fun transform(context: TransformContext, klass: ClassNode) = klass.also {
         if (onCommInterceptor(context, klass)) {
             return klass
+        }
+
+        klass.invisibleAnnotations?.forEach {
+            if (it.desc == AsmReplaceClass){
+                asmConfigsMap.put(klass.name,klass.name)
+                logger.print("klass.invisibleAnnotations,klass.name=${klass.name}")
+            }
         }
 
         klass.methods.forEach { method->
