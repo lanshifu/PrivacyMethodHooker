@@ -1,4 +1,4 @@
-package com.lanshifu.privacy_method_annotation
+package com.lanshifu.asm_annotation
 
 import org.objectweb.asm.Opcodes
 

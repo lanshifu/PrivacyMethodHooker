@@ -11,20 +11,19 @@ import java.io.PrintWriter
  * @author lanxiaobin
  * @date 2021/11/11
  */
-class AnnonationParserClassTransform : AbsClassTransformer() {
+class AnnotationParserClassTransform : AbsClassTransformer() {
 
     private lateinit var logger: PrintWriter
 
     companion object{
-        const val AsmReplaceClass= "Lcom/lanshifu/privacy_method_annotation/AsmClass;"
-        const val AsmFieldDesc = "Lcom/lanshifu/privacy_method_annotation/AsmField;"
+        const val AsmFieldDesc = "Lcom/lanshifu/asm_annotation/AsmMethodReplace;"
         var asmConfigs = mutableListOf<AsmItem>()
         var asmConfigsMap = HashMap<String,String>()
     }
 
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
-        this.logger = context.reportsDir.file("AnnonationParserTransform").file(context.name).file("report.txt").touch().printWriter()
+        this.logger = context.reportsDir.file("AnnotationParserClassTransform").file(context.name).file("report.txt").touch().printWriter()
         logger.println("--start-- ${System.currentTimeMillis()}")
     }
 
@@ -36,13 +35,6 @@ class AnnonationParserClassTransform : AbsClassTransformer() {
     override fun transform(context: TransformContext, klass: ClassNode) = klass.also {
         if (onCommInterceptor(context, klass)) {
             return klass
-        }
-
-        klass.invisibleAnnotations?.forEach {
-            if (it.desc == AsmReplaceClass){
-                asmConfigsMap.put(klass.name,klass.name)
-                logger.print("klass.invisibleAnnotations,klass.name=${klass.name}")
-            }
         }
 
         klass.methods.forEach { method->

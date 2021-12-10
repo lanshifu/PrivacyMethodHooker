@@ -14,7 +14,7 @@ import java.io.PrintWriter
  */
 class PrivacyMethodReplaceTransform : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
-    private val asmItems = AnnonationParserClassTransform.asmConfigs
+    private val asmItems = AnnotationParserClassTransform.asmConfigs
     private var asmItemsClassMap: HashMap<String, String> = HashMap<String, String>()
 
     override fun onPreTransform(context: TransformContext) {
@@ -23,10 +23,10 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
             .file("report.txt").touch().printWriter()
         logger.println("--start-- ${System.currentTimeMillis()}")
 
-        AnnonationParserClassTransform.asmConfigs.forEach {
+        AnnotationParserClassTransform.asmConfigs.forEach {
             asmItemsClassMap[it.targetClass] = it.targetClass
         }
-        logger.print("\nasmItemsMap size=${asmItemsClassMap!!.size}，asmItems.size=${asmItems.size}\n\n")
+        logger.print("\nasmItemsMap size=${asmItemsClassMap.size}，asmItems.size=${asmItems.size}\n\n")
         logger.print("asmItemsClassMap=${asmItemsClassMap} \n\n")
         logger.print("asmItems=${asmItems} \n\n")
     }
@@ -42,7 +42,7 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
             return klass
         }
 
-        if (AnnonationParserClassTransform.asmConfigsMap.contains(klass.name)) {
+        if (AnnotationParserClassTransform.asmConfigsMap.contains(klass.name)) {
             logger.print("\nPrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${klass.name}\n")
             return@also
         }
@@ -62,9 +62,10 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
 
                             logger.print(
                                 "\nhook:\n" +
-                                        "opcode=${insnNode.opcode},owner=${insnNode.owner},desc=${insnNode.desc},name=${insnNode.name} ->\n" +
+                                        "opcode=${insnNode.opcode},owner=${insnNode.owner},desc=${insnNode.desc},name=${klass.name}#${insnNode.name} ->\n" +
                                         "opcode=${asmItem.targetAccess},owner=${asmItem.targetClass},desc=${asmItem.targetDesc},name=${asmItem.targetMethod}\n"
                             )
+
                             insnNode.opcode = asmItem.targetAccess
                             insnNode.desc = asmItem.targetDesc
                             insnNode.owner = asmItem.targetClass

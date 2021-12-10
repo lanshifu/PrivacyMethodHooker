@@ -1,4 +1,4 @@
-package com.lanshifu.privacy_method_annotation;
+package com.lanshifu.asm_annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
-public @interface AsmField {
+public @interface AsmMethodReplace {
     Class oriClass();
 
     String oriMethod() default "";

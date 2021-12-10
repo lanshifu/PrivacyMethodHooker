@@ -1,7 +1,7 @@
 package com.lanshifu.plugin.transform
 
 import com.didiglobal.booster.transform.Transformer
-import com.lanshifu.plugin.classtransformer.AnnonationParserClassTransform
+import com.lanshifu.plugin.classtransformer.AnnotationParserClassTransform
 import com.lanshifu.plugin.asmtransformer.BaseAsmTransformer
 import org.gradle.api.Project
 
@@ -14,7 +14,7 @@ class CommonTransform(androidProject: Project) : BaseTransform(androidProject) {
     override val transformers = listOf<Transformer>(
         BaseAsmTransformer(
             listOf(
-                AnnonationParserClassTransform()
+                AnnotationParserClassTransform()
             )
         )
     )

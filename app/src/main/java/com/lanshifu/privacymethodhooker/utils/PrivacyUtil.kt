@@ -14,16 +14,13 @@ import android.net.wifi.ScanResult
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.provider.Settings
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.Keep
-import com.lanshifu.privacy_method_annotation.AsmClass
-import com.lanshifu.privacy_method_annotation.AsmField
-import com.lanshifu.privacy_method_annotation.AsmMethodOpcodes
+import com.lanshifu.asm_annotation.AsmMethodReplace
+import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.privacymethodhooker.BuildConfig
 import java.util.*
 import kotlin.collections.HashMap
@@ -42,7 +39,6 @@ import kotlin.collections.HashMap
  *     (declaration of 'com.lanshifu.privacymethodhooker.MainActivity' appears in /data/app/com.lanshifu.privacymethodhooker-2/base.apk)
  */
 @Keep
-@AsmClass
 object PrivacyUtil {
 
     private const val TAG = "PrivacyUtil"
@@ -114,7 +110,7 @@ object PrivacyUtil {
 
 
     @JvmStatic
-    @AsmField(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRunningAppProcesses(manager: ActivityManager): List<RunningAppProcessInfo?> {
         val key = "getRunningAppProcesses"
         val cache = getListCache<RunningAppProcessInfo?>(key)
@@ -129,7 +125,7 @@ object PrivacyUtil {
     }
 
     @JvmStatic
-    @AsmField(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRecentTasks(
         manager: ActivityManager,
         maxNum: Int,
@@ -149,7 +145,7 @@ object PrivacyUtil {
     }
 
     @JvmStatic
-    @AsmField(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRunningTasks(
         manager: ActivityManager,
         maxNum: Int
@@ -172,7 +168,7 @@ object PrivacyUtil {
      */
     @JvmStatic
     @SuppressLint("MissingPermission")
-    @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getAllCellInfo(manager: TelephonyManager): List<CellInfo>? {
         val key = "getAllCellInfo"
         val cache = getListCache<CellInfo>(key)
@@ -191,7 +187,7 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getDeviceId(manager: TelephonyManager): String? {
         val key = "getDeviceId"
         val cache = getCache<String>(key)
@@ -212,7 +208,7 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getImei(manager: TelephonyManager): String? {
         val key = "getImei"
         val cache = getCache<String>(key)
@@ -231,7 +227,7 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmField(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getSimSerialNumber(manager: TelephonyManager): String? {
         val key = "getSimSerialNumber"
         val cache = getCache<String>(key)
@@ -249,7 +245,7 @@ object PrivacyUtil {
      * 读取WIFI的SSID
      */
     @JvmStatic
-    @AsmField(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getSSID(manager: WifiInfo): String? {
         val key = "getSSID"
         val cache = getCache<String?>(key)
@@ -269,7 +265,7 @@ object PrivacyUtil {
      * 读取WIFI的SSID
      */
     @JvmStatic
-    @AsmField(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getBSSID(manager: WifiInfo): String? {
         val key = "getBSSID"
         val cache = getCache<String?>(key)
@@ -288,7 +284,7 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmField(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getMacAddress(manager: WifiInfo): String? {
         val key = "getMacAddress"
         val cache = getCache<String?>(key)
@@ -306,7 +302,7 @@ object PrivacyUtil {
      * 读取AndroidId
      */
     @JvmStatic
-    @AsmField(oriClass = Settings.System::class, oriAccess = AsmMethodOpcodes.INVOKESTATIC)
+    @AsmMethodReplace(oriClass = Settings.System::class, oriAccess = AsmMethodOpcodes.INVOKESTATIC)
     fun getString(resolver: ContentResolver, name: String): String? {
         //处理AndroidId
         if (Settings.Secure.ANDROID_ID == name) {
@@ -330,7 +326,7 @@ object PrivacyUtil {
      * getSensorList
      */
     @JvmStatic
-    @AsmField(oriClass = SensorManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = SensorManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getSensorList(manager: SensorManager, type: Int): List<Sensor>? {
         val key = "getSensorList"
         val cache = getListCache<Sensor>(key)
@@ -349,7 +345,7 @@ object PrivacyUtil {
      * 读取WIFI扫描结果
      */
     @JvmStatic
-    @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getScanResults(manager: WifiManager): List<ScanResult>? {
         val key = "getScanResults"
         val cache = getListCache<ScanResult>(key)
@@ -367,7 +363,7 @@ object PrivacyUtil {
      * 读取DHCP信息
      */
     @JvmStatic
-    @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getDhcpInfo(manager: WifiManager): DhcpInfo? {
         val key = "getDhcpInfo"
         val cache = getCache<DhcpInfo>(key)
@@ -388,7 +384,7 @@ object PrivacyUtil {
      */
     @SuppressLint("MissingPermission")
     @JvmStatic
-    @AsmField(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getConfiguredNetworks(manager: WifiManager): List<WifiConfiguration>? {
         val key = "getConfiguredNetworks"
         val cache = getListCache<WifiConfiguration>(key)
@@ -409,7 +405,7 @@ object PrivacyUtil {
      */
     @JvmStatic
     @SuppressLint("MissingPermission")
-    @AsmField(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getLastKnownLocation(
         manager: LocationManager, provider: String
     ): Location? {
@@ -441,7 +437,7 @@ object PrivacyUtil {
      */
     @SuppressLint("MissingPermission")
     @JvmStatic
-    @AsmField(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun requestLocationUpdates(
         manager: LocationManager, provider: String, minTime: Long, minDistance: Float,
         listener: LocationListener
