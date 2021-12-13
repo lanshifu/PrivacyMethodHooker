@@ -101,7 +101,7 @@ object PrivacyUtil {
 
 
     private fun <T> putCache(key: String, value: T): T {
-        logD("putCache key=$key,value=$value")
+        logI("putCache key=$key,value=$value")
         value?.let {
             anyCache[key] = value
         }
@@ -164,7 +164,7 @@ object PrivacyUtil {
     }
 
     /**
-     * 读取基站信息
+     * 读取基站信息，需要开启定位
      */
     @JvmStatic
     @SuppressLint("MissingPermission")

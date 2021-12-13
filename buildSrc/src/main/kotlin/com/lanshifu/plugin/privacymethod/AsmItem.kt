@@ -42,18 +42,21 @@ class AsmItem(
         if (oriMethod == null) {
             oriMethod = targetMethod
         }
-        //静态方法，参数和返回值一致
+        //静态方法，oriDesc 跟 targetDesc 一样
         if (oriAccess == Opcodes.INVOKESTATIC) {
             oriDesc = targetDesc
         } else {
-            //非静态方法，第一个参数是类名
-            //targetDesc=(Landroid/telephony/TelephonyManager;)Ljava/lang/String;
+            //非静态方法，约定第一个参数是实例类名，oriDesc 比 targetDesc 少一个参数，处理一下
             var param = targetDesc.split(")")[0] + ")" //(Landroid/telephony/TelephonyManager;)
             val returnValue = targetDesc.split(")")[1] //Ljava/lang/String;
             if (param.indexOf(sourceName) == 1) {
                 param = "(" + param.substring(param.indexOf(sourceName) + sourceName.length)
             }
             oriDesc = param + returnValue
+
+            //处理之后
+            //targetDesc=(Landroid/telephony/TelephonyManager;)Ljava/lang/String;
+            //oriDesc= Ljava/lang/String;
         }
     }
 
