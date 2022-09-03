@@ -2,24 +2,21 @@ package com.lanshifu.plugin
 
 import com.android.build.api.transform.*
 import com.android.build.api.transform.Status.*
-import com.android.dex.DexFormat
 import com.didiglobal.booster.gradle.*
 import com.didiglobal.booster.kotlinx.NCPU
-import com.didiglobal.booster.kotlinx.file
-import com.didiglobal.booster.kotlinx.green
-import com.didiglobal.booster.kotlinx.red
 import com.didiglobal.booster.transform.AbstractKlassPool
 import com.didiglobal.booster.transform.ArtifactManager
 import com.didiglobal.booster.transform.TransformContext
 import com.didiglobal.booster.transform.artifacts
 import com.didiglobal.booster.transform.util.transform
-import com.lanshifu.plugin.extension.dex
 import com.lanshifu.plugin.extension.doTransform
 import com.lanshifu.plugin.extension.println
 import com.lanshifu.plugin.transform.BaseTransform
 import java.io.File
 import java.net.URI
-import java.util.concurrent.*
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 /**
  * Represents a delegate of TransformInvocation
@@ -165,6 +162,9 @@ internal class DelegateTransformInvocation(
                     )
                 }
             }
+            else -> {
+                project.logger.info("${jarInput.file} not changed")
+            }
         }
     }
 
@@ -204,21 +204,25 @@ internal class DelegateTransformInvocation(
                         }
                     }
                 }
+                else -> {
+                    project.logger.info("$file not changed")
+                }
             }
         }
     }
 
     private fun doVerify() {
-        outputs.sortedBy(File::nameWithoutExtension).forEach { output ->
-            val out = temporaryDir.file(output.name)
-            val rc = out.dex(
-                output,
-                variant.extension.defaultConfig.targetSdkVersion?.apiLevel
-                    ?: DexFormat.API_NO_EXTENDED_OPCODES
-            )
-            println("${if (rc != 0) red("✗") else green("✓")} $output")
-            out.deleteRecursively()
-        }
+        // TODO unnecessary since Android 5.0
+//        outputs.sortedBy(File::nameWithoutExtension).forEach { output ->
+//            val out = temporaryDir.file(output.name)
+//            val rc = out.dex(
+//                output,
+//                variant.extension.defaultConfig.targetSdkVersion?.apiLevel
+//                    ?: DexFormat.API_NO_EXTENDED_OPCODES
+//            )
+//            println("${if (rc != 0) red("✗") else green("✓")} $output")
+//            out.deleteRecursively()
+//        }
     }
 
     private fun QualifiedContent.transform(output: File) {
