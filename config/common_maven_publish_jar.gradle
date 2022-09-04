@@ -1,0 +1,115 @@
+apply plugin: 'maven-publish'
+
+def isLocalUrl(Properties props) {
+    if (props['LOCAL_URL'] != null) {
+        println("LOCAL_URL=${props['LOCAL_URL']}")
+        return Boolean.parseBoolean(props['LOCAL_URL'])
+    } else {
+        return true
+    }
+}
+
+static def getGroupId(Properties props) {
+    if(props['GROUP_ID'] == null){
+        throw  new Throwable('需要在project的maven_public.properties 声明 GROUP_ID')
+    }
+    return props['GROUP_ID']
+}
+
+static def getArtifactId(Properties props) {
+    if(props['ARTIFACT_ID'] == null){
+        throw  new Throwable('需要在project的maven_public.properties 声明 ARTIFACT_ID')
+    }
+    return props['ARTIFACT_ID']
+}
+
+static def getReleaseVersion(Properties props) {
+    if(props['RELEASE_VERSION'] == null){
+        throw  new Throwable('需要在project的maven_public.properties 声明 RELEASE_VERSION')
+    }
+    return props['RELEASE_VERSION']
+}
+
+def getReleaseRepositoryUrl(Properties props) {
+    if (hasProperty('RELEASE_REPOSITORY_URL')) {
+        return RELEASE_REPOSITORY_URL
+    } else if (props['RELEASE_REPOSITORY_URL'] != null) {
+        return props['RELEASE_REPOSITORY_URL']
+    } else {
+        return "http://xxx:8081/repository/android-private/"
+    }
+}
+
+static def getRepositoryUsername(Properties props) {
+    if(props['NEXUS_USERNAME'] == null){
+        throw  new Throwable('需要在root project的local.properties 声明 NEXUS_USERNAME=你的密码')
+    }
+    return props['NEXUS_USERNAME']
+}
+
+static def getRepositoryPassword(Properties props) {
+    if(props['NEXUS_PASSWORD'] == null){
+        throw  new Throwable('需要在root project的local.properties 声明 NEXUS_PASSWORD=你的密码')
+    }
+    return props['NEXUS_PASSWORD']
+}
+
+def localProperties = new Properties()
+def mavenPublicProperties = new Properties()
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier.set("sources")
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+
+            File mavenPublicPropertiesFile = file(getProjectDir().absolutePath + '/maven_publish.properties')
+            if(!mavenPublicPropertiesFile.exists()){
+                throw  new Throwable('需要在library根目录（build.gradle同级目录）下创建 maven_publish.properties文件，配置GROUP_ID、ARTIFACT_ID、RELEASE_VERSION')
+            }
+            mavenPublicPropertiesFile.withInputStream { mavenPublicProperties.load(it) }
+
+            groupId = getGroupId(mavenPublicProperties)
+            artifactId = getArtifactId(mavenPublicProperties)
+            version = getReleaseVersion(mavenPublicProperties)
+            from components.java
+            artifact sourcesJar
+
+            pom {
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+            }
+        }
+    }
+    repositories {
+        maven {
+            rootProject.file('local.properties').withInputStream { localProperties.load(it) }
+
+            if(isLocalUrl(mavenPublicProperties)){
+                url = uri('../repo')
+            } else {
+                ///上传到远程仓库
+                url = getReleaseRepositoryUrl(mavenPublicProperties)
+                allowInsecureProtocol true
+                credentials {
+                    username getRepositoryUsername(localProperties)
+                    password getRepositoryPassword(localProperties)
+                }
+                credentials {
+                    username getRepositoryUsername(localProperties)
+                    password getRepositoryPassword(localProperties)
+                }
+            }
+
+        }
+    }
+}
+

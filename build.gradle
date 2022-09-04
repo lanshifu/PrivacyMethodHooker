@@ -3,20 +3,26 @@ apply from: "config.gradle"
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.kotlin_version = '1.5.31'
-    ext.booster_version = '4.0.0'
+    ext.booster_version = '4.13.0'
     repositories {
+        maven {
+            url uri('repo')
+        }
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.0.1"
+        classpath "com.android.tools.build:gradle:7.2.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.ext.kotlin_version}"
+        classpath 'com.lanshifu.plugin:privacy_method:1.0.0-beta01'
     }
 }
 
 allprojects {
     repositories {
-        maven { url 'local_repo' }
+        maven {
+            url uri('repo')
+        }
         jcenter()
         google()
         mavenCentral()

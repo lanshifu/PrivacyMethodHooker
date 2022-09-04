@@ -1,0 +1,131 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.lanshifu.plugin",
+    "module": "privacy_method",
+    "version": "1.0.0-beta01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.3.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.didiglobal.booster",
+          "module": "booster-api",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "com.didiglobal.booster",
+          "module": "booster-transform-asm",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.5.31"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "privacy_method-1.0.0-beta01.jar",
+          "url": "privacy_method-1.0.0-beta01.jar",
+          "size": 68691,
+          "sha512": "31b5e12038416a7788e59c687c1ff79b0135d001cd37f57d78648e3acd59fffde299a0139bdbaffaa882a8aa54b7ebf8320403f5206f399ef359253b11f541e3",
+          "sha256": "6dc1176efd43052a7af34982377f55f0601c410cc15647896b37303440257fda",
+          "sha1": "f9c93563febb727912624a8ce876ffc1079e4eca",
+          "md5": "a7eeeec667d6929a7bf52a85bc738a4d"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.ow2.asm",
+          "module": "asm",
+          "version": {
+            "requires": "7.1"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-commons",
+          "version": {
+            "requires": "7.1"
+          }
+        },
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "4.0.1"
+          }
+        },
+        {
+          "group": "com.didiglobal.booster",
+          "module": "booster-api",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "com.didiglobal.booster",
+          "module": "booster-transform-asm",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.5.31"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "privacy_method-1.0.0-beta01.jar",
+          "url": "privacy_method-1.0.0-beta01.jar",
+          "size": 68691,
+          "sha512": "31b5e12038416a7788e59c687c1ff79b0135d001cd37f57d78648e3acd59fffde299a0139bdbaffaa882a8aa54b7ebf8320403f5206f399ef359253b11f541e3",
+          "sha256": "6dc1176efd43052a7af34982377f55f0601c410cc15647896b37303440257fda",
+          "sha1": "f9c93563febb727912624a8ce876ffc1079e4eca",
+          "md5": "a7eeeec667d6929a7bf52a85bc738a4d"
+        }
+      ]
+    }
+  ]
+}

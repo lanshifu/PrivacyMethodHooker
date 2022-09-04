@@ -1,0 +1,73 @@
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply from: "../config/common_maven_publish_jar.gradle"
+
+
+buildscript {
+    apply from: "../config.gradle"
+    ext {
+        kotlin_version = '1.5.31'
+        apg_Version = '7.2.1'
+        booster_version = '4.0.0'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/public/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:$apg_Version"
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += ['src/main/kotlin', 'src/main/java']
+        }
+        kotlin {
+            srcDirs += ['src/main/kotlin', 'src/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs += ['src/main/kotlin', 'src/main/java']
+        }
+        kotlin {
+            srcDirs += ['src/main/kotlin', 'src/main/java']
+        }
+    }
+}
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    compileOnly localGroovy()
+    compileOnly gradleApi()
+    //ASM相关依赖
+    implementation 'org.ow2.asm:asm:7.1'
+    implementation 'org.ow2.asm:asm-commons:7.1'
+    implementation "com.android.tools.build:gradle:4.0.1"
+
+//  kapt "com.google.auto.service:auto-service:1.0-rc6"
+    api "com.didiglobal.booster:booster-api:$booster_version"
+    api "com.didiglobal.booster:booster-transform-asm:$booster_version"
+
+}

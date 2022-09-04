@@ -1,3 +1,4 @@
 rootProject.name = "PrivacyMethodHooker"
 include ':app'
-include ':asm_annotation'
+include ':annotation_library'
+include ':plugin_library'
