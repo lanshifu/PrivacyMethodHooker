@@ -65,8 +65,3 @@ open class BaseTransform protected constructor(val project: Project) : Transform
 
 
 }
-
-/**
- * The option for transform outputs verifying, default is false
- */
-private const val OPT_TRANSFORM_VERIFY = "dokit.transform.verify"

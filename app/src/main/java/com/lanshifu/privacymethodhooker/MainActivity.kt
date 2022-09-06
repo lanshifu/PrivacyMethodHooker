@@ -3,13 +3,19 @@ package com.lanshifu.privacymethodhooker
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.lanshifu.privacymethodhooker.testcase.*
-import com.lanshifu.privacymethodhooker.utils.PrivacyUtil
+import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.PrivacyMethodManagerDelegate
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    var isAgreePrivacy = false
+    var isUseCache = false
+    var showPrivacyMethodStack = true
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,16 +24,46 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         cbAgree.setOnCheckedChangeListener { compoundButton, b ->
-            PrivacyUtil.isAgreePrivacy = b
+            isAgreePrivacy = b
             updateData()
         }
 
         cbUseCache.setOnCheckedChangeListener { compoundButton, b ->
-            PrivacyUtil.isUseCache = b
+            isUseCache = b
             updateData()
         }
 
         updateData()
+
+        PrivacyMethodManager.setDelegate(object : PrivacyMethodManagerDelegate {
+
+            override fun isAgreePrivacy(): Boolean {
+                return isAgreePrivacy
+            }
+
+            override fun isUseCache(): Boolean {
+                return isUseCache
+            }
+
+            override fun showPrivacyMethodStack(): Boolean {
+                return showPrivacyMethodStack
+            }
+
+            override fun onPrivacyMethodCall(methodName: String, methodStack: String) {
+                Log.d(
+                    "MainActivity",
+                    "onPrivacyMethodCall,methodName=$methodName,methodStack=$methodStack"
+                )
+            }
+
+            override fun onPrivacyMethodCallIllegal(methodName: String, methodStack: String) {
+                Log.e(
+                    "MainActivity",
+                    "onPrivacyMethodCallIllegal,methodName=$methodName,methodStack=$methodStack"
+                )
+            }
+
+        })
 
     }
 
@@ -57,7 +93,8 @@ class MainActivity : AppCompatActivity() {
         getSSID.text = ("getSSID=${getSSID(this)}")
         getBSSID.text = ("getBSSID=${getBSSID(this)}")
         getMacAddress.text = ("getMacAddress=${getMacAddress(this)}")
-        getConfiguredNetworks.text = ("getConfiguredNetworks,size=${getConfiguredNetworks(this)?.size}")
+        getConfiguredNetworks.text =
+            ("getConfiguredNetworks,size=${getConfiguredNetworks(this)?.size}")
 
         getSensorList.text = ("getSensorList size=${getSensorList(this)?.size}")
         getImei.text = ("getImei=${getImei(this)}")

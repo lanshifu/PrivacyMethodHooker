@@ -1,8 +1,7 @@
-package com.lanshifu.privacymethodhooker.utils
+package com.lanshifu.privacy_method_hook_library
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
-import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.ContentResolver
 import android.hardware.Sensor
 import android.hardware.SensorManager
@@ -19,16 +18,13 @@ import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.annotation.Keep
-import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
-import com.lanshifu.privacymethodhooker.BuildConfig
-import java.util.*
-import kotlin.collections.HashMap
+import com.lanshifu.asm_annotation.AsmMethodReplace
+import com.lanshifu.asm_annotation.BuildConfig
 
 /**
  * @author lanxiaobin
- * @date 2021/10/9
- *
+ * @date 2022/9/5
  * 1、不要被混淆
  *
  * 2、Kotlin 的方法必须要使用JvmStatic注解，否则Java调用会报错
@@ -39,35 +35,29 @@ import kotlin.collections.HashMap
  *     (declaration of 'com.lanshifu.privacymethodhooker.MainActivity' appears in /data/app/com.lanshifu.privacymethodhooker-2/base.apk)
  */
 @Keep
-object PrivacyUtil {
-
-    private const val TAG = "PrivacyUtil"
-
-    var isAgreePrivacy: Boolean = false
-    var isUseCache: Boolean = true
+object PrivacyMethodUtil {
 
     private var anyCache = HashMap<String, Any>()
 
     private fun checkAgreePrivacy(name: String): Boolean {
-        if (!isAgreePrivacy) {
-            logW("$name: isAgreePrivacy=false")
-            //没有同意隐私权限，打印堆栈，toast
-            if (BuildConfig.DEBUG) {
-//                Toast.makeText(
-//                    ApplicationContext.getContext(),
-//                    "隐私同意前禁止调用$name，现在返回默认值，log过滤PrivacyUtil",
-//                    Toast.LENGTH_LONG
-//                ).show()
-                Log.d(TAG, "$name: stack= " + Log.getStackTraceString(Throwable()))
-            }
-            return false
+
+        var methodStack = ""
+        if (PrivacyMethodManager.mDelegate.showPrivacyMethodStack()) {
+            methodStack = Log.getStackTraceString(Throwable())
         }
 
+        PrivacyMethodManager.mDelegate.onPrivacyMethodCall(name, methodStack)
+
+        if (!PrivacyMethodManager.mDelegate.isAgreePrivacy()) {
+            //没有同意隐私权限，打印堆栈，toast
+            PrivacyMethodManager.mDelegate.onPrivacyMethodCallIllegal(name, methodStack)
+            return false
+        }
         return true
     }
 
     private fun <T> getListCache(key: String): List<T>? {
-        if (!isUseCache){
+        if (!PrivacyMethodManager.mDelegate.isUseCache()) {
             return null
         }
         val cache = anyCache[key]
@@ -75,7 +65,7 @@ object PrivacyUtil {
             try {
                 return cache as List<T>
             } catch (e: Exception) {
-                Log.w(TAG, "getListCache: key=$key,e=${e.message}")
+                Log.w(PrivacyMethodManager.TAG, "getListCache: key=$key,e=${e.message}")
             }
         }
         logD("getListCache key=$key,return null")
@@ -83,16 +73,16 @@ object PrivacyUtil {
     }
 
     private fun <T> getCache(key: String): T? {
-        if (!isUseCache){
+        if (!PrivacyMethodManager.mDelegate.isUseCache()) {
             return null
         }
         val cache = anyCache[key]
         if (cache != null) {
             try {
-                Log.d(TAG, "getCache: key=$key,value=$cache")
+                Log.d(PrivacyMethodManager.TAG, "getCache: key=$key,value=$cache")
                 return cache as T
             } catch (e: Exception) {
-                Log.w(TAG, "getListCache: key=$key,e=${e.message}")
+                Log.w(PrivacyMethodManager.TAG, "getListCache: key=$key,e=${e.message}")
             }
         }
         logD("getCache key=$key,return null")
@@ -111,9 +101,9 @@ object PrivacyUtil {
 
     @JvmStatic
     @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getRunningAppProcesses(manager: ActivityManager): List<RunningAppProcessInfo?> {
+    fun getRunningAppProcesses(manager: ActivityManager): List<ActivityManager.RunningAppProcessInfo?> {
         val key = "getRunningAppProcesses"
-        val cache = getListCache<RunningAppProcessInfo?>(key)
+        val cache = getListCache<ActivityManager.RunningAppProcessInfo?>(key)
         if (cache != null) {
             return cache
         }
@@ -168,7 +158,10 @@ object PrivacyUtil {
      */
     @JvmStatic
     @SuppressLint("MissingPermission")
-    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(
+        oriClass = TelephonyManager::class,
+        oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
+    )
     fun getAllCellInfo(manager: TelephonyManager): List<CellInfo>? {
         val key = "getAllCellInfo"
         val cache = getListCache<CellInfo>(key)
@@ -187,7 +180,10 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(
+        oriClass = TelephonyManager::class,
+        oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
+    )
     fun getDeviceId(manager: TelephonyManager): String? {
         val key = "getDeviceId"
         val cache = getCache<String>(key)
@@ -208,7 +204,10 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(
+        oriClass = TelephonyManager::class,
+        oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
+    )
     fun getImei(manager: TelephonyManager): String? {
         val key = "getImei"
         val cache = getCache<String>(key)
@@ -227,7 +226,10 @@ object PrivacyUtil {
      */
     @SuppressLint("HardwareIds")
     @JvmStatic
-    @AsmMethodReplace(oriClass = TelephonyManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
+    @AsmMethodReplace(
+        oriClass = TelephonyManager::class,
+        oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
+    )
     fun getSimSerialNumber(manager: TelephonyManager): String? {
         val key = "getSimSerialNumber"
         val cache = getCache<String>(key)
@@ -451,16 +453,17 @@ object PrivacyUtil {
 
 
     private fun logI(log: String) {
-        Log.i(TAG, log)
+        Log.i(PrivacyMethodManager.TAG, log)
     }
+
     private fun logD(log: String) {
-        if (BuildConfig.DEBUG){
-            Log.d(TAG, log)
+        if (BuildConfig.DEBUG) {
+            Log.d(PrivacyMethodManager.TAG, log)
         }
     }
 
     private fun logW(log: String) {
-        Log.w(TAG, log)
+        Log.w(PrivacyMethodManager.TAG, log)
     }
 
 }

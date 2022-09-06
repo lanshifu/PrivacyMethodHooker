@@ -19,10 +19,10 @@
       "attributes": {
         "org.gradle.category": "library",
         "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
         "org.gradle.jvm.version": 11,
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-api",
-        "org.jetbrains.kotlin.localToProject": "public",
         "org.jetbrains.kotlin.platform.type": "jvm"
       },
       "dependencies": [
@@ -44,7 +44,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-jdk8",
           "version": {
-            "requires": "1.5.31"
+            "requires": "1.6.21"
           }
         }
       ],
@@ -52,11 +52,11 @@
         {
           "name": "privacy_method-1.0.0-beta01.jar",
           "url": "privacy_method-1.0.0-beta01.jar",
-          "size": 68691,
-          "sha512": "31b5e12038416a7788e59c687c1ff79b0135d001cd37f57d78648e3acd59fffde299a0139bdbaffaa882a8aa54b7ebf8320403f5206f399ef359253b11f541e3",
-          "sha256": "6dc1176efd43052a7af34982377f55f0601c410cc15647896b37303440257fda",
-          "sha1": "f9c93563febb727912624a8ce876ffc1079e4eca",
-          "md5": "a7eeeec667d6929a7bf52a85bc738a4d"
+          "size": 68918,
+          "sha512": "aff8e625b609c590c35cc1ddc2999c85e74e0715bee612358e39c569e3b30069dea728fb0ec71678323679bd098fd245abc0914eef4e66de126c52811d6e1e6e",
+          "sha256": "82ff3f4684b56681a52ead0977a1f325a7eaab4ad84bf27a87146b288608f67b",
+          "sha1": "8d68a220a8b6b9d5d4f3de464001c572045ddbbc",
+          "md5": "0603bea05bb07b833cfacb837cfc9779"
         }
       ]
     },
@@ -65,10 +65,10 @@
       "attributes": {
         "org.gradle.category": "library",
         "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
         "org.gradle.jvm.version": 11,
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-runtime",
-        "org.jetbrains.kotlin.localToProject": "public",
         "org.jetbrains.kotlin.platform.type": "jvm"
       },
       "dependencies": [
@@ -111,7 +111,7 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-jdk8",
           "version": {
-            "requires": "1.5.31"
+            "requires": "1.6.21"
           }
         }
       ],
@@ -119,11 +119,11 @@
         {
           "name": "privacy_method-1.0.0-beta01.jar",
           "url": "privacy_method-1.0.0-beta01.jar",
-          "size": 68691,
-          "sha512": "31b5e12038416a7788e59c687c1ff79b0135d001cd37f57d78648e3acd59fffde299a0139bdbaffaa882a8aa54b7ebf8320403f5206f399ef359253b11f541e3",
-          "sha256": "6dc1176efd43052a7af34982377f55f0601c410cc15647896b37303440257fda",
-          "sha1": "f9c93563febb727912624a8ce876ffc1079e4eca",
-          "md5": "a7eeeec667d6929a7bf52a85bc738a4d"
+          "size": 68918,
+          "sha512": "aff8e625b609c590c35cc1ddc2999c85e74e0715bee612358e39c569e3b30069dea728fb0ec71678323679bd098fd245abc0914eef4e66de126c52811d6e1e6e",
+          "sha256": "82ff3f4684b56681a52ead0977a1f325a7eaab4ad84bf27a87146b288608f67b",
+          "sha1": "8d68a220a8b6b9d5d4f3de464001c572045ddbbc",
+          "md5": "0603bea05bb07b833cfacb837cfc9779"
         }
       ]
     }

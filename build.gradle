@@ -8,12 +8,16 @@ buildscript {
         maven {
             url uri('repo')
         }
+        jcenter()
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://oss.sonatype.org/content/repositories/public/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.2.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.ext.kotlin_version}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
         classpath 'com.lanshifu.plugin:privacy_method:1.0.0-beta01'
     }
 }
