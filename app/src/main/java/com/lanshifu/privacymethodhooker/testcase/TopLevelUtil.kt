@@ -144,7 +144,7 @@ private fun getWifiInfo(context: Activity): WifiInfo? {
 
     val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-    if (networkInfo.isConnected) {
+    if (networkInfo != null && networkInfo.isConnected) {
         val wifiManager =
             context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         return wifiManager.connectionInfo
@@ -167,6 +167,20 @@ fun getMacAddress(context: Activity): String? {
 @RequiresApi(Build.VERSION_CODES.M)
 fun getScanResults(context: Activity): MutableList<ScanResult>? {
     val wifiManager = context.getSystemService(WifiManager::class.java) as WifiManager
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        // TODO: Consider calling
+        //    ActivityCompat#requestPermissions
+        // here to request the missing permissions, and then overriding
+        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+        //                                          int[] grantResults)
+        // to handle the case where the user grants the permission. See the documentation
+        // for ActivityCompat#requestPermissions for more details.
+        return null
+    }
     return wifiManager.scanResults
 }
 
