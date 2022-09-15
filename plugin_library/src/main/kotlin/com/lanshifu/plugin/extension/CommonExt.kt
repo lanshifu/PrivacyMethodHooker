@@ -1,8 +1,6 @@
 package com.lanshifu.plugin.extension
 
 import com.android.build.gradle.api.BaseVariant
-import com.android.dex.DexFormat
-import com.android.dx.command.dexer.Main
 import com.didiglobal.booster.kotlinx.NCPU
 import com.didiglobal.booster.kotlinx.redirect
 import com.didiglobal.booster.kotlinx.search
@@ -137,27 +135,6 @@ val MethodInsnNode.ownerClassName: String
 
 val ClassNode.formatSuperName: String
     get() = superName.replace('/', '.')
-
-internal fun File.dex(output: File, api: Int = DexFormat.API_NO_EXTENDED_OPCODES): Int {
-    val args = Main.Arguments().apply {
-        numThreads = NCPU
-        debug = true
-        warnings = true
-        emptyOk = true
-        multiDex = true
-        jarOutput = true
-        optimize = false
-        minSdkVersion = api
-        fileNames = arrayOf(output.canonicalPath)
-        outName = canonicalPath
-    }
-    return try {
-        Main.run(args)
-    } catch (t: Throwable) {
-        t.printStackTrace()
-        -1
-    }
-}
 
 /**
  * Transform this file or directory to the output by the specified transformer

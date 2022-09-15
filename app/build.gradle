@@ -7,10 +7,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.lanshifu.privacy_method'
 
 android {
-
     compileSdkVersion rootProject.ext.version["compileSdkVersion"]
     defaultConfig {
-
         applicationId "com.lanshifu.privacymethodhooker"
         minSdkVersion rootProject.ext.version["minSdkVersion"]
         targetSdkVersion rootProject.ext.version["targetSdkVersion"]
@@ -18,7 +16,6 @@ android {
         versionName rootProject.ext.version["versionName"]
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     sourceSets {
@@ -32,11 +29,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
-    }
-
-    dataBinding {
-        enabled true
     }
 
     buildFeatures {
@@ -49,25 +41,19 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
+        jvmTarget = '11'
     }
-
-
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-//    implementation project(path: ':annotation_library')
-    implementation project(path: ':privacy_method_hook_library')
-
+    implementation project(path: ':asm_annotation')
 }

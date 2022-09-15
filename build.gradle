@@ -2,8 +2,9 @@
 apply from: "config.gradle"
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.5.31'
-    ext.booster_version = '4.13.0'
+    ext.agp_version = '7.2.2'
+    ext.kotlin_version = '1.7.10'
+    ext.booster_version = '4.0.0'
     repositories {
         maven {
             url uri('repo')
@@ -16,8 +17,8 @@ buildscript {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.2.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
+        classpath "com.android.tools.build:gradle:${agp_version}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
         classpath 'com.lanshifu.plugin:privacy_method:1.0.0-beta01'
     }
 }
@@ -33,7 +34,6 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/public/' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-
     }
 }
 
