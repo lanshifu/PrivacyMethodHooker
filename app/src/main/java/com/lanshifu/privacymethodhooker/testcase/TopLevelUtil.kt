@@ -116,7 +116,7 @@ fun getImei(context: Activity): String? {
 fun getSimSerialNumber(context: Activity): String? {
     val manager: TelephonyManager =
         context.getSystemService(TelephonyManager::class.java) as TelephonyManager
-    return manager.getSimSerialNumber()
+    return manager.simSerialNumber
 }
 
 

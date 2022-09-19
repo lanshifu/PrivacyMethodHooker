@@ -39,6 +39,8 @@ class AsmItem(
                 oriMethod = value as String?
             }
         }
+
+        //只要处理这里
         if (oriMethod == null) {
             oriMethod = targetMethod
         }

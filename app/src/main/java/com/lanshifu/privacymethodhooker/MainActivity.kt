@@ -6,6 +6,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.lanshifu.privacy_method_hook_library.DefaultPrivacyMethodManagerDelegate
 import com.lanshifu.privacymethodhooker.testcase.*
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManagerDelegate
@@ -33,36 +34,14 @@ class MainActivity : AppCompatActivity() {
             updateData()
         }
 
-        updateData()
+//        updateData()
 
-        PrivacyMethodManager.setDelegate(object : PrivacyMethodManagerDelegate {
 
+        PrivacyMethodManager.setDelegate(object : DefaultPrivacyMethodManagerDelegate(){
             override fun isAgreePrivacy(): Boolean {
+                // 是否同意隐私协议
                 return isAgreePrivacy
             }
-
-            override fun isUseCache(): Boolean {
-                return isUseCache
-            }
-
-            override fun showPrivacyMethodStack(): Boolean {
-                return showPrivacyMethodStack
-            }
-
-            override fun onPrivacyMethodCall(methodName: String, methodStack: String) {
-                Log.d(
-                    "MainActivity",
-                    "onPrivacyMethodCall,methodName=$methodName,methodStack=$methodStack"
-                )
-            }
-
-            override fun onPrivacyMethodCallIllegal(methodName: String, methodStack: String) {
-                Log.e(
-                    "MainActivity",
-                    "onPrivacyMethodCallIllegal,methodName=$methodName,methodStack=$methodStack"
-                )
-            }
-
         })
 
     }
@@ -82,10 +61,10 @@ class MainActivity : AppCompatActivity() {
         val getAllCellInfo = getAllCellInfo(this)
         btnGetAllCellInfo.text = ("getAllCellInfo size=${getAllCellInfo?.size}")
 
-        val getDeviceId = getDeviceId(this)
-        btnGetDeviceId.text = ("getDeviceId=$getDeviceId")
+//        val getDeviceId = getDeviceId(this)
+//        btnGetDeviceId.text = ("getDeviceId=$getDeviceId")
 
-        getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
+//        getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
 
         val androidId = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
         btnGetIdAndroid.text = ("androidId=$androidId")

@@ -13,9 +13,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
 public @interface AsmMethodReplace {
-    Class oriClass();
+    Class<?> oriClass();
 
     String oriMethod() default "";
 
     int oriAccess() default AsmMethodOpcodes.INVOKESTATIC;
+
+    boolean needClassNameParam() default false;
 }
