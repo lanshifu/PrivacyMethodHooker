@@ -14,9 +14,9 @@ open class AbsClassTransformer : ClassTransformer {
 
     fun onCommInterceptor(context: TransformContext, klass: ClassNode): Boolean {
 //        "===onCommInterceptor--->$this====${klass.className}===".println()
-        if (context.isRelease()) {
-            return true
-        }
+//        if (context.isRelease()) {
+//            return true
+//        }
 //
 //        if (!DoKitExtUtil.dokitPluginSwitchOpen()) {
 //            return true

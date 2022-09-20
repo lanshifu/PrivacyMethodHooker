@@ -16,7 +16,7 @@ object PrivacyMethodManager : IPrivacyMethodManager,PrivacyMethodManagerDelegate
     }
 
     override fun isAgreePrivacy(): Boolean {
-        return mDelegate.isUseCache()
+        return mDelegate.isAgreePrivacy()
     }
 
     override fun isUseCache(): Boolean {

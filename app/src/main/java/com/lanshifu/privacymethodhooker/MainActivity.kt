@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
         val getDeviceId = getDeviceId(this)
         btnGetDeviceId.text = ("getDeviceId=$getDeviceId")
 
+        val getAndroidId = getAndroidId(this)
+        btnGetAndroidId.text = ("getAndroidId=$getAndroidId")
+
         getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
 
         val androidId = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)

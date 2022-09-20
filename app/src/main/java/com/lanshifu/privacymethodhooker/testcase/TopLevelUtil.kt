@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
+import android.provider.Settings
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import android.util.Log
@@ -246,6 +247,10 @@ fun requestLocationUpdates(context: Activity): Boolean {
     }
     manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener)
     return true
+}
+
+fun getAndroidId(context: Context): String {
+    return Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID);
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
