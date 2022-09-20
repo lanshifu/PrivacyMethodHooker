@@ -22,6 +22,7 @@ import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.asm_annotation.BuildConfig
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
 
 /**
  * @author lanxiaobin
@@ -37,8 +38,6 @@ import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
  */
 @Keep
 object PrivacyMethodUtil {
-
-    private var anyCache = HashMap<String, Any>()
 
     private fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
 
@@ -57,19 +56,19 @@ object PrivacyMethodUtil {
         return true
     }
 
-    private fun <T> getListCache(key: String): List<T>? {
+    private fun <T> getListCache(key: String, callerClassName: String = ""): List<T>? {
         if (!PrivacyMethodManager.isUseCache()) {
             return null
         }
-        val cache = anyCache[key]
-        if (cache != null && cache is List<*>) {
+        val cache: List<T>? = PrivacyMethodCacheManager.get<List<T>>(key)
+        if (cache != null) {
             try {
-                return cache as List<T>
+                return cache
             } catch (e: Exception) {
                 Log.w(PrivacyMethodManager.TAG, "getListCache: key=$key,e=${e.message}")
             }
         }
-        logD("getListCache key=$key,return null")
+        logD("getListCache key=$key,return null,callerClassName=$callerClassName")
         return null
     }
 
@@ -77,7 +76,7 @@ object PrivacyMethodUtil {
         if (!PrivacyMethodManager.isUseCache()) {
             return null
         }
-        val cache = anyCache[key]
+        val cache = PrivacyMethodCacheManager.get<T>(key)
         if (cache != null) {
             try {
                 Log.d(PrivacyMethodManager.TAG, "getCache: key=$key,value=$cache")
@@ -93,8 +92,9 @@ object PrivacyMethodUtil {
 
     private fun <T> putCache(key: String, value: T): T {
         logI("putCache key=$key,value=$value")
+
         value?.let {
-            anyCache[key] = value
+            PrivacyMethodCacheManager.put(key, value)
         }
         return value
     }
@@ -103,11 +103,11 @@ object PrivacyMethodUtil {
     @JvmStatic
     @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRunningAppProcesses(
-        callerClassName: String,
-        manager: ActivityManager
+        manager: ActivityManager,
+        callerClassName: String
     ): List<ActivityManager.RunningAppProcessInfo?> {
         val key = "getRunningAppProcesses"
-        val cache = getListCache<ActivityManager.RunningAppProcessInfo?>(key)
+        val cache = getListCache<ActivityManager.RunningAppProcessInfo?>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -121,13 +121,13 @@ object PrivacyMethodUtil {
     @JvmStatic
     @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRecentTasks(
-        callerClassName: String,
         manager: ActivityManager,
         maxNum: Int,
-        flags: Int
+        flags: Int,
+        callerClassName: String
     ): List<ActivityManager.RecentTaskInfo>? {
         val key = "getRecentTasks"
-        val cache = getListCache<ActivityManager.RecentTaskInfo>(key)
+        val cache = getListCache<ActivityManager.RecentTaskInfo>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -142,12 +142,12 @@ object PrivacyMethodUtil {
     @JvmStatic
     @AsmMethodReplace(oriClass = ActivityManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getRunningTasks(
-        callerClassName: String,
         manager: ActivityManager,
-        maxNum: Int
+        maxNum: Int,
+        callerClassName: String
     ): List<ActivityManager.RunningTaskInfo>? {
         val key = "getRunningTasks"
-        val cache = getListCache<ActivityManager.RunningTaskInfo>(key)
+        val cache = getListCache<ActivityManager.RunningTaskInfo>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -168,9 +168,12 @@ object PrivacyMethodUtil {
         oriClass = TelephonyManager::class,
         oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
     )
-    fun getAllCellInfo(callerClassName: String, manager: TelephonyManager): List<CellInfo>? {
+    fun getAllCellInfo(
+        manager: TelephonyManager,
+        callerClassName: String
+    ): List<CellInfo>? {
         val key = "getAllCellInfo"
-        val cache = getListCache<CellInfo>(key)
+        val cache = getListCache<CellInfo>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -190,7 +193,10 @@ object PrivacyMethodUtil {
         oriClass = TelephonyManager::class,
         oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
     )
-    fun getDeviceId(callerClassName: String, manager: TelephonyManager): String? {
+    fun getDeviceId(
+        manager: TelephonyManager,
+        callerClassName: String
+    ): String? {
         val key = "getDeviceId"
         val cache = getCache<String>(key)
         if (cache != null) {
@@ -214,7 +220,10 @@ object PrivacyMethodUtil {
         oriClass = TelephonyManager::class,
         oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
     )
-    fun getImei(callerClassName: String, manager: TelephonyManager): String? {
+    fun getImei(
+        manager: TelephonyManager,
+        callerClassName: String
+    ): String? {
         val key = "getImei"
         val cache = getCache<String>(key)
         if (cache != null) {
@@ -236,7 +245,10 @@ object PrivacyMethodUtil {
         oriClass = TelephonyManager::class,
         oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
     )
-    fun getSimSerialNumber(callerClassName: String, manager: TelephonyManager): String? {
+    fun getSimSerialNumber(
+        manager: TelephonyManager,
+        callerClassName: String
+    ): String? {
         val key = "getSimSerialNumber"
         val cache = getCache<String>(key)
         if (cache != null) {
@@ -254,7 +266,10 @@ object PrivacyMethodUtil {
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getSSID(callerClassName: String, manager: WifiInfo): String? {
+    fun getSSID(
+        manager: WifiInfo,
+        callerClassName: String
+    ): String? {
         val key = "getSSID"
         val cache = getCache<String?>(key)
         if (cache != null) {
@@ -274,7 +289,10 @@ object PrivacyMethodUtil {
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getBSSID(callerClassName: String, manager: WifiInfo): String? {
+    fun getBSSID(
+        manager: WifiInfo,
+        callerClassName: String
+    ): String? {
         val key = "getBSSID"
         val cache = getCache<String?>(key)
         if (cache != null) {
@@ -293,7 +311,10 @@ object PrivacyMethodUtil {
     @SuppressLint("HardwareIds", "MissingPermission")
     @JvmStatic
     @AsmMethodReplace(oriClass = WifiInfo::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getMacAddress(callerClassName: String, manager: WifiInfo): String? {
+    fun getMacAddress(
+        manager: WifiInfo,
+        callerClassName: String
+    ): String? {
         val key = "getMacAddress"
         val cache = getCache<String?>(key)
         if (cache != null) {
@@ -311,7 +332,10 @@ object PrivacyMethodUtil {
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = Settings.System::class, oriAccess = AsmMethodOpcodes.INVOKESTATIC)
-    fun getString(callerClassName: String, resolver: ContentResolver, name: String): String? {
+    fun getString(
+        resolver: ContentResolver, name: String,
+        callerClassName: String
+    ): String? {
         //处理AndroidId
         if (Settings.Secure.ANDROID_ID == name) {
 
@@ -335,7 +359,10 @@ object PrivacyMethodUtil {
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = SensorManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getSensorList(callerClassName: String, manager: SensorManager, type: Int): List<Sensor>? {
+    fun getSensorList(
+        manager: SensorManager, type: Int,
+        callerClassName: String
+    ): List<Sensor>? {
         val key = "getSensorList"
         val cache = getListCache<Sensor>(key)
         if (cache != null) {
@@ -354,7 +381,10 @@ object PrivacyMethodUtil {
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getScanResults(callerClassName: String, manager: WifiManager): List<ScanResult>? {
+    fun getScanResults(
+        manager: WifiManager,
+        callerClassName: String
+    ): List<ScanResult>? {
         val key = "getScanResults"
         val cache = getListCache<ScanResult>(key)
         if (cache != null) {
@@ -372,7 +402,10 @@ object PrivacyMethodUtil {
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getDhcpInfo(callerClassName: String, manager: WifiManager): DhcpInfo? {
+    fun getDhcpInfo(
+        manager: WifiManager,
+        callerClassName: String
+    ): DhcpInfo? {
         val key = "getDhcpInfo"
         val cache = getCache<DhcpInfo>(key)
         if (cache != null) {
@@ -393,7 +426,10 @@ object PrivacyMethodUtil {
     @SuppressLint("MissingPermission")
     @JvmStatic
     @AsmMethodReplace(oriClass = WifiManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
-    fun getConfiguredNetworks(callerClassName: String, manager: WifiManager): List<WifiConfiguration>? {
+    fun getConfiguredNetworks(
+        manager: WifiManager,
+        callerClassName: String
+    ): List<WifiConfiguration>? {
         val key = "getConfiguredNetworks"
         val cache = getListCache<WifiConfiguration>(key)
         if (cache != null) {
@@ -415,8 +451,9 @@ object PrivacyMethodUtil {
     @SuppressLint("MissingPermission")
     @AsmMethodReplace(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun getLastKnownLocation(
-        callerClassName: String,
-        manager: LocationManager, provider: String
+        manager: LocationManager,
+        provider: String,
+        callerClassName: String
     ): Location? {
         if (!checkAgreePrivacy("getLastKnownLocation")) {
             return null
@@ -448,9 +485,12 @@ object PrivacyMethodUtil {
     @JvmStatic
     @AsmMethodReplace(oriClass = LocationManager::class, oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL)
     fun requestLocationUpdates(
-        callerClassName: String,
-        manager: LocationManager, provider: String, minTime: Long, minDistance: Float,
-        listener: LocationListener
+        manager: LocationManager,
+        provider: String,
+        minTime: Long,
+        minDistance: Float,
+        listener: LocationListener,
+        callerClassName: String
     ) {
         if (!checkAgreePrivacy("requestLocationUpdates")) {
             return

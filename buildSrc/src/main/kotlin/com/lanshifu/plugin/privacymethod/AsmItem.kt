@@ -44,21 +44,28 @@ class AsmItem(
         if (oriMethod == null) {
             oriMethod = targetMethod
         }
-        //静态方法，oriDesc 跟 targetDesc 一样
+
+        /**由targetDesc 计算出oriDesc,，区分静态方法和非静态方法*/
+        //静态方法，oriDesc = targetDesc去掉最后一个String参数
         if (oriAccess == Opcodes.INVOKESTATIC) {
-            oriDesc = targetDesc
+            val rp = targetDesc.lastIndexOf(')')
+            var left = targetDesc.substring(0, rp)
+            left = left.substring(0, left.lastIndexOf("Ljava/lang/String;")) + ')'
+            val right = targetDesc.substring(rp)
+            oriDesc = left + right
         } else {
-            //非静态方法，约定第一个参数是实例类名，oriDesc 比 targetDesc 少一个参数，处理一下
-            var param = targetDesc.split(")")[0] + ")" //(Landroid/telephony/TelephonyManager;)
-            val returnValue = targetDesc.split(")")[1] //Ljava/lang/String;
-            if (param.indexOf(sourceName) == 1) {
-                param = "(" + param.substring(param.indexOf(sourceName) + sourceName.length)
-            }
+            //非静态方法，oriDesc = targetDesc去掉前后两个参数
+            //targetDesc=(Landroid/telephony/TelephonyManager;Ljava/lang/String;)Ljava/lang/String;
+            //处理之后
+            //oriDesc= Ljava/lang/String;
+
+            var param = targetDesc.split(")")[0] + ")"
+            val returnValue = targetDesc.split(")")[1] //返回的不用改Ljava/util/List;
+            //param=(Landroid/telephony/TelephonyManager;Ljava/lang/String;)
+            param = "(" + param.substring(param.indexOf(sourceName) + sourceName.length)
+            param = param.substring(0, param.lastIndexOf("Ljava/lang/String;")) + ')'
             oriDesc = param + returnValue
 
-            //处理之后
-            //targetDesc=(Landroid/telephony/TelephonyManager;)Ljava/lang/String;
-            //oriDesc= Ljava/lang/String;
         }
     }
 

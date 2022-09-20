@@ -34,13 +34,17 @@ class MainActivity : AppCompatActivity() {
             updateData()
         }
 
-//        updateData()
+        updateData()
 
 
         PrivacyMethodManager.setDelegate(object : DefaultPrivacyMethodManagerDelegate(){
             override fun isAgreePrivacy(): Boolean {
                 // 是否同意隐私协议
                 return isAgreePrivacy
+            }
+
+            override fun isUseCache(): Boolean {
+                return isUseCache
             }
         })
 
@@ -61,10 +65,10 @@ class MainActivity : AppCompatActivity() {
         val getAllCellInfo = getAllCellInfo(this)
         btnGetAllCellInfo.text = ("getAllCellInfo size=${getAllCellInfo?.size}")
 
-//        val getDeviceId = getDeviceId(this)
-//        btnGetDeviceId.text = ("getDeviceId=$getDeviceId")
+        val getDeviceId = getDeviceId(this)
+        btnGetDeviceId.text = ("getDeviceId=$getDeviceId")
 
-//        getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
+        getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
 
         val androidId = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
         btnGetIdAndroid.text = ("androidId=$androidId")

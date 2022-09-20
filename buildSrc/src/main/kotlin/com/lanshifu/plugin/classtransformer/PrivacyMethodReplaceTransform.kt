@@ -58,12 +58,8 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
                         //INVOKEVIRTUAL android/app/ActivityManager.getRunningAppProcesses ()Ljava/util/List; ->
                         //INVOKESTATIC  com/lanshifu/asm_plugin_library/privacy/PrivacyUtil.getRunningAppProcesses (Landroid/app/ActivityManager;)Ljava/util/List;
 
-                        val l = insnNode.desc.lastIndexOf('(')
-                        val desc = "${insnNode.desc.substring(0, l)}Ljava/lang/String;${insnNode.desc.substring(l)}"
-
-
                         if (
-//                            asmItem.oriDesc == desc &&
+                            asmItem.oriDesc == insnNode.desc &&
                             asmItem.oriMethod == insnNode.name &&
                             insnNode.opcode == asmItem.oriAccess &&
                             (insnNode.owner == asmItem.oriClass || asmItem.oriClass == "java/lang/Object")
@@ -82,10 +78,9 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
                             insnNode.owner = asmItem.targetClass
                             insnNode.name = asmItem.targetMethod
 
-                            /// 将字符串压栈到第一个
-                            method.instructions.insertBefore(insnNode, LdcInsnNode(asmItem.oriClass))
-
-                            ///如果需要参数
+                            ///将字符串压入操作数栈，在这个方法指令之前
+                            // LdcInsnNode:读取常量到操作数栈顶
+                            method.instructions.insertBefore(insnNode, LdcInsnNode(klass.name))
                         }
                     }
                 }

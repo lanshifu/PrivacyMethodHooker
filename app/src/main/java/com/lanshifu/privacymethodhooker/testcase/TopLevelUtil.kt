@@ -96,7 +96,9 @@ fun getDeviceId(context: Activity): String? {
         context.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
         return null
     }
-    return manager.getDeviceId()
+    //The user 10191 does not meet the requirements to access device identifiers
+//    return manager.getDeviceId()
+    return null
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
@@ -106,7 +108,9 @@ fun getImei(context: Activity): String? {
         context.getSystemService(TelephonyManager::class.java) as TelephonyManager
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        manager.getImei()
+        //getImeiForSlot: The user 10191 does not meet the requirements to access device identifiers.
+//        manager.getImei()
+        null
     } else {
         "VERSION.SDK_INT < O"
     }
@@ -116,7 +120,9 @@ fun getImei(context: Activity): String? {
 fun getSimSerialNumber(context: Activity): String? {
     val manager: TelephonyManager =
         context.getSystemService(TelephonyManager::class.java) as TelephonyManager
-    return manager.simSerialNumber
+    //getIccSerialNumber: The user 10191 does not meet the requirements to access device identifiers.
+//    return manager.simSerialNumber
+    return null
 }
 
 
