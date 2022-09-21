@@ -1,10 +1,10 @@
-package com.lanshifu.plugin.privacymethod
+package com.lanshifu.plugin.bean
 
 import groovyjarjarasm.asm.Opcodes
 
 /**
  * @author lanxiaobin
- * @date 2021/9/30
+ * @date 2022-09-22
  */
 class AsmClassItem(
     targetClass: String,
@@ -14,12 +14,12 @@ class AsmClassItem(
     var oriClass: String? = null
     var oriMethod: String? = null
     var oriDesc: String? = null
-    var oriAccess = Opcodes.INVOKESTATIC
+    var oriAccess = Opcodes.INVOKESPECIAL
 
     var targetClass: String = ""
     var targetMethod: String = ""
     var targetDesc: String = ""
-    var targetAccess = Opcodes.INVOKESTATIC
+    var targetAccess = Opcodes.INVOKESPECIAL
 
     init {
         this.targetClass = targetClass
@@ -37,6 +37,9 @@ class AsmClassItem(
                 oriAccess = value as Int
             } else if (key === "oriMethod") {
                 oriMethod = value as String?
+            } else if (key == "targetClass") {
+                sourceName = value.toString()
+                this.targetClass = sourceName.substring(1, sourceName.length - 1)
             }
         }
 
@@ -45,27 +48,14 @@ class AsmClassItem(
             oriMethod = targetMethod
         }
 
-        /**由targetDesc 计算出oriDesc,，区分静态方法和非静态方法*/
-        //静态方法，oriDesc = targetDesc去掉最后一个String参数
-        //targetDesc=(Landroid/content/ContentResolver;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-        //oriDesc=(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;
-        if (oriAccess == Opcodes.INVOKESTATIC) {
-            val rp = targetDesc.lastIndexOf(')')
-            var left = targetDesc.substring(0, rp)
-            left = left.substring(0, left.lastIndexOf("Ljava/lang/String;"))
-            val right = targetDesc.substring(rp)
-            oriDesc = left + right
-        } else {
-            //非静态方法，oriDesc = targetDesc去掉前后两个参数
-            //targetDesc=(Landroid/telephony/TelephonyManager;Ljava/lang/String;)Ljava/lang/String;
-            //oriDesc= Ljava/lang/String;
-            val returnValue = targetDesc.split(")")[1] //返回的不用改Ljava/util/List;
-            var param = targetDesc.split(")")[0] + ")"
-            param = "(" + param.substring(param.indexOf(sourceName) + sourceName.length)
-            param = param.substring(0, param.lastIndexOf("Ljava/lang/String;")) + ')'
-            oriDesc = param + returnValue
-
-        }
+        /**由targetDesc 计算出oriDesc,去掉最后一个String参数即可*/
+        //INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;Ljava/lang/String;)V
+        //INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
+        val rp = targetDesc.lastIndexOf(')')
+        var left = targetDesc.substring(0, rp)
+        left = left.substring(0, left.lastIndexOf("Ljava/lang/String;"))
+        val right = targetDesc.substring(rp)
+        oriDesc = left + right
     }
 
     override fun equals(other: Any?): Boolean {

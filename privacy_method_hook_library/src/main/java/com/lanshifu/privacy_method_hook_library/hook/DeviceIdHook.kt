@@ -11,6 +11,7 @@ import com.lanshifu.asm_annotation.AsmClassReplace
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
+import com.lanshifu.privacy_method_hook_library.log.LogUtil
 import com.lanshifu.privacy_method_hook_library.system.HookFile
 import java.io.File
 
@@ -162,9 +163,9 @@ object DeviceIdHook {
     /**
      * 文件
      */
-    @AsmClassReplace(oriClass = File::class)
-    fun hookFile(string: String): File {
-        return HookFile(string)
+    @AsmClassReplace(oriClass = File::class, targetClass = HookFile::class)
+    fun hookFile(string: String,callerClassName: String){
+        LogUtil.i("new HookFile,callerClassName=$callerClassName")
     }
 
 

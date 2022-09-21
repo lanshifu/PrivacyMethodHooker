@@ -1,4 +1,4 @@
-package com.lanshifu.plugin.privacymethod
+package com.lanshifu.plugin.bean
 
 import groovyjarjarasm.asm.Opcodes
 

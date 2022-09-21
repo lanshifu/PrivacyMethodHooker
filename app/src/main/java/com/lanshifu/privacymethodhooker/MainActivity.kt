@@ -99,7 +99,8 @@ class MainActivity : AppCompatActivity() {
         INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
         ASTORE 8
          */
-        val file = File("")
+        val file = File(externalCacheDir?.absolutePath ?: "")
+        print(file.absolutePath)
     }
 
 }

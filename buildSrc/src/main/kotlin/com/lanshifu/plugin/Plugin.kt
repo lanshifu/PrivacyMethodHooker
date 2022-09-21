@@ -3,7 +3,7 @@ package com.lanshifu.plugin
 import com.android.build.gradle.AppExtension
 import com.didiglobal.booster.gradle.getAndroid
 import com.lanshifu.plugin.transform.CommonTransform
-import com.lanshifu.plugin.transform.PrivacyMethodHookTransform
+import com.lanshifu.plugin.transform.HookTransform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -24,7 +24,7 @@ class Plugin : Plugin<Project> {
                         CommonTransform(project)
                     )
                     androidExt.registerTransform(
-                        PrivacyMethodHookTransform(project)
+                        HookTransform(project)
                     )
 
 

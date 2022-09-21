@@ -3,7 +3,6 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
-import com.didiglobal.booster.transform.asm.className
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.LdcInsnNode
 import org.objectweb.asm.tree.MethodInsnNode
@@ -14,10 +13,10 @@ import java.io.PrintWriter
  * @author lanxiaobin
  * @date 2021/11/11
  */
-class PrivacyMethodReplaceTransform : AbsClassTransformer() {
+class MethodReplaceTransformer : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
-    private val asmItems = AnnotationParserClassTransform.asmConfigs
-    private var asmItemsClassMap: HashMap<String, String> = HashMap<String, String>()
+    private val asmItems = AnnotationParserTransformer.asmMethodReplaceConfigs
+    private var asmItemsClassMap: HashMap<String, String> = HashMap()
 
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
@@ -25,7 +24,7 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
             .file("report.txt").touch().printWriter()
         logger.println("--start-- ${System.currentTimeMillis()}")
 
-        AnnotationParserClassTransform.asmConfigs.forEach {
+        AnnotationParserTransformer.asmMethodReplaceConfigs.forEach {
             asmItemsClassMap[it.targetClass] = it.targetClass
         }
         logger.print("\nasmItemsMap size=${asmItemsClassMap.size}，asmItems.size=${asmItems.size}\n\n")
@@ -44,7 +43,7 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
             return klass
         }
 
-        if (AnnotationParserClassTransform.asmConfigsMap.contains(klass.name)) {
+        if (AnnotationParserTransformer.asmConfigsMap.contains(klass.name)) {
             logger.print("\nPrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${klass.name}\n")
             return@also
         }

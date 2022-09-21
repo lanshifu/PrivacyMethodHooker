@@ -3,7 +3,8 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
-import com.lanshifu.plugin.privacymethod.AsmMethodItem
+import com.lanshifu.plugin.bean.AsmClassItem
+import com.lanshifu.plugin.bean.AsmMethodItem
 import org.objectweb.asm.tree.ClassNode
 import java.io.PrintWriter
 
@@ -11,14 +12,15 @@ import java.io.PrintWriter
  * @author lanxiaobin
  * @date 2021/11/11
  */
-class AnnotationParserClassTransform : AbsClassTransformer() {
+class AnnotationParserTransformer : AbsClassTransformer() {
 
     private lateinit var logger: PrintWriter
 
     companion object{
         const val AsmFieldDesc = "Lcom/lanshifu/asm_annotation/AsmMethodReplace;"
         const val AsmClassReplaceDesc = "Lcom/lanshifu/asm_annotation/AsmClassReplace;"
-        var asmConfigs = mutableListOf<AsmMethodItem>()
+        var asmMethodReplaceConfigs = mutableListOf<AsmMethodItem>()
+        var asmClassReplaceConfigs = mutableListOf<AsmClassItem>()
         var asmConfigsMap = HashMap<String,String>()
     }
 
@@ -42,13 +44,19 @@ class AnnotationParserClassTransform : AbsClassTransformer() {
             method.invisibleAnnotations?.forEach { node ->
                 if (node.desc == AsmFieldDesc) {
                     val asmItem = AsmMethodItem(klass.name, method, node)
-                    if (!asmConfigs.contains(asmItem)) {
+                    if (!asmMethodReplaceConfigs.contains(asmItem)) {
                         logger.print("\nadd AsmMethodItem:$asmItem")
-                        asmConfigs.add(asmItem)
-                        asmConfigsMap.put(klass.name,klass.name)
+                        asmMethodReplaceConfigs.add(asmItem)
+                        asmConfigsMap[klass.name] = klass.name
                     }
                 } else if(node.desc == AsmClassReplaceDesc){
                     //todo
+                    val asmItem = AsmClassItem(klass.name, method, node)
+                    if (!asmClassReplaceConfigs.contains(asmItem)) {
+                        logger.print("\nadd AsmClassItem:$asmItem")
+                        asmClassReplaceConfigs.add(asmItem)
+                        asmConfigsMap[klass.name] = klass.name
+                    }
                 }
             }
         }

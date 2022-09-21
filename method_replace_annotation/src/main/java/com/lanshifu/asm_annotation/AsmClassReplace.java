@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface AsmClassReplace {
     Class<?> oriClass();
+    Class<?> targetClass();
 
     int oriAccess() default AsmMethodOpcodes.INVOKESPECIAL;
 
