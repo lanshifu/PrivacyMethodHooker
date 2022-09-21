@@ -3,6 +3,7 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
+import com.lanshifu.plugin.bean.AsmClassItem
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.LdcInsnNode
 import org.objectweb.asm.tree.MethodInsnNode
@@ -15,8 +16,7 @@ import java.io.PrintWriter
  */
 class ClassReplaceTransformer : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
-    private val asmItems = AnnotationParserTransformer.asmClassReplaceConfigs
-    private var asmItemsClassMap: HashMap<String, String> = HashMap()
+    private var asmItemsClassMap: HashMap<String, AsmClassItem> = HashMap()
 
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
@@ -25,11 +25,10 @@ class ClassReplaceTransformer : AbsClassTransformer() {
         logger.println("--start-- ${System.currentTimeMillis()}")
 
         AnnotationParserTransformer.asmClassReplaceConfigs.forEach {
-            asmItemsClassMap[it.targetClass] = it.targetClass
+            asmItemsClassMap[it.oriClass] = it
         }
-        logger.print("\nasmItemsMap size=${asmItemsClassMap.size}，asmItems.size=${asmItems.size}\n\n")
+        logger.print("\nasmItemsMap size=${asmItemsClassMap.size}\n\n")
         logger.print("asmItemsClassMap=${asmItemsClassMap} \n\n")
-        logger.print("asmItems=${asmItems} \n\n")
     }
 
     override fun onPostTransform(context: TransformContext) {
@@ -53,9 +52,7 @@ class ClassReplaceTransformer : AbsClassTransformer() {
 
                 if (insnNode is MethodInsnNode && insnNode.name == "<init>") {
 
-                    asmItems.forEach { asmItem ->
-                        //INVOKEVIRTUAL android/app/ActivityManager.getRunningAppProcesses ()Ljava/util/List; ->
-                        //INVOKESTATIC  com/lanshifu/asm_plugin_library/privacy/PrivacyUtil.getRunningAppProcesses (Landroid/app/ActivityManager;)Ljava/util/List;
+                    asmItemsClassMap[insnNode.owner]?.let { asmItem ->
 //AsmMethodItem(
 // oriClass=java/io/File,
 // oriMethod=hookFile,
@@ -71,6 +68,11 @@ class ClassReplaceTransformer : AbsClassTransformer() {
 // owner=java/io/File,
 // desc=(Ljava/lang/String;)V,
 // klass.name=androidx/core/net/UriKt#insnNode.name=<init> ->
+                        if(klass.name == asmItem.targetClass){
+                            logger.print("\nPrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${klass.name}\n")
+                            return@let
+                        }
+
                         if (
                             asmItem.oriDesc == insnNode.desc &&
                             insnNode.opcode == asmItem.oriAccess &&

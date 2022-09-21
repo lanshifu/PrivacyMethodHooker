@@ -11,7 +11,7 @@ class AsmClassItem(
     methodNode: org.objectweb.asm.tree.MethodNode,
     node: org.objectweb.asm.tree.AnnotationNode
 ) {
-    var oriClass: String? = null
+    var oriClass: String = ""
     var oriMethod: String? = null
     var oriDesc: String? = null
     var oriAccess = Opcodes.INVOKESPECIAL
