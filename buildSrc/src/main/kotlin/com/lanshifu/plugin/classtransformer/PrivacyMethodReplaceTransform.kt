@@ -64,8 +64,6 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
                             insnNode.opcode == asmItem.oriAccess &&
                             (insnNode.owner == asmItem.oriClass || asmItem.oriClass == "java/lang/Object")
                         ) {
-//                            val r = insnNode.desc.lastIndexOf(')')
-//                            val desc = "${insnNode.desc.substring(0, r)}Ljava/lang/String;${insnNode.desc.substring(r)}"
 
                             logger.print(
                                 "\nhook:\n" +
@@ -78,8 +76,6 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
                             insnNode.owner = asmItem.targetClass
                             insnNode.name = asmItem.targetMethod
 
-                            ///将字符串压入操作数栈，在这个方法指令之前
-                            // LdcInsnNode:读取常量到操作数栈顶
                             method.instructions.insertBefore(insnNode, LdcInsnNode(klass.name))
                         }
                     }

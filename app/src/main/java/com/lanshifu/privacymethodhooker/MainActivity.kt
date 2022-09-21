@@ -3,14 +3,13 @@ package com.lanshifu.privacymethodhooker
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.lanshifu.privacy_method_hook_library.DefaultPrivacyMethodManagerDelegate
+import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
 import com.lanshifu.privacymethodhooker.testcase.*
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
-import com.lanshifu.privacy_method_hook_library.PrivacyMethodManagerDelegate
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 return isAgreePrivacy
             }
 
-            override fun isUseCache(): Boolean {
+            override fun isUseCache(methodName:String): Boolean {
                 return isUseCache
             }
         })
@@ -73,8 +72,8 @@ class MainActivity : AppCompatActivity() {
 
         getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
 
-        val androidId = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
-        btnGetIdAndroid.text = ("androidId=$androidId")
+        val androidId = getAndroidId2(this)
+        btnGetIdAndroid.text = ("androidId2=$androidId")
 
         getSSID.text = ("getSSID=${getSSID(this)}")
         getBSSID.text = ("getBSSID=${getBSSID(this)}")
@@ -92,6 +91,15 @@ class MainActivity : AppCompatActivity() {
 
         requestLocationUpdates(this)
         requestLocationUpdates.text = "requestLocationUpdates"
+
+        /**
+         *     NEW java/io/File
+        DUP
+        LDC ""
+        INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
+        ASTORE 8
+         */
+        val file = File("")
     }
 
 }

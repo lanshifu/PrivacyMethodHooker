@@ -253,6 +253,11 @@ fun getAndroidId(context: Context): String {
     return Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID);
 }
 
+@SuppressLint("HardwareIds")
+fun getAndroidId2(context: Context): String {
+    return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID);
+}
+
 @RequiresApi(Build.VERSION_CODES.M)
 fun getLastKnownLocation(context: Activity): Location? {
 

@@ -1,4 +1,4 @@
-package com.lanshifu.privacy_method_hook_library
+package com.lanshifu.privacy_method_hook_library.delegate
 
 /**
  * @author lanxiaobin
@@ -13,8 +13,9 @@ interface PrivacyMethodManagerDelegate {
 
     /**
      * 是否使用缓存
+     * @param methodName: 对应某个隐私API方法名
      */
-    fun isUseCache(): Boolean
+    fun isUseCache(methodName: String): Boolean
 
     /**
      * 是否显示隐私调用堆栈

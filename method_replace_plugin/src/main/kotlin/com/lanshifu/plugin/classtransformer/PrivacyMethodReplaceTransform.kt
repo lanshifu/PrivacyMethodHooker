@@ -3,7 +3,9 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
+import com.didiglobal.booster.transform.asm.className
 import org.objectweb.asm.tree.ClassNode
+import org.objectweb.asm.tree.LdcInsnNode
 import org.objectweb.asm.tree.MethodInsnNode
 import java.io.PrintWriter
 
@@ -55,10 +57,15 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
                     asmItems.forEach { asmItem ->
                         //INVOKEVIRTUAL android/app/ActivityManager.getRunningAppProcesses ()Ljava/util/List; ->
                         //INVOKESTATIC  com/lanshifu/asm_plugin_library/privacy/PrivacyUtil.getRunningAppProcesses (Landroid/app/ActivityManager;)Ljava/util/List;
-                        if (asmItem.oriDesc == insnNode.desc && asmItem.oriMethod == insnNode.name
-                            && insnNode.opcode == asmItem.oriAccess &&
+
+                        if (
+                            asmItem.oriDesc == insnNode.desc &&
+                            asmItem.oriMethod == insnNode.name &&
+                            insnNode.opcode == asmItem.oriAccess &&
                             (insnNode.owner == asmItem.oriClass || asmItem.oriClass == "java/lang/Object")
                         ) {
+//                            val r = insnNode.desc.lastIndexOf(')')
+//                            val desc = "${insnNode.desc.substring(0, r)}Ljava/lang/String;${insnNode.desc.substring(r)}"
 
                             logger.print(
                                 "\nhook:\n" +
@@ -70,6 +77,10 @@ class PrivacyMethodReplaceTransform : AbsClassTransformer() {
                             insnNode.desc = asmItem.targetDesc
                             insnNode.owner = asmItem.targetClass
                             insnNode.name = asmItem.targetMethod
+
+                            ///将字符串压入操作数栈，在这个方法指令之前
+                            // LdcInsnNode:读取常量到操作数栈顶
+                            method.instructions.insertBefore(insnNode, LdcInsnNode(klass.name))
                         }
                     }
                 }

@@ -16,13 +16,12 @@ import android.net.wifi.WifiManager
 import android.provider.Settings
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
-import android.util.Log
 import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
-import com.lanshifu.asm_annotation.BuildConfig
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
 import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
+import com.lanshifu.privacy_method_hook_library.log.LogUtil
 
 /**
  * @author lanxiaobin
@@ -39,65 +38,59 @@ import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
 @Keep
 object PrivacyMethodUtil {
 
-    private fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
 
-        var methodStack = ""
-        if (PrivacyMethodManager.isShowPrivacyMethodStack()) {
-            methodStack = Log.getStackTraceString(Throwable())
-        }
-
-        PrivacyMethodManager.onPrivacyMethodCall(className, name, methodStack)
-
-        if (!PrivacyMethodManager.isAgreePrivacy()) {
-            //没有同意隐私权限，打印堆栈，toast
-            PrivacyMethodManager.onPrivacyMethodCallIllegal(className, name, methodStack)
-            return false
-        }
-        return true
-    }
-
-    private fun <T> getListCache(key: String, callerClassName: String = ""): List<T>? {
-        if (!PrivacyMethodManager.isUseCache()) {
-            return null
-        }
-        val cache: List<T>? = PrivacyMethodCacheManager.get<List<T>>(key)
-        if (cache != null) {
-            try {
-                return cache
-            } catch (e: Exception) {
-                Log.w(PrivacyMethodManager.TAG, "getListCache: key=$key,e=${e.message}")
-            }
-        }
-        logD("getListCache key=$key,return null,callerClassName=$callerClassName")
-        return null
-    }
-
-    private fun <T> getCache(key: String): T? {
-        if (!PrivacyMethodManager.isUseCache()) {
+    private fun <T> getCache(key: String, callerClassName: String): T? {
+        if (!PrivacyMethodManager.isUseCache(key)) {
             return null
         }
         val cache = PrivacyMethodCacheManager.get<T>(key)
         if (cache != null) {
             try {
-                Log.d(PrivacyMethodManager.TAG, "getCache: key=$key,value=$cache")
-                return cache as T
+                LogUtil.w("getCache: key=$key,value=$cache,callerClassName=$callerClassName")
+               
+                return cache
             } catch (e: Exception) {
-                Log.w(PrivacyMethodManager.TAG, "getListCache: key=$key,e=${e.message}")
+                LogUtil.e("getCache: key=$key,e=${e.message},callerClassName=$callerClassName")
             }
         }
-        logD("getCache key=$key,return null")
+        LogUtil.d("getCache key=$key,return null,callerClassName=$callerClassName")
+        return null
+    }
+
+
+    /**
+     * 检查缓存和是否同意隐私协议
+     */
+    private fun <T> checkCacheAndAgreePrivacy(key: String, callerClassName: String): T? {
+        if (!PrivacyMethodManager.isUseCache(key)) {
+            return null
+        }
+        val cache = PrivacyMethodCacheManager.get<T>(key)
+        if (cache != null) {
+            try {
+                LogUtil.w("getCache: key=$key,value=$cache,callerClassName=$callerClassName")
+
+                return cache
+            } catch (e: Exception) {
+                LogUtil.e("getCache: key=$key,e=${e.message},callerClassName=$callerClassName")
+            }
+        }
+
+        checkAgreePrivacy(key)
+
+        LogUtil.d("getCache key=$key,return null,callerClassName=$callerClassName")
         return null
     }
 
 
     private fun <T> putCache(key: String, value: T): T {
-        logI("putCache key=$key,value=$value")
-
+        LogUtil.i("putCache key=$key,value=$value")
         value?.let {
             PrivacyMethodCacheManager.put(key, value)
         }
         return value
     }
+
 
 
     @JvmStatic
@@ -107,7 +100,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<ActivityManager.RunningAppProcessInfo?> {
         val key = "getRunningAppProcesses"
-        val cache = getListCache<ActivityManager.RunningAppProcessInfo?>(key, callerClassName)
+        val cache = getCache<List<ActivityManager.RunningAppProcessInfo?>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -127,7 +120,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<ActivityManager.RecentTaskInfo>? {
         val key = "getRecentTasks"
-        val cache = getListCache<ActivityManager.RecentTaskInfo>(key, callerClassName)
+        val cache = getCache<List<ActivityManager.RecentTaskInfo>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -147,7 +140,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<ActivityManager.RunningTaskInfo>? {
         val key = "getRunningTasks"
-        val cache = getListCache<ActivityManager.RunningTaskInfo>(key, callerClassName)
+        val cache = getCache<List<ActivityManager.RunningTaskInfo>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -173,7 +166,8 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<CellInfo>? {
         val key = "getAllCellInfo"
-        val cache = getListCache<CellInfo>(key, callerClassName)
+//        val cache = <CellInfo>(key, callerClassName)
+        val cache = getCache<List<CellInfo>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -198,7 +192,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): String? {
         val key = "getDeviceId"
-        val cache = getCache<String>(key)
+        val cache = getCache<String>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -209,31 +203,6 @@ object PrivacyMethodUtil {
 //        return manager.deviceId
         return putCache(key, null)
 
-    }
-
-    /**
-     * 读取基站信息
-     */
-    @SuppressLint("HardwareIds")
-    @JvmStatic
-    @AsmMethodReplace(
-        oriClass = TelephonyManager::class,
-        oriAccess = AsmMethodOpcodes.INVOKEVIRTUAL
-    )
-    fun getImei(
-        manager: TelephonyManager,
-        callerClassName: String
-    ): String? {
-        val key = "getImei"
-        val cache = getCache<String>(key)
-        if (cache != null) {
-            return cache
-        }
-        if (!checkAgreePrivacy(key)) {
-            return null
-        }
-        //READ_PHONE_STATE 已经整改去掉，返回null
-        return putCache(key, null)
     }
 
     /**
@@ -250,7 +219,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): String? {
         val key = "getSimSerialNumber"
-        val cache = getCache<String>(key)
+        val cache = getCache<String>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -271,7 +240,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): String? {
         val key = "getSSID"
-        val cache = getCache<String?>(key)
+        val cache = getCache<String?>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -294,7 +263,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): String? {
         val key = "getBSSID"
-        val cache = getCache<String?>(key)
+        val cache = getCache<String?>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -316,7 +285,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): String? {
         val key = "getMacAddress"
-        val cache = getCache<String?>(key)
+        val cache = getCache<String?>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -340,7 +309,7 @@ object PrivacyMethodUtil {
         if (Settings.Secure.ANDROID_ID == name) {
 
             val key = "ANDROID_ID"
-            val cache = getCache<String?>(key)
+            val cache = getCache<String?>(key, callerClassName)
             if (cache != null) {
                 return cache
             }
@@ -364,7 +333,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<Sensor>? {
         val key = "getSensorList"
-        val cache = getListCache<Sensor>(key)
+        val cache = getCache<List<Sensor>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -386,7 +355,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<ScanResult>? {
         val key = "getScanResults"
-        val cache = getListCache<ScanResult>(key)
+        val cache = getCache<List<ScanResult>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -407,7 +376,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): DhcpInfo? {
         val key = "getDhcpInfo"
-        val cache = getCache<DhcpInfo>(key)
+        val cache = getCache<DhcpInfo>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -431,7 +400,7 @@ object PrivacyMethodUtil {
         callerClassName: String
     ): List<WifiConfiguration>? {
         val key = "getConfiguredNetworks"
-        val cache = getListCache<WifiConfiguration>(key)
+        val cache = getCache<List<WifiConfiguration>>(key, callerClassName)
         if (cache != null) {
             return cache
         }
@@ -497,21 +466,6 @@ object PrivacyMethodUtil {
         }
         manager.requestLocationUpdates(provider, minTime, minDistance, listener)
 
-    }
-
-
-    private fun logI(log: String) {
-        Log.i(PrivacyMethodManager.TAG, log)
-    }
-
-    private fun logD(log: String) {
-        if (BuildConfig.DEBUG) {
-            Log.d(PrivacyMethodManager.TAG, log)
-        }
-    }
-
-    private fun logW(log: String) {
-        Log.w(PrivacyMethodManager.TAG, log)
     }
 
 }

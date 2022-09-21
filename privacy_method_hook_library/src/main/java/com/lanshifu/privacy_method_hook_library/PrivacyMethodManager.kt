@@ -1,15 +1,22 @@
 package com.lanshifu.privacy_method_hook_library
 
+import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
+import com.lanshifu.privacy_method_hook_library.delegate.PrivacyMethodManagerDelegate
+
 /**
  *
  * 隐私方法管理类
  * 提供给外部调用，设置代理
  */
-object PrivacyMethodManager : IPrivacyMethodManager,PrivacyMethodManagerDelegate {
+object PrivacyMethodManager : IPrivacyMethodManager, PrivacyMethodManagerDelegate {
 
     const val TAG = "PrivacyMethodManager"
 
     private var mDelegate: PrivacyMethodManagerDelegate = DefaultPrivacyMethodManagerDelegate()
+
+    fun getInstance(): IPrivacyMethodManager {
+        return this
+    }
 
     override fun setDelegate(delegate: PrivacyMethodManagerDelegate) {
         mDelegate = delegate
@@ -19,8 +26,8 @@ object PrivacyMethodManager : IPrivacyMethodManager,PrivacyMethodManagerDelegate
         return mDelegate.isAgreePrivacy()
     }
 
-    override fun isUseCache(): Boolean {
-        return mDelegate.isUseCache()
+    override fun isUseCache(methodName: String): Boolean {
+        return mDelegate.isUseCache(methodName)
     }
 
     override fun isShowPrivacyMethodStack(): Boolean {

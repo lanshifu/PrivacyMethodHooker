@@ -1,4 +1,4 @@
-package com.lanshifu.privacy_method_hook_library
+package com.lanshifu.privacy_method_hook_library.delegate
 
 import android.util.Log
 
@@ -7,11 +7,13 @@ import android.util.Log
  * @date 2022/9/5
  */
 open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
+
     override fun isAgreePrivacy(): Boolean {
         return false
     }
 
-    override fun isUseCache(): Boolean {
+    override fun isUseCache(methodName: String): Boolean {
+        // todo 缓存配置
         return true
     }
 
@@ -30,6 +32,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         className: String,
         methodName: String,
         methodStack: String){
+
         Log.e(
             "PrivacyMethodManager",
             "onPrivacyMethodCallIllegal,methodName=$methodName,methodStack=$methodStack"

@@ -1,6 +1,7 @@
 package com.lanshifu.privacy_method_hook_library.cache
 
-import android.util.Log
+import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.log.LogUtil
 
 
 /**
@@ -9,51 +10,85 @@ import android.util.Log
  */
 object PrivacyMethodCacheManager : IPrivacyMethodCache {
 
-    private var mPrivacyMethodCache: IPrivacyMethodCache = DefaultPrivacyMethodCache()
-    private var mCachePutTimeMillis = HashMap<String, Long>()
-
     private const val CACHE_TIME_PERFIX = "CACHE_TIME_PERFIX_"
+    private var mPrivacyMethodCacheImpl: IPrivacyMethodCache = DefaultPrivacyMethodCache()
+    private val mCacheExpireTimeMap = HashMap<String, Int>()
+    private val mCacheBlackMap = HashMap<String,String>()
+
+    init {
+        mCacheExpireTimeMap["getRunningAppProcesses"] = 10
+
+        initBlackList()
+    }
+
+    private fun initBlackList() {
+        mCacheBlackMap["getSimSerialNumber"] = "1"
+        mCacheBlackMap["query"] = "1"
+    }
+
+
+    /**
+     * 设置缓存过期时间，单位s
+     */
+    fun setCacheExpireTime(map: HashMap<String, Int>) {
+        mCacheExpireTimeMap.putAll(map)
+        LogUtil.d("PrivacyMethodCache:setCacheExpireTime,map=$map")
+    }
 
     /**
      * 设置缓存框架
      */
     fun setPrivacyMethodCache(iPrivacyMethodCache: IPrivacyMethodCache) {
-        mPrivacyMethodCache = iPrivacyMethodCache
-    }
-
-
-    /**
-     * 支持缓存时间
-     */
-    fun <T> get(key: String, cacheSaveSeconds: Int): T? {
-
-
-        //判断缓存是否过期，清除
-        if (get<Long>(CACHE_TIME_PERFIX + key) != null &&
-            (System.currentTimeMillis() - (get<Long>(CACHE_TIME_PERFIX + key)
-                ?: 0L)) > cacheSaveSeconds * 1000
-        ) {
-            remove(CACHE_TIME_PERFIX + key)
-            // todo 回调
-            Log.d("PrivacyMethodCache", "mCachePutTimeMillis.remove $key")
-        }
-
-        return get(key)
+        mPrivacyMethodCacheImpl = iPrivacyMethodCache
+        LogUtil.d("PrivacyMethodCache:setPrivacyMethodCache,name=${iPrivacyMethodCache.javaClass::getSimpleName}")
     }
 
     override fun <T> get(key: String): T? {
-        return mPrivacyMethodCache.get(key)
+        checkCacheExpire(key)
+        LogUtil.d("PrivacyMethodCache:get,key=$key")
+        return mPrivacyMethodCacheImpl.get(key)
     }
 
 
     override fun put(key: String, value: Any) {
-        // 记录时间
-        mPrivacyMethodCache.put(CACHE_TIME_PERFIX + key, System.currentTimeMillis())
 
-        return mPrivacyMethodCache.put(key, value)
+        if (mCacheBlackMap.containsKey(key)) {
+            return
+        }
+        LogUtil.d("PrivacyMethodCache:put,key=$key,value=$value")
+        savePutTime(key)
+        return mPrivacyMethodCacheImpl.put(key, value)
     }
 
     override fun remove(key: String) {
-        mPrivacyMethodCache.remove(key)
+        LogUtil.d("PrivacyMethodCache:remove,key=$key")
+        mPrivacyMethodCacheImpl.remove(key)
+    }
+
+    /**
+     * 每次put的时候记录时间
+     */
+    private fun savePutTime(key: String) {
+        LogUtil.d("PrivacyMethodCache:savePutTime,key=$key")
+        val cacheMethodCallTimeKey = CACHE_TIME_PERFIX + key
+        mPrivacyMethodCacheImpl.put(cacheMethodCallTimeKey, System.currentTimeMillis())
+    }
+
+    /**
+     * 每次get检查是否过期
+     */
+    private fun checkCacheExpire(key: String) {
+        mCacheExpireTimeMap[key]?.let { cacheSaveSecond ->
+
+            val cacheMethodCallTimeKey = CACHE_TIME_PERFIX + key
+            //判断缓存是否过期，清除
+            val prePutTime = mPrivacyMethodCacheImpl.get<Long>(cacheMethodCallTimeKey)
+            if (prePutTime != null && (System.currentTimeMillis() - prePutTime) > cacheSaveSecond * 1000) {
+                mPrivacyMethodCacheImpl.remove(cacheMethodCallTimeKey)
+                LogUtil.d("PrivacyMethodCache:mCachePutTimeMillis.remove $key,cacheSaveSecond=$cacheSaveSecond")
+                PrivacyMethodManager.onCacheExpire(key)
+            }
+
+        }
     }
 }

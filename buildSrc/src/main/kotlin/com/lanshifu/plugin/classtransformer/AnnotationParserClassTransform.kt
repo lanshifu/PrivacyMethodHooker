@@ -3,7 +3,7 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
-import com.lanshifu.plugin.privacymethod.AsmItem
+import com.lanshifu.plugin.privacymethod.AsmMethodItem
 import org.objectweb.asm.tree.ClassNode
 import java.io.PrintWriter
 
@@ -17,7 +17,8 @@ class AnnotationParserClassTransform : AbsClassTransformer() {
 
     companion object{
         const val AsmFieldDesc = "Lcom/lanshifu/asm_annotation/AsmMethodReplace;"
-        var asmConfigs = mutableListOf<AsmItem>()
+        const val AsmClassReplaceDesc = "Lcom/lanshifu/asm_annotation/AsmClassReplace;"
+        var asmConfigs = mutableListOf<AsmMethodItem>()
         var asmConfigsMap = HashMap<String,String>()
     }
 
@@ -40,12 +41,14 @@ class AnnotationParserClassTransform : AbsClassTransformer() {
         klass.methods.forEach { method->
             method.invisibleAnnotations?.forEach { node ->
                 if (node.desc == AsmFieldDesc) {
-                    val asmItem = AsmItem(klass.name, method, node)
+                    val asmItem = AsmMethodItem(klass.name, method, node)
                     if (!asmConfigs.contains(asmItem)) {
-                        logger.print("\nadd AsmItem:$asmItem")
+                        logger.print("\nadd AsmMethodItem:$asmItem")
                         asmConfigs.add(asmItem)
                         asmConfigsMap.put(klass.name,klass.name)
                     }
+                } else if(node.desc == AsmClassReplaceDesc){
+                    //todo
                 }
             }
         }
