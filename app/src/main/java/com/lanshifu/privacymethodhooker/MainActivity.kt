@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
 import com.lanshifu.privacymethodhooker.testcase.*
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.log.LogUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -69,11 +70,11 @@ class MainActivity : AppCompatActivity() {
 
         val getAndroidId = getAndroidId(this)
         btnGetAndroidId.text = ("getAndroidId=$getAndroidId")
+        val getAndroidId2 = getAndroidId2(this)
+        btnGetIdAndroid.text = ("androidId2=$getAndroidId2")
 
         getSimSerialNumber.text = ("getSimSerialNumber=${getSimSerialNumber(this)}")
 
-        val androidId = getAndroidId2(this)
-        btnGetIdAndroid.text = ("androidId2=$androidId")
 
         getSSID.text = ("getSSID=${getSSID(this)}")
         getBSSID.text = ("getBSSID=${getBSSID(this)}")
@@ -99,8 +100,10 @@ class MainActivity : AppCompatActivity() {
         INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
         ASTORE 8
          */
-        val file = File(externalCacheDir?.absolutePath ?: "")
-        print(file.absolutePath)
+        val file1 = CustomFile("/sys/class/net/wlan0/address")
+        val file2 = File("/system/build.prop")
+        LogUtil.d(file1.absolutePath + ",length:${file1.length()}")
+        LogUtil.d(file2.absolutePath + ",length:${file2.length()}")
     }
 
 }

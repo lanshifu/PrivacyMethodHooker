@@ -27,11 +27,11 @@ class AnnotationParserTransformer : AbsClassTransformer() {
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
         this.logger = context.reportsDir.file("AnnotationParserClassTransform").file(context.name).file("report.txt").touch().printWriter()
-        logger.println("--start-- ${System.currentTimeMillis()}")
+        logger.println("--AnnotationParserTransformer start-- ${System.currentTimeMillis()}")
     }
 
     override fun onPostTransform(context: TransformContext) {
-        logger.println("\n--end-- ${System.currentTimeMillis()}")
+        logger.println("\n--AnnotationParserTransformer end-- ${System.currentTimeMillis()}")
         this.logger.close()
     }
 
@@ -50,7 +50,6 @@ class AnnotationParserTransformer : AbsClassTransformer() {
                         asmConfigsMap[klass.name] = klass.name
                     }
                 } else if(node.desc == AsmClassReplaceDesc){
-                    //todo
                     val asmItem = AsmClassItem(klass.name, method, node)
                     if (!asmClassReplaceConfigs.contains(asmItem)) {
                         logger.print("\nadd AsmClassItem:$asmItem")

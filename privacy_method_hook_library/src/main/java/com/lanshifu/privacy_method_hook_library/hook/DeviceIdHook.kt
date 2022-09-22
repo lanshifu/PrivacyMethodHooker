@@ -161,11 +161,11 @@ object DeviceIdHook {
     }
 
     /**
-     * 文件
+     * 替换 File(fileName:String)
      */
     @AsmClassReplace(oriClass = File::class, targetClass = HookFile::class)
-    fun hookFile(string: String,callerClassName: String){
-        LogUtil.i("new HookFile,callerClassName=$callerClassName")
+    fun hookFile(fileName: String) {
+        LogUtil.i("new HookFile")
     }
 
 
@@ -176,11 +176,15 @@ object AndroidIdHook {
 
     /**
      * 读取AndroidId 第二种方式
+     * Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+     * INVOKESTATIC android/provider/Settings$System.getString (Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;
+
      */
     @JvmStatic
     @AsmMethodReplace(oriClass = Settings.Secure::class, oriAccess = AsmMethodOpcodes.INVOKESTATIC)
     fun getString(
-        resolver: ContentResolver, name: String,
+        resolver: ContentResolver,
+        name: String,
         callerClassName: String
     ): String? {
         //处理AndroidId
@@ -199,7 +203,7 @@ object AndroidIdHook {
             return value
         }
 
-        return Settings.System.getString(resolver, name)
+        return Settings.Secure.getString(resolver, name)
     }
 
 }

@@ -3,10 +3,14 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
+import com.didiglobal.booster.transform.asm.find
+import com.didiglobal.booster.transform.asm.isInstanceOf
 import com.lanshifu.plugin.bean.AsmClassItem
+import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.LdcInsnNode
 import org.objectweb.asm.tree.MethodInsnNode
+import org.objectweb.asm.tree.TypeInsnNode
 import java.io.PrintWriter
 
 
@@ -50,48 +54,43 @@ class ClassReplaceTransformer : AbsClassTransformer() {
         klass.methods.forEach { method ->
             method.instructions?.iterator()?.forEach { insnNode ->
 
-                if (insnNode is MethodInsnNode && insnNode.name == "<init>") {
+                when (insnNode.opcode) {
+                    Opcodes.NEW -> {
+                        if (insnNode is TypeInsnNode) {
+                            insnNode.find { findInsnNode ->
+                                (findInsnNode.opcode == Opcodes.INVOKESPECIAL) &&
+                                        (findInsnNode is MethodInsnNode) &&
+                                        (insnNode.desc == findInsnNode.owner && "<init>" == findInsnNode.name)
+                            }?.isInstanceOf { init: MethodInsnNode ->
 
-                    asmItemsClassMap[insnNode.owner]?.let { asmItem ->
-//AsmMethodItem(
-// oriClass=java/io/File,
-// oriMethod=hookFile,
-// oriDesc=(Ljava/lang/String;)Ljava/io/File;,
-// oriAccess=183,
-// targetClass='com/lanshifu/privacy_method_hook_library/hook/DeviceIdHook',
-// targetMethod='hookFile',
-// targetDesc='(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;',
-// targetAccess=183)]
+                                asmItemsClassMap[init.owner]?.let { asmItem ->
+                                    if (
+                                        init.desc == asmItem.oriDesc &&
+                                        init.owner == asmItem.oriClass
+                                    ) {
+                                        logger.print(
+                                            "\nhook:\n" +
+                                                    "owner=${init.owner},desc=${init.desc} klass.name=${klass.name}->\n" +
+                                                    "owner=${asmItem.targetClass},desc=${asmItem.targetDesc}\n"
+                                        )
+                                        /// 换一个类名
+                                        insnNode.desc = asmItem.targetClass
+                                        init.desc = asmItem.targetDesc
+                                        init.owner = asmItem.targetClass
+                                        method.instructions.insertBefore(
+                                            init,
+                                            LdcInsnNode(klass.name)
+                                        )
 
-//if:
-//opcode=183,
-// owner=java/io/File,
-// desc=(Ljava/lang/String;)V,
-// klass.name=androidx/core/net/UriKt#insnNode.name=<init> ->
-                        if(klass.name == asmItem.targetClass){
-                            logger.print("\nPrivacyMethodReplaceAsmHelper modifyClass ignore,classNode.name=${klass.name}\n")
-                            return@let
-                        }
+                                    }
+                                }
 
-                        if (
-                            asmItem.oriDesc == insnNode.desc &&
-                            insnNode.opcode == asmItem.oriAccess &&
-                            insnNode.owner == asmItem.oriClass
-                        ) {
-
-                            logger.print(
-                                "\nhook:\n" +
-                                        "owner=${insnNode.owner},desc=${insnNode.desc} klass.name=${klass.name}->\n" +
-                                        "owner=${asmItem.targetClass},desc=${asmItem.targetDesc}\n"
-                            )
-
-                            insnNode.desc = asmItem.targetDesc
-                            insnNode.owner = asmItem.targetClass
-
-                            method.instructions.insertBefore(insnNode, LdcInsnNode(klass.name))
+                            }
                         }
                     }
+
                 }
+
             }
         }
     }

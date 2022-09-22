@@ -44,6 +44,9 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
     }
 
     override fun <T> get(key: String): T? {
+        if(!PrivacyMethodManager.isUseCache(key)){
+            return null
+        }
         checkCacheExpire(key)
         LogUtil.d("PrivacyMethodCache:get,key=$key")
         return mPrivacyMethodCacheImpl.get(key)

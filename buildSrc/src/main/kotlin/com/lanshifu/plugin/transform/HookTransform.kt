@@ -19,7 +19,7 @@ class HookTransform(androidProject: Project) : BaseTransform(androidProject) {
         BaseAsmTransformer(
             listOf(
                 MethodReplaceTransformer(),
-                ClassReplaceTransformer(),
+//                ClassReplaceTransformer(),
             )
         )
     )

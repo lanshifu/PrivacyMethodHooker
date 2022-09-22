@@ -96,6 +96,7 @@
             android:textAllCaps="false" />
 
 
+
         <Button
             android:id="@+id/getImei"
             android:layout_width="wrap_content"
@@ -129,6 +130,7 @@
             android:padding="8dp"
             android:text="getAndroidId"
             android:textAllCaps="false" />
+
 
         <TextView
             android:text="WifiManager"
