@@ -122,7 +122,7 @@ fun TransformContext.isRelease(): Boolean {
 
 
 fun String.println() {
-    println("[lizhi plugin]===>$this")
+    println("[plugin]===>$this")
 }
 
 fun File.lastPath(): String {
