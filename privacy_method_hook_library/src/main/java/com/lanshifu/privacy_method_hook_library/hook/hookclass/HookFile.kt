@@ -14,7 +14,6 @@ import java.net.URI
 open class HookFile : File {
     constructor(fileName: String) : super(fileName) {
         LogUtil.i("HookFile:pathname=$fileName")
-
         //mac
         //sys/class/net/*/address
         val matchParttern = """^\/sys\/class\/net\/\w{1,}\/address"""
@@ -22,15 +21,14 @@ open class HookFile : File {
         if (ismatchAddress) {
             LogUtil.d("读文件 fileName=$fileName")
             if (!checkAgreePrivacy("<init>", "java.io.File")) {
-
-                // TODO: 改成空路径？
+                // todo: 改成空路径？
             }
         }
 
         if (fileName.startsWith("/system/build.prop")) {
             LogUtil.d("读文件 fileName=$fileName")
             if (!checkAgreePrivacy("<init>fileName=$fileName", "java.io.File")) {
-                // TODO: 改成空路径？
+                // todo: 改成空路径？
             }
         }
 

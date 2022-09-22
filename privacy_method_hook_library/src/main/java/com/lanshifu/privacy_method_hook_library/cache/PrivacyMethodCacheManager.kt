@@ -13,19 +13,10 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
     private const val CACHE_TIME_PERFIX = "CACHE_TIME_PERFIX_"
     private var mPrivacyMethodCacheImpl: IPrivacyMethodCache = DefaultPrivacyMethodCache()
     private val mCacheExpireTimeMap = HashMap<String, Int>()
-    private val mCacheBlackMap = HashMap<String,String>()
 
     init {
         mCacheExpireTimeMap["getRunningAppProcesses"] = 10
-
-        initBlackList()
     }
-
-    private fun initBlackList() {
-        mCacheBlackMap["getSimSerialNumber"] = "1"
-        mCacheBlackMap["query"] = "1"
-    }
-
 
     /**
      * 设置缓存过期时间，单位s
@@ -54,10 +45,6 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
 
 
     override fun put(key: String, value: Any) {
-
-        if (mCacheBlackMap.containsKey(key)) {
-            return
-        }
         LogUtil.d("PrivacyMethodCache:put,key=$key,value=$value")
         savePutTime(key)
         return mPrivacyMethodCacheImpl.put(key, value)

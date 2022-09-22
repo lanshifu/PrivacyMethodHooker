@@ -1,5 +1,7 @@
 package com.lanshifu.privacy_method_hook_library
 
+import android.annotation.SuppressLint
+import android.content.Context
 import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
 import com.lanshifu.privacy_method_hook_library.delegate.PrivacyMethodManagerDelegate
 
@@ -8,18 +10,16 @@ import com.lanshifu.privacy_method_hook_library.delegate.PrivacyMethodManagerDel
  * 隐私方法管理类
  * 提供给外部调用，设置代理
  */
-object PrivacyMethodManager : IPrivacyMethodManager, PrivacyMethodManagerDelegate {
-
-    const val TAG = "PrivacyMethodManager"
+@SuppressLint("StaticFieldLeak")
+object PrivacyMethodManager : PrivacyMethodManagerDelegate {
 
     private var mDelegate: PrivacyMethodManagerDelegate = DefaultPrivacyMethodManagerDelegate()
 
-    fun getInstance(): IPrivacyMethodManager {
-        return this
-    }
+    lateinit var mContext: Context
 
-    override fun setDelegate(delegate: PrivacyMethodManagerDelegate) {
+    fun init(content: Context, delegate: PrivacyMethodManagerDelegate) {
         mDelegate = delegate
+        mContext = content.applicationContext
     }
 
     override fun isAgreePrivacy(): Boolean {
@@ -48,6 +48,10 @@ object PrivacyMethodManager : IPrivacyMethodManager, PrivacyMethodManagerDelegat
 
     override fun onCacheExpire(methodName: String) {
         mDelegate.onCacheExpire(methodName)
+    }
+
+    override fun customCacheExpireMap(): Map<String, Int> {
+        return mDelegate.customCacheExpireMap()
     }
 
 }

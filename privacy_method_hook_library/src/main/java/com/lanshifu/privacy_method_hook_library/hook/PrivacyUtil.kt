@@ -8,9 +8,6 @@ import com.lanshifu.privacy_method_hook_library.log.LogUtil
 /**
  * @author lanxiaobin
  * @date 2022/9/21
- */
-
-/**
  * 检查缓存和隐私
  */
 fun <T> checkCacheAndPrivacy(
@@ -44,7 +41,9 @@ fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
 
 fun <T> saveResult(key: String, value: T, callerClassName: String): T {
     LogUtil.d("saveResult,key=$key,value=$value,callerClassName=${callerClassName}")
-    PrivacyMethodCacheManager.put(key, value as Any)
+    if(value != null){
+        PrivacyMethodCacheManager.put(key, value as Any)
+    }
     return value
 }
 

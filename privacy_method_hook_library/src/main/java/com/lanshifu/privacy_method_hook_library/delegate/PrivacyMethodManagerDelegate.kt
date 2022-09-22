@@ -18,7 +18,8 @@ interface PrivacyMethodManagerDelegate {
     fun isUseCache(methodName: String): Boolean
 
     /**
-     * 是否显示隐私调用堆栈
+     * 是否显示隐私方法调用堆栈，
+     * release包建议关闭
      */
     fun isShowPrivacyMethodStack(): Boolean
 
@@ -36,4 +37,10 @@ interface PrivacyMethodManagerDelegate {
      * 缓存过期回调
      */
     fun onCacheExpire(methodName: String)
+
+
+    /**
+     * 自定义缓存过期时间
+     */
+    fun customCacheExpireMap(): Map<String, Int>
 }
