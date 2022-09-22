@@ -3,20 +3,22 @@ package com.lanshifu.privacy_method_hook_library.hook.hookmethod
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.provider.Settings
+import android.telephony.CellLocation
+import android.telephony.NeighboringCellInfo
+import android.telephony.TelephonyManager
 import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
 import com.lanshifu.privacy_method_hook_library.hook.saveResult
 
-
 @Keep
 @SuppressLint("HardwareIds", "MissingPermission", "NewApi")
-object `Settings$SecureHook` {
+object SettingsSystemHook {
 
     @JvmStatic
     @AsmMethodReplace(
-        oriClass = Settings.Secure::class,
+        oriClass = Settings.System::class,
         oriAccess = AsmMethodOpcodes.INVOKESTATIC
     )
     fun getString(
@@ -25,24 +27,21 @@ object `Settings$SecureHook` {
         callerClassName: String
     ): String {
 
+        var key = name
         when (name) {
             "android_id" -> {
-            }
-            // 6.0 之后获取不到bluetooth_address了
-            "bluetooth_address" -> {
-            }
-            "bluetooth_name" -> {
+                key = "${key}_${Settings.Secure.ANDROID_ID}"
             }
             else -> {
-                return Settings.Secure.getString(resolver, name)
+                return Settings.System.getString(resolver, name)
             }
         }
 
-        val checkResult = checkCacheAndPrivacy<String>(name, callerClassName)
+        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: ""
         }
-        return saveResult(name, Settings.Secure.getString(resolver, name) ?: "", callerClassName)
+        return saveResult(key, Settings.System.getString(resolver, name) ?: "", callerClassName)
     }
 
 
