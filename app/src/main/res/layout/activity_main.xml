@@ -30,9 +30,222 @@
             android:text="使用缓存" />
 
         <TextView
-            android:text="ActivityManager"
+            android:text="TelephonyManager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/getImei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getImei"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getDeviceId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getDeviceId"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getSubscriberId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSubscriberId"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getSimSerialNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSimSerialNumber"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getMeid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getMeid"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getLine1Number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getLine1Number"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getCellLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getCellLocation"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getNeighboringCellInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getNeighboringCellInfo"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getSimOperator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSimOperator"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getSimOperatorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSimOperatorName"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/getSimCountryIso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSimCountryIso"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getNetworkOperator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getNetworkOperator"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getNetworkOperatorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getNetworkOperatorName"
+            android:textAllCaps="false" />
+
+
+
+        <Button
+            android:id="@+id/getNetworkCountryIso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getNetworkCountryIso"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            android:text="Settings.System"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/getAndroidBySystem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getAndroidBySystem"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getAndroidIdBySecure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getAndroidIdBySecure"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getBluetoothAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getBluetoothAddress"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getBluetoothName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getBluetoothName"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:text="Runtime" />
+
+        <Button
+            android:id="@+id/getSerialNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSerialNo"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getEth0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getEth0"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getPackage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getPackage"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:text="ActivityManager" />
 
 
         <Button
@@ -63,72 +276,6 @@
 
 
 
-        <TextView
-            android:text="TelephonyManager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnGetAllCellInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getAllCellInfo"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/btnGetDeviceId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getDeviceId"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/btnGetAndroidId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getAndroidId"
-            android:textAllCaps="false" />
-
-
-        <Button
-            android:id="@+id/getImei"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getImei"
-            android:textAllCaps="false" />
-
-
-        <Button
-            android:id="@+id/getSimSerialNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getSimSerialNumber"
-            android:textAllCaps="false" />
-
-
-        <TextView
-            android:text="Settings.System"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnGetIdAndroid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getAndroidId"
-            android:textAllCaps="false" />
 
         <TextView
             android:text="WifiManager"

@@ -3,9 +3,12 @@ package com.lanshifu.plugin.classtransformer
 import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.transform.TransformContext
-import org.objectweb.asm.tree.ClassNode
-import org.objectweb.asm.tree.LdcInsnNode
-import org.objectweb.asm.tree.MethodInsnNode
+import com.didiglobal.booster.transform.asm.find
+import com.didiglobal.booster.transform.asm.isInstanceOf
+import com.lanshifu.plugin.bean.AsmClassItem
+import com.lanshifu.plugin.bean.AsmMethodItem
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.tree.*
 import java.io.PrintWriter
 
 
@@ -16,7 +19,8 @@ import java.io.PrintWriter
 class MethodReplaceTransformer : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
     private val asmItems = AnnotationParserTransformer.asmMethodReplaceConfigs
-    private var asmItemsClassMap: HashMap<String, String> = HashMap()
+    private var asmMethodItemsMap: HashMap<String, AsmMethodItem> = HashMap()
+    private var asmItemsClassMap: HashMap<String, AsmClassItem> = HashMap()
 
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
@@ -25,10 +29,15 @@ class MethodReplaceTransformer : AbsClassTransformer() {
         logger.println("--start-- ${System.currentTimeMillis()}")
 
         AnnotationParserTransformer.asmMethodReplaceConfigs.forEach {
-            asmItemsClassMap[it.targetClass] = it.targetClass
+            asmMethodItemsMap["${it.oriClass}${it.oriMethod}${it.oriDesc}"] = it
         }
-        logger.print("\nasmItemsMap size=${asmItemsClassMap.size}，asmItems.size=${asmItems.size}\n\n")
-        logger.print("asmItemsClassMap=${asmItemsClassMap} \n\n")
+
+        AnnotationParserTransformer.asmClassReplaceConfigs.forEach {
+            asmItemsClassMap[it.oriClass] = it
+        }
+
+        logger.print("\nasmItemsMap size=${asmMethodItemsMap.size}，asmItems.size=${asmItems.size}\n\n")
+        logger.print("asmItemsClassMap=${asmMethodItemsMap} \n\n")
         logger.print("asmItems=${asmItems} \n\n")
     }
 
@@ -51,34 +60,80 @@ class MethodReplaceTransformer : AbsClassTransformer() {
         klass.methods.forEach { method ->
             method.instructions?.iterator()?.forEach { insnNode ->
 
-                if (insnNode is MethodInsnNode) {
+                when (insnNode.opcode) {
+                    Opcodes.NEW -> {
+                        transformNew(klass, insnNode)
+                    }
+                    else -> {
+                        if (insnNode is MethodInsnNode) {
 
-                    asmItems.forEach { asmItem ->
-                        //INVOKEVIRTUAL android/app/ActivityManager.getRunningAppProcesses ()Ljava/util/List; ->
-                        //INVOKESTATIC  com/lanshifu/asm_plugin_library/privacy/PrivacyUtil.getRunningAppProcesses (Landroid/app/ActivityManager;)Ljava/util/List;
+                            asmMethodItemsMap["${insnNode.owner}${insnNode.name}${insnNode.desc}"]?.let { asmItem ->
+                                if (
+                                    asmItem.oriDesc == insnNode.desc &&
+                                    asmItem.oriMethod == insnNode.name &&
+                                    insnNode.opcode == asmItem.oriAccess &&
+                                    (insnNode.owner == asmItem.oriClass || asmItem.oriClass == "java/lang/Object")
+                                ) {
 
-                        if (
-                            asmItem.oriDesc == insnNode.desc &&
-                            asmItem.oriMethod == insnNode.name &&
-                            insnNode.opcode == asmItem.oriAccess &&
-                            (insnNode.owner == asmItem.oriClass || asmItem.oriClass == "java/lang/Object")
-                        ) {
+                                    logger.print(
+                                        "\nhook:\n" +
+                                                "opcode=${insnNode.opcode},owner=${insnNode.owner},desc=${insnNode.desc},name=${klass.name}#${insnNode.name} ->\n" +
+                                                "opcode=${asmItem.targetAccess},owner=${asmItem.targetClass},desc=${asmItem.targetDesc},name=${asmItem.targetMethod}\n"
+                                    )
 
-                            logger.print(
-                                "\nhook:\n" +
-                                        "opcode=${insnNode.opcode},owner=${insnNode.owner},desc=${insnNode.desc},name=${klass.name}#${insnNode.name} ->\n" +
-                                        "opcode=${asmItem.targetAccess},owner=${asmItem.targetClass},desc=${asmItem.targetDesc},name=${asmItem.targetMethod}\n"
-                            )
+                                    insnNode.opcode = asmItem.targetAccess
+                                    insnNode.desc = asmItem.targetDesc
+                                    insnNode.owner = asmItem.targetClass
+                                    insnNode.name = asmItem.targetMethod
 
-                            insnNode.opcode = asmItem.targetAccess
-                            insnNode.desc = asmItem.targetDesc
-                            insnNode.owner = asmItem.targetClass
-                            insnNode.name = asmItem.targetMethod
+                                    method.instructions.insertBefore(
+                                        insnNode,
+                                        LdcInsnNode(klass.name)
+                                    )
+                                }
+                            }
 
-                            method.instructions.insertBefore(insnNode, LdcInsnNode(klass.name))
                         }
                     }
                 }
+
+
+            }
+        }
+    }
+
+    private fun transformNew(klass: ClassNode, insnNode: AbstractInsnNode) {
+        if (insnNode is TypeInsnNode) {
+            insnNode.find { findInsnNode ->
+                (findInsnNode.opcode == Opcodes.INVOKESPECIAL) &&
+                        (findInsnNode is MethodInsnNode) &&
+                        (insnNode.desc == findInsnNode.owner && "<init>" == findInsnNode.name)
+            }?.isInstanceOf { init: MethodInsnNode ->
+
+                asmItemsClassMap[init.owner]?.let { asmItem ->
+
+
+                    /// todo 有继承的情况？改superName
+                    //        if (!name.equals(MONITOR_SUPER_CLASS_NAME) && superName.equals(IMAGE_VIEW_CLASS_NAME)) {
+                    //            superName = MONITOR_SUPER_CLASS_NAME;
+                    //        }
+
+                    if (
+                        init.desc == asmItem.oriDesc &&
+                        init.owner == asmItem.oriClass
+                    ) {
+                        logger.print(
+                            "\nhook:\n" +
+                                    "owner=${init.owner},desc=${init.desc} klass.name=${klass.name}->\n" +
+                                    "owner=${asmItem.targetClass},desc=${asmItem.targetDesc}\n"
+                        )
+                        /// 换一个类名
+                        insnNode.desc = asmItem.targetClass
+                        init.desc = asmItem.targetDesc
+                        init.owner = asmItem.targetClass
+                    }
+                }
+
             }
         }
     }

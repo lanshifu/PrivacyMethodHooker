@@ -8,34 +8,54 @@ import android.util.Log
  */
 open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
 
+    /**
+     * 这些是默认不缓存的方法，黑名单
+     */
+    private val mCacheBlackMap = HashMap<String, String>()
+
+    init {
+        mCacheBlackMap["getSimSerialNumber"] = "1"
+        mCacheBlackMap["getLine1Number"] = "1"
+        mCacheBlackMap["getCellLocation"] = "1"
+        mCacheBlackMap["getSimOperator"] = "1"
+        mCacheBlackMap["getSimOperatorName"] = "1"
+        mCacheBlackMap["getSimCountryIso"] = "1"
+        mCacheBlackMap["getNetworkOperator"] = "1"
+        mCacheBlackMap["getNetworkOperatorName"] = "1"
+        mCacheBlackMap["getNetworkCountryIso"] = "1"
+        mCacheBlackMap["query"] = "1"
+    }
+
     override fun isAgreePrivacy(): Boolean {
         return false
     }
 
     override fun isUseCache(methodName: String): Boolean {
-        // todo 缓存配置
+        if (mCacheBlackMap.containsKey(methodName)) {
+            return false
+        }
         return true
     }
 
     override fun isShowPrivacyMethodStack(): Boolean {
-        return true
+        return false
     }
 
     override fun onPrivacyMethodCall(className: String, methodName: String, methodStack: String) {
         Log.d(
             "PrivacyMethodManager",
-            "onPrivacyMethodCall,methodName=$methodName,methodStack=$methodStack"
+            "onPrivacyMethodCall,className=$className,methodName=$methodName,methodStack=$methodStack"
         )
     }
 
     override fun onPrivacyMethodCallIllegal(
         className: String,
         methodName: String,
-        methodStack: String){
-
+        methodStack: String
+    ) {
         Log.e(
             "PrivacyMethodManager",
-            "onPrivacyMethodCallIllegal,methodName=$methodName,methodStack=$methodStack"
+            "onPrivacyMethodCallIllegal,className=$className，methodName=$methodName,methodStack=$methodStack"
         )
     }
 
@@ -44,6 +64,11 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
             "PrivacyMethodManager",
             "onCacheExpire,methodName=$methodName"
         )
+        //todo toast
+    }
+
+    override fun customCacheExpireMap(): Map<String, Int> {
+        return emptyMap()
     }
 
 }

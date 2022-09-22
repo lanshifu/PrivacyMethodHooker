@@ -47,15 +47,7 @@ class AsmClassItem(
         if (oriMethod == null) {
             oriMethod = targetMethod
         }
-
-        /**由targetDesc 计算出oriDesc,去掉最后一个String参数即可*/
-        //INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;Ljava/lang/String;)V
-        //INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
-        val rp = targetDesc.lastIndexOf(')')
-        var left = targetDesc.substring(0, rp)
-        left = left.substring(0, left.lastIndexOf("Ljava/lang/String;"))
-        val right = targetDesc.substring(rp)
-        oriDesc = left + right
+        oriDesc = targetDesc
     }
 
     override fun equals(other: Any?): Boolean {
