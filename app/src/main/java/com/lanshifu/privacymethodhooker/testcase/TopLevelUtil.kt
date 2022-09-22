@@ -250,12 +250,12 @@ fun requestLocationUpdates(context: Activity): Boolean {
 }
 
 fun getAndroidId(context: Context): String {
-    return Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID);
+    return Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 }
 
 @SuppressLint("HardwareIds")
 fun getAndroidId2(context: Context): String {
-    return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID);
+    return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) ?: ""
 }
 
 @RequiresApi(Build.VERSION_CODES.M)

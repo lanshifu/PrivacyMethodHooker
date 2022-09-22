@@ -100,10 +100,16 @@ class MainActivity : AppCompatActivity() {
         INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
         ASTORE 8
          */
-        val file1 = CustomFile("/sys/class/net/wlan0/address")
-        val file2 = File("/system/build.prop")
-        LogUtil.d(file1.absolutePath + ",length:${file1.length()}")
+        val file0 = CustomFile("/sys/class/net/etho0/address")
+
+        val file1 = File("/sys/class/net/etho0/address")
+        val file2 = File("/sys/class/net/wlan0/address")
+        val file3 = File("/system/build.prop")
+        val file4 = File(externalCacheDir?.absolutePath ?: "")
+        LogUtil.d(file0.absolutePath + ",length:${file0.length()}")
         LogUtil.d(file2.absolutePath + ",length:${file2.length()}")
+        LogUtil.d(file3.absolutePath + ",length:${file3.length()}")
+        LogUtil.d(file4.absolutePath + ",length:${file4.length()}")
     }
 
 }

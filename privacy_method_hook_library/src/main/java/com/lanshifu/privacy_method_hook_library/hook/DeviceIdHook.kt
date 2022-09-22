@@ -7,13 +7,8 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import com.lanshifu.asm_annotation.AsmClassReplace
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
-import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
-import com.lanshifu.privacy_method_hook_library.log.LogUtil
-import com.lanshifu.privacy_method_hook_library.system.HookFile
-import java.io.File
 
 /**
  * @author lanxiaobin
@@ -40,19 +35,13 @@ object DeviceIdHook {
     fun getImei(
         manager: TelephonyManager,
         callerClassName: String
-    ): String? {
+    ): String {
         val key = "getImei"
-        val cache = PrivacyMethodCacheManager.get<String>(key)
-        if (cache != null) {
-            return cache
+        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+        if (checkResult.shouldReturn()) {
+            return checkResult.cacheData ?: ""
         }
-        if (!checkAgreePrivacy(key)) {
-            return null
-        }
-
-        val value = manager.imei
-        saveResult(key, value, callerClassName)
-        return value
+        return saveResult(key, manager.imei ?: "", callerClassName)
     }
 
     @SuppressLint("HardwareIds", "MissingPermission", "NewApi")
@@ -65,19 +54,13 @@ object DeviceIdHook {
         manager: TelephonyManager,
         slotIndex: Int,
         callerClassName: String
-    ): String? {
+    ): String {
         val key = "getImei"
-        val cache = PrivacyMethodCacheManager.get<String>(key)
-        if (cache != null) {
-            return cache
+        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+        if (checkResult.shouldReturn()) {
+            return checkResult.cacheData ?: ""
         }
-        if (!checkAgreePrivacy(key)) {
-            return null
-        }
-
-        val value = manager.getImei(slotIndex)
-        saveResult(key, value, callerClassName)
-        return value
+        return saveResult(key, manager.getImei(slotIndex) ?: "", callerClassName)
     }
 
     /**
@@ -93,16 +76,11 @@ object DeviceIdHook {
         if (Settings.Secure.ANDROID_ID == name) {
 
             val key = "ANDROID_ID"
-            val cache = PrivacyMethodCacheManager.get<String?>(key)
-            if (cache != null) {
-                return cache
+            val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+            if (checkResult.shouldReturn()) {
+                return checkResult.cacheData ?: ""
             }
-            if (!checkAgreePrivacy(key)) {
-                return ""
-            }
-            val value = Settings.System.getString(resolver, name)
-            saveResult(key, value, callerClassName)
-            return value
+            return saveResult(key, Settings.System.getString(resolver, name) ?: "", callerClassName)
         }
 
         return Settings.System.getString(resolver, name)
@@ -119,19 +97,13 @@ object DeviceIdHook {
     fun getSubscriberId(
         manager: TelephonyManager,
         callerClassName: String
-    ): String? {
+    ): String {
         val key = "getSubscriberId"
-        val cache = PrivacyMethodCacheManager.get<String>(key)
-        if (cache != null) {
-            return cache
+        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+        if (checkResult.shouldReturn()) {
+            return checkResult.cacheData ?: ""
         }
-        if (!checkAgreePrivacy(key)) {
-            return null
-        }
-
-        val value = manager.subscriberId
-        saveResult(key, value, callerClassName)
-        return value
+        return saveResult(key, manager.subscriberId ?: "", callerClassName)
     }
 
 
@@ -145,27 +117,13 @@ object DeviceIdHook {
     fun getSimSerialNumber(
         manager: TelephonyManager,
         callerClassName: String
-    ): String? {
+    ): String {
         val key = "getSimSerialNumber"
-        val cache = PrivacyMethodCacheManager.get<String>(key)
-        if (cache != null) {
-            return cache
+        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+        if (checkResult.shouldReturn()) {
+            return checkResult.cacheData ?: ""
         }
-        if (!checkAgreePrivacy(key)) {
-            return null
-        }
-
-        val value = manager.simSerialNumber
-        saveResult(key, value, callerClassName)
-        return value
-    }
-
-    /**
-     * 替换 File(fileName:String)
-     */
-    @AsmClassReplace(oriClass = File::class, targetClass = HookFile::class)
-    fun hookFile(fileName: String) {
-        LogUtil.i("new HookFile")
+        return saveResult(key, manager.simSerialNumber ?: "", callerClassName)
     }
 
 
@@ -191,16 +149,16 @@ object AndroidIdHook {
         if (Settings.Secure.ANDROID_ID == name) {
 
             val key = "ANDROID_ID"
-            val cache = PrivacyMethodCacheManager.get<String?>(key)
-            if (cache != null) {
-                return cache
+            val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+            if (checkResult.shouldReturn()) {
+                return checkResult.cacheData ?: ""
             }
-            if (!checkAgreePrivacy(key)) {
-                return ""
-            }
-            val value = Settings.System.getString(resolver, name)
-            saveResult(key, value, callerClassName)
-            return value
+            return saveResult(
+                key,
+                Settings.System.getString(resolver, name) ?: "",
+                callerClassName
+            )
+
         }
 
         return Settings.Secure.getString(resolver, name)

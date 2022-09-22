@@ -9,8 +9,24 @@ import com.lanshifu.privacy_method_hook_library.log.LogUtil
  * @author lanxiaobin
  * @date 2022/9/21
  */
-fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
 
+/**
+ * 检查缓存和隐私
+ */
+fun <T> checkCacheAndPrivacy(
+    key: String,
+    callerClassName: String
+): CheckCacheAndPrivacyResult<T> {
+    val cache = PrivacyMethodCacheManager.get<T?>(key)
+    if (cache != null) {
+        return CheckCacheAndPrivacyResult(cache, true)
+    }
+
+    val isAgreePrivacy = checkAgreePrivacy(key, callerClassName)
+    return CheckCacheAndPrivacyResult(null, isAgreePrivacy)
+}
+
+fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
     var methodStack = ""
     if (PrivacyMethodManager.isShowPrivacyMethodStack()) {
         methodStack = Log.getStackTraceString(Throwable())
@@ -26,10 +42,17 @@ fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
     return true
 }
 
-fun saveResult(key: String, value: String, callerClassName: String) {
-
+fun <T> saveResult(key: String, value: T, callerClassName: String): T {
     LogUtil.d("saveResult,key=$key,value=$value,callerClassName=${callerClassName}")
-    // todo 区分app和第三方调用，缓存处理
+    PrivacyMethodCacheManager.put(key, value as Any)
+    return value
+}
 
-    PrivacyMethodCacheManager.put(key, value)
+class CheckCacheAndPrivacyResult<T>(
+    var cacheData: T?,
+    var isAgreePrivacy: Boolean,
+) {
+    fun shouldReturn(): Boolean {
+        return cacheData != null || !isAgreePrivacy
+    }
 }
