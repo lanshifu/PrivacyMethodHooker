@@ -16,6 +16,7 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
 
     init {
         mCacheExpireTimeMap["getRunningAppProcesses"] = 10
+        setCacheExpireTime(PrivacyMethodManager.customCacheExpireMap())
     }
 
     /**

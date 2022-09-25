@@ -50,7 +50,7 @@ object PrivacyMethodManager : PrivacyMethodManagerDelegate {
         mDelegate.onCacheExpire(methodName)
     }
 
-    override fun customCacheExpireMap(): Map<String, Int> {
+    override fun customCacheExpireMap(): HashMap<String, Int> {
         return mDelegate.customCacheExpireMap()
     }
 

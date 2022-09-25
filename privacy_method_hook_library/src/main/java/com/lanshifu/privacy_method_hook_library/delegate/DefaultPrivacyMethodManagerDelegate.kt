@@ -19,7 +19,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         mCacheBlackMap["getCellLocation"] = "1"
         mCacheBlackMap["getSimOperator"] = "1"
         mCacheBlackMap["getSimOperatorName"] = "1"
-        mCacheBlackMap["getSimCountryIso"] = "1"
+//        mCacheBlackMap["getSimCountryIso"] = "1"
         mCacheBlackMap["getNetworkOperator"] = "1"
         mCacheBlackMap["getNetworkOperatorName"] = "1"
         mCacheBlackMap["getNetworkCountryIso"] = "1"
@@ -67,8 +67,12 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         //todo toast
     }
 
-    override fun customCacheExpireMap(): Map<String, Int> {
-        return emptyMap()
+    override fun customCacheExpireMap(): HashMap<String, Int> {
+        return HashMap<String, Int>().apply {
+
+            ///缓存60s过期
+            this["getSimCountryIso"] = 10
+        }
     }
 
 }

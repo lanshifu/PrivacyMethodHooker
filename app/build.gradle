@@ -17,7 +17,9 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']

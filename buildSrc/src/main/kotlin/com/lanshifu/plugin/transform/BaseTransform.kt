@@ -13,14 +13,12 @@ import org.gradle.api.Project
 
 /**
  * Represents the transform base
- * DoKitCommTransform 作用于 CommTransformer、BigImgTransformer、UrlConnectionTransformer、GlobalSlowMethodTransformer
- * @author johnsonlee
  */
 open class BaseTransform protected constructor(val project: Project) : Transform() {
 
     /*transformers
      * Preload transformers as List to fix NoSuchElementException caused by ServiceLoader in parallel mode
-     * booster 的默认出炉逻辑 DoKit已重写自处理
+     * booster 的默认出炉逻辑
      */
     internal open val transformers = listOf<Transformer>()
 
@@ -65,8 +63,3 @@ open class BaseTransform protected constructor(val project: Project) : Transform
 
 
 }
-
-/**
- * The option for transform outputs verifying, default is false
- */
-private const val OPT_TRANSFORM_VERIFY = "dokit.transform.verify"

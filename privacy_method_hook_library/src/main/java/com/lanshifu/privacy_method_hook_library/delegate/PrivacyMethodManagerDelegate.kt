@@ -38,9 +38,8 @@ interface PrivacyMethodManagerDelegate {
      */
     fun onCacheExpire(methodName: String)
 
-
     /**
      * 自定义缓存过期时间
      */
-    fun customCacheExpireMap(): Map<String, Int>
+    fun customCacheExpireMap(): HashMap<String, Int>
 }

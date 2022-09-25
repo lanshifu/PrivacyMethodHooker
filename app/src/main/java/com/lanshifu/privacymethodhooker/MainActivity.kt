@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     var isAgreePrivacy = false
     var isUseCache = false
-    var showPrivacyMethodStack = true
+    var showPrivacyMethodStack = false
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun isShowPrivacyMethodStack(): Boolean {
-                return false
+                return showPrivacyMethodStack
             }
 
             override fun onPrivacyMethodCallIllegal(

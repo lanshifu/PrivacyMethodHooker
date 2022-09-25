@@ -14,6 +14,9 @@ import org.gradle.api.Project
 class Plugin : Plugin<Project> {
     override fun apply(project: Project) {
 
+        val availableProcessors = Runtime.getRuntime().availableProcessors()
+        print("Plugin availableProcessors=$availableProcessors")
+
         when {
             project.plugins.hasPlugin("com.android.application") ||
                     project.plugins.hasPlugin("com.android.dynamic-feature") -> {
