@@ -17,7 +17,7 @@ import com.lanshifu.privacymethodhooker.Myapp
  * @date 2022/9/22
  */
 @SuppressLint("NewApi", "StaticFieldLeak")
-object TelePhonyManagerTest {
+object TelePhonyManagerUtil {
     private var manager: TelephonyManager =
         Myapp.context.getSystemService(TelephonyManager::class.java) as TelephonyManager
 
@@ -27,7 +27,17 @@ object TelePhonyManagerTest {
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //getImeiForSlot: The user 10191 does not meet the requirements to access device identifiers.
-//            manager.getImei()
+            manager.getImei()
+            null
+        } else {
+            "VERSION.SDK_INT < O"
+        }
+    }
+    fun getImei2(): String? {
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //getImeiForSlot: The user 10191 does not meet the requirements to access device identifiers.
+            manager.getImei(0)
             null
         } else {
             "VERSION.SDK_INT < O"
@@ -46,6 +56,20 @@ object TelePhonyManagerTest {
         }
         //The user 10191 does not meet the requirements to access device identifiers
         return manager.getDeviceId()
+    }
+
+    fun getDeviceIdWithSlotIndex(context: Activity): String? {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_PHONE_STATE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            context.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
+            return null
+        }
+        //The user 10191 does not meet the requirements to access device identifiers
+        return manager.getDeviceId(0)
     }
 
     fun getSubscriberId(): String? {

@@ -34,19 +34,20 @@ object TelephonyManagerHook {
     fun getImei(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getImei"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
-        //getImeiForSlot: The user 10191 does not meet the requirements to access device identifiers.
-        return try {
-            saveResult(key, manager.imei ?: "", callerClassName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ""
-        }
+    ): String? {
+        return null
+//        val key = "TelephonyManager#getImei()"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData ?: ""
+//        }
+//        //getImeiForSlot: The user 10191 does not meet the requirements to access device identifiers.
+//        return try {
+//            saveResult(key, manager.imei ?: "", callerClassName)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            ""
+//        }
     }
 
 
@@ -59,13 +60,14 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         slotIndex: Int,
         callerClassName: String
-    ): String {
-        val key = "getImei"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
-        return saveResult(key, manager.getImei(slotIndex) ?: "", callerClassName)
+    ): String? {
+        return null
+//        val key = "TelephonyManager#getImei($slotIndex)"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData
+//        }
+//        return saveResult(key, manager.getImei(slotIndex), callerClassName)
     }
 
 
@@ -77,19 +79,20 @@ object TelephonyManagerHook {
     fun getDeviceId(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getImei"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
-        //The user 10210 does not meet the requirements to access device identifiers.
-        return try {
-            saveResult(key, manager.deviceId ?: "", callerClassName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ""
-        }
+    ): String? {
+        return null
+//        val key = "TelephonyManager#getDeviceId()"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData ?: ""
+//        }
+//        //The user 10210 does not meet the requirements to access device identifiers.
+//        return try {
+//            saveResult(key, manager.deviceId ?: "", callerClassName)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            ""
+//        }
     }
 
     @JvmStatic
@@ -101,13 +104,14 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         slotIndex: Int,
         callerClassName: String
-    ): String {
-        val key = "getImei"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
-        return saveResult(key, manager.getDeviceId(slotIndex) ?: "", callerClassName)
+    ): String? {
+        return null
+//        val key = "#TelephonyManagergetDeviceId(${slotIndex})"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData ?: ""
+//        }
+//        return saveResult(key, manager.getDeviceId(slotIndex) ?: "", callerClassName)
     }
 
 
@@ -119,18 +123,19 @@ object TelephonyManagerHook {
     fun getSubscriberId(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getSubscriberId"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
-        return try {
-            saveResult(key, manager.subscriberId ?: "", callerClassName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ""
-        }
+    ): String? {
+        return null
+//        val key = "TelephonyManager#getSubscriberId()"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData ?: ""
+//        }
+//        return try {
+//            saveResult(key, manager.subscriberId ?: "", callerClassName)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            ""
+//        }
     }
 
 
@@ -142,19 +147,20 @@ object TelephonyManagerHook {
     fun getSimSerialNumber(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getSimSerialNumber"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
+    ): String? {
+//        val key = "TelephonyManager#getSimSerialNumber()"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData ?: ""
+//        }
+        return null
         //The user 10210 does not meet the requirements to access device identifiers.
-        return try {
-            saveResult(key, manager.simSerialNumber ?: "", callerClassName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ""
-        }
+//        return try {
+//            saveResult(key, manager.simSerialNumber ?: "", callerClassName)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            ""
+//        }
     }
 
 
@@ -166,19 +172,20 @@ object TelephonyManagerHook {
     fun getMeid(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getMeid"
-        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
-        if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
-        }
-        //The user 10210 does not meet the requirements to access device identifiers.
-        return try {
-            saveResult(key, manager.meid ?: "", callerClassName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ""
-        }
+    ): String? {
+        return null
+//        val key = "TelephonyManager#getMeid()"
+//        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
+//        if (checkResult.shouldReturn()) {
+//            return checkResult.cacheData ?: ""
+//        }
+//        //The user 10210 does not meet the requirements to access device identifiers.
+//        return try {
+//            saveResult(key, manager.meid ?: "", callerClassName)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            ""
+//        }
     }
 
 
@@ -190,13 +197,13 @@ object TelephonyManagerHook {
     fun getLine1Number(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getLine1Number"
+    ): String? {
+        val key = "TelephonyManager#getLine1Number"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.line1Number ?: "", callerClassName)
+        return saveResult(key, manager.line1Number, callerClassName)
     }
 
 
@@ -209,7 +216,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): CellLocation? {
-        val key = "getCellLocation"
+        val key = "TelephonyManager#getCellLocation"
         val checkResult = checkCacheAndPrivacy<CellLocation>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
@@ -246,13 +253,13 @@ object TelephonyManagerHook {
     fun getSimOperator(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
+    ): String? {
         val key = "getSimOperator"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.simOperator ?: "", callerClassName)
+        return saveResult(key, manager.simOperator, callerClassName)
     }
 
     @JvmStatic
@@ -263,13 +270,13 @@ object TelephonyManagerHook {
     fun getSimOperatorName(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
+    ): String? {
         val key = "getSimOperatorName"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.simOperatorName ?: "", callerClassName)
+        return saveResult(key, manager.simOperatorName, callerClassName)
     }
 
     @JvmStatic
@@ -280,13 +287,13 @@ object TelephonyManagerHook {
     fun getSimCountryIso(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
-        val key = "getSimCountryIso"
+    ): String? {
+        val key = "TelephonyManager#getSimCountryIso"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.simCountryIso ?: "", callerClassName)
+        return saveResult(key, manager.simCountryIso, callerClassName)
     }
 
     @JvmStatic
@@ -297,13 +304,13 @@ object TelephonyManagerHook {
     fun getNetworkOperator(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
+    ): String? {
         val key = "getNetworkOperator"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.networkOperator ?: "", callerClassName)
+        return saveResult(key, manager.networkOperator, callerClassName)
     }
 
     @JvmStatic
@@ -314,13 +321,13 @@ object TelephonyManagerHook {
     fun getNetworkOperatorName(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
+    ): String? {
         val key = "getNetworkOperatorName"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.networkOperatorName ?: "", callerClassName)
+        return saveResult(key, manager.networkOperatorName, callerClassName)
     }
 
     @JvmStatic
@@ -331,13 +338,13 @@ object TelephonyManagerHook {
     fun getNetworkCountryIso(
         manager: TelephonyManager,
         callerClassName: String
-    ): String {
+    ): String? {
         val key = "getNetworkCountryIso"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
-            return checkResult.cacheData ?: ""
+            return checkResult.cacheData
         }
-        return saveResult(key, manager.networkCountryIso ?: "", callerClassName)
+        return saveResult(key, manager.networkCountryIso, callerClassName)
     }
 
 }

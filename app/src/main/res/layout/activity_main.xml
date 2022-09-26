@@ -29,8 +29,19 @@
             android:layout_height="wrap_content"
             android:text="使用缓存" />
 
+
+        <Button
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="刷新"
+            android:textAllCaps="false" />
+
+
         <TextView
-            android:text="TelephonyManager"
+            android:text="TelephonyManager(部分API过时返回null)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -45,7 +56,25 @@
             android:textAllCaps="false" />
 
         <Button
+            android:id="@+id/getImei2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getImei2"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/getDeviceId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getDeviceId"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getDeviceId2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -163,6 +192,128 @@
             android:text="getNetworkCountryIso"
             android:textAllCaps="false" />
 
+        <TextView
+            android:text="WifiInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/getIpAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getIpAddress"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getMacAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getMacAddress"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getSSID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getSSID"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getBSSID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getBSSID"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:text="WifiManager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/getScanResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getScanResults"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getDhcpInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getDhcpInfo"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/getConnectionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getConnectionInfo"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            android:text="BluetoothAdapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/getAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getConnectionInfo"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/getName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getConnectionInfo"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:text="BluetoothDevice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/bdGetAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getConnectionInfo"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/bdGetName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="getConnectionInfo"
+            android:textAllCaps="false" />
 
         <TextView
             android:text="Settings.System"
@@ -232,14 +383,21 @@
             android:textAllCaps="false" />
 
 
-        <Button
-            android:id="@+id/getPackage"
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getPackage"
-            android:textAllCaps="false" />
+            android:layout_height="60dp">
+
+            <Button
+                android:id="@+id/getPackage"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:text="getPackage"
+                android:textAllCaps="false" />
+
+
+        </ScrollView>
 
 
         <TextView
@@ -275,46 +433,6 @@
             android:textAllCaps="false" />
 
 
-
-
-        <TextView
-            android:text="WifiManager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/getSSID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getSSID"
-            android:textAllCaps="false" />
-        <Button
-            android:id="@+id/getBSSID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getBSSID"
-            android:textAllCaps="false" />
-        <Button
-            android:id="@+id/getMacAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getMacAddress"
-            android:textAllCaps="false" />
-        <Button
-            android:id="@+id/getConfiguredNetworks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getConfiguredNetworks"
-            android:textAllCaps="false" />
-
-
         <TextView
             android:text="SensorManager"
             android:layout_width="wrap_content"
@@ -323,29 +441,6 @@
 
         <Button
             android:id="@+id/getSensorList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getSensorList"
-            android:textAllCaps="false" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WifiManager" />
-
-        <Button
-            android:id="@+id/getScanResults"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getSensorList"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/getDhcpInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

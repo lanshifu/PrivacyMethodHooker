@@ -23,8 +23,8 @@ object SettingsSecureHook {
         resolver: ContentResolver,
         name: String,
         callerClassName: String
-    ): String {
-
+    ): String? {
+        val key = "Settings\$Secure#getString(${name})"
         when (name) {
             "android_id" -> {
             }
@@ -34,11 +34,11 @@ object SettingsSecureHook {
             "bluetooth_name" -> {
             }
             else -> {
-                return Settings.Secure.getString(resolver, name)
+                return Settings.Secure.getString(resolver, key)
             }
         }
 
-        val checkResult = checkCacheAndPrivacy<String>(name, callerClassName)
+        val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: ""
         }

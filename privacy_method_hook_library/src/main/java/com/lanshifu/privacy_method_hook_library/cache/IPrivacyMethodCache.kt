@@ -8,7 +8,7 @@ interface IPrivacyMethodCache {
 
     fun <T> get(key: String): T?
 
-    fun put(key: String, value: Any)
+    fun <T> put(key: String, value: T) :T
 
     fun remove(key: String)
 

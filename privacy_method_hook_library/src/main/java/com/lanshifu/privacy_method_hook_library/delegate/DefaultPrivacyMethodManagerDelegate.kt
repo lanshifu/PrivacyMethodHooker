@@ -1,6 +1,8 @@
 package com.lanshifu.privacy_method_hook_library.delegate
 
 import android.util.Log
+import android.widget.Toast
+import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
 
 /**
  * @author lanxiaobin
@@ -57,6 +59,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
             "PrivacyMethodManager",
             "onPrivacyMethodCallIllegal,className=$className，methodName=$methodName,methodStack=$methodStack"
         )
+        Toast.makeText(PrivacyMethodManager.mContext,"调用了隐私API，methodName=$methodName，className=$className",Toast.LENGTH_LONG).show()
     }
 
     override fun onCacheExpire(methodName: String) {
@@ -65,13 +68,13 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
             "onCacheExpire,methodName=$methodName"
         )
         //todo toast
+
     }
 
     override fun customCacheExpireMap(): HashMap<String, Int> {
         return HashMap<String, Int>().apply {
-
             ///缓存60s过期
-            this["getSimCountryIso"] = 10
+            this["TelephonyManager#getSimCountryIso"] = 10
         }
     }
 

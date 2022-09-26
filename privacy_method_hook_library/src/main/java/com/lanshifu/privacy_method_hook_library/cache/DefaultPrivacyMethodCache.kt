@@ -19,8 +19,12 @@ class DefaultPrivacyMethodCache : IPrivacyMethodCache {
     }
 
 
-    override fun put(key: String, value: Any) {
-        mCache[key] = value
+    override fun <T> put(key: String, value: T): T {
+        when (value) {
+            is Any -> mCache[key] = value
+            else -> mCache[key] = value.toString()
+        }
+        return value
     }
 
     override fun remove(key: String) {

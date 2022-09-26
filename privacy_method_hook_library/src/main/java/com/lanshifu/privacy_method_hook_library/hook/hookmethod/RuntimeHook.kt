@@ -24,17 +24,17 @@ object RuntimeHook {
         callerClassName: String
     ): Process {
 
+        val key = "Runtime#exec($name)"
         if (name.contains("/sys/class/net/") ||
             name.contains("pm list package") ||
             name.contains("getprop")
         ) {
-            val checkCacheAndPrivacy = checkCacheAndPrivacy<Process>(name, callerClassName)
+            val checkCacheAndPrivacy = checkCacheAndPrivacy<Process>(key, callerClassName)
             if (checkCacheAndPrivacy.shouldReturn()) {
-                if(checkCacheAndPrivacy.cacheData != null){
-                    // todo 直接构造一个假的返回?
-//                    return checkCacheAndPrivacy.cacheData!!
-                }
-                return saveResult(name, runtime.exec(name), callerClassName)
+//                if(checkCacheAndPrivacy.cacheData != null){
+//                }
+                // todo 直接构造一个假的返回?
+                return runtime.exec("pwd")
             }
             return runtime.exec(name)
 

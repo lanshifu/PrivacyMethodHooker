@@ -41,6 +41,60 @@
 
 # 实现原理
 
+# 隐私API
+
+## TelePhonyManager
+
+-  getImei
+-  getDeviceId
+-  getSubscriberId
+-  getSimSerialNumber
+-  getMeid
+
+这些API只能系统App调用，target 29 以上调用会抛异常，target 28或者以下会返回null
+
+- getLine1Number
+- getCellLocation
+- getSimOperator
+- getSimOperatorName
+- getSimCountryIso
+- getNetworkOperator
+- getNetworkOperatorName
+- getNetworkCountryIso
+
+## WifiInfo
+- getIpAddress
+- getSSID
+- getBSSID
+- getMacAddress
+
+后面三个需要开启定位才能获取到真实的。
+
+## WifiManager
+- getScanResults
+需要开启定位才能获取
+
+- getDhcpInfo
+- getConnectionInfo
+
+## BluetoothAdapter
+- getAddress
+- getName
+
+## BluetoothAdapter
+- getAddress
+- getName
+
+
+## Settings
+Settings$System#getString(android_id)
+Settings$Secure#getString(android_id)
+Settings$Secure#getString(bluetooth_address)
+Settings$Secure#getString(bluetooth_name)
+
+## Runtime
+
+
 # 友情链接
 
 1. [ASM hook隐私方法调用，防止App被下架](https://juejin.cn/post/7043399520486424612#heading-0) 蓝师傅之前在其它公司的实现方案，以源码形式集成，没有发布到远程仓库，不支持多个项目快速接入，不支持替换Class，扩展性也没那么高。

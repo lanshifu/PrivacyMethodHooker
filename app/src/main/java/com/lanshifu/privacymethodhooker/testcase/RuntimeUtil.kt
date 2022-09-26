@@ -10,7 +10,7 @@ import java.io.InputStreamReader
  * @author lanxiaobin
  * @date 2022/9/22
  */
-object RuntimeTest {
+object RuntimeUtil {
 
     fun getSerialNo():String{
         var process = Runtime.getRuntime().exec("getprop ro.serialno")

@@ -8,7 +8,7 @@ import android.provider.Settings
  * @author lanxiaobin
  * @date 2022/9/22
  */
-object SettingsTest {
+object SettingsUtil {
 
     fun getAndroidBySystem(contentResolver: ContentResolver):String{
         return Settings.System.getString(contentResolver,"android_id")

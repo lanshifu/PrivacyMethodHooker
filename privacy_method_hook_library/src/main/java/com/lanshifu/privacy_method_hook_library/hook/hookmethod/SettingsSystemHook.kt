@@ -25,12 +25,11 @@ object SettingsSystemHook {
         resolver: ContentResolver,
         name: String,
         callerClassName: String
-    ): String {
+    ): String? {
 
-        var key = name
+        val key = "Settings\$System#getString(${name})"
         when (name) {
             "android_id" -> {
-                key = "${key}_${Settings.Secure.ANDROID_ID}"
             }
             else -> {
                 return Settings.System.getString(resolver, name)
