@@ -15,7 +15,7 @@ interface PrivacyMethodManagerDelegate {
      * 是否使用缓存
      * @param methodName: 对应某个隐私API方法名
      */
-    fun isUseCache(methodName: String): Boolean
+    fun isUseCache(methodName: String, callerClassName: String): Boolean
 
     /**
      * 是否显示隐私方法调用堆栈，
@@ -31,7 +31,7 @@ interface PrivacyMethodManagerDelegate {
     /**
      * 隐私调用违规的时候回调
      */
-    fun onPrivacyMethodCallIllegal(className: String, methodName: String, methodStack: String)
+    fun onPrivacyMethodCallIllegal(callerClassName: String, methodName: String, methodStack: String)
 
     /**
      * 缓存过期回调

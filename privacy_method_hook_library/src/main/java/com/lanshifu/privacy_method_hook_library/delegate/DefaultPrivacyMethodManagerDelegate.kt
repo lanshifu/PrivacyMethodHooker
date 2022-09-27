@@ -1,8 +1,8 @@
 package com.lanshifu.privacy_method_hook_library.delegate
 
-import android.util.Log
 import android.widget.Toast
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.log.LogUtil
 
 /**
  * @author lanxiaobin
@@ -12,6 +12,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
 
     /**
      * 这些是默认不缓存的方法，黑名单
+     * 黑名单中的方法如果需要缓存，可以重写 isUseCache 方法
      */
     private val mCacheBlackMap = HashMap<String, String>()
 
@@ -32,7 +33,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         return false
     }
 
-    override fun isUseCache(methodName: String): Boolean {
+    override fun isUseCache(methodName: String, callerClassName: String): Boolean {
         if (mCacheBlackMap.containsKey(methodName)) {
             return false
         }
@@ -44,31 +45,31 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
     }
 
     override fun onPrivacyMethodCall(className: String, methodName: String, methodStack: String) {
-        Log.d(
-            "PrivacyMethodManager",
-            "onPrivacyMethodCall,className=$className,methodName=$methodName,methodStack=$methodStack"
+        LogUtil.d(
+            "onPrivacyMethodCall,className=$className,methodName=$methodName"
         )
     }
 
     override fun onPrivacyMethodCallIllegal(
-        className: String,
+        callerClassName: String,
         methodName: String,
         methodStack: String
     ) {
-        Log.e(
-            "PrivacyMethodManager",
-            "onPrivacyMethodCallIllegal,className=$className，methodName=$methodName,methodStack=$methodStack"
+        LogUtil.e(
+            "onPrivacyMethodCallIllegal,callerClassName=$callerClassName，methodName=$methodName,methodStack=$methodStack"
         )
-        Toast.makeText(PrivacyMethodManager.mContext,"调用了隐私API，methodName=$methodName，className=$className",Toast.LENGTH_LONG).show()
+
+        Toast.makeText(
+            PrivacyMethodManager.mContext,
+            "调用了隐私API，methodName=$methodName，className=$callerClassName",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun onCacheExpire(methodName: String) {
-        Log.d(
-            "PrivacyMethodManager",
+        LogUtil.i(
             "onCacheExpire,methodName=$methodName"
         )
-        //todo toast
-
     }
 
     override fun customCacheExpireMap(): HashMap<String, Int> {

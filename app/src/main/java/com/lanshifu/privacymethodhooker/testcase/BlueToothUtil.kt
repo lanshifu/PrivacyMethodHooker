@@ -18,30 +18,6 @@ import androidx.core.app.ActivityCompat
 object BlueToothUtil {
 
 
-    private fun getWifiInfo(context: Activity): WifiInfo? {
-
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_WIFI_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                context.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
-                return null
-            }
-        }
-
-        val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        if (networkInfo != null && networkInfo.isConnected) {
-            val wifiManager =
-                context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            return wifiManager.connectionInfo
-        }
-        return null
-    }
-
     fun getBluetoothAdapterAddress(context: Activity): String? {
         val adapter = BluetoothAdapter.getDefaultAdapter()
         return  adapter.address
@@ -70,5 +46,45 @@ object BlueToothUtil {
         return adapter.name
     }
 
+    fun getBluetoothDeviceName(context: Activity): String? {
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                context.requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT),3)
+            }
+            return null
+        }
+
+        val bondedDevices = adapter.bondedDevices
+        for (bondedDevice in bondedDevices) {
+            return bondedDevice.name
+        }
+        return null
+    }
+
+
+    fun getBluetoothDeviceAddress(context: Activity): String? {
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                context.requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT),3)
+            }
+            return null
+        }
+
+        val bondedDevices = adapter.bondedDevices
+        for (bondedDevice in bondedDevices) {
+            return bondedDevice.address
+        }
+        return null
+    }
 
 }

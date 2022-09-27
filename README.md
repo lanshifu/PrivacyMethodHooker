@@ -41,7 +41,7 @@
 
 # 实现原理
 
-# 隐私API
+# 隐私API汇总
 
 ## TelePhonyManager
 
@@ -85,12 +85,27 @@
 - getAddress
 - getName
 
+## SensorManagerHook
+- getSensorList
+
+## Sensor
+- getName
+- getType
+- getVersion
+
+## NetworkInterface
+- getHardwareAddress
+>测试用例没覆盖
+
+## PackageManager
+- getInstalledPackages
+- getInstalledApplications
 
 ## Settings
-Settings$System#getString(android_id)
-Settings$Secure#getString(android_id)
-Settings$Secure#getString(bluetooth_address)
-Settings$Secure#getString(bluetooth_name)
+Settings$System#getString("android_id")
+Settings$Secure#getString("android_id")
+Settings$Secure#getString("bluetooth_address")
+Settings$Secure#getString("bluetooth_name")
 
 ## Runtime
 

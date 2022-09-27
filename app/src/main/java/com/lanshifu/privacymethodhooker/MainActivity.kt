@@ -3,6 +3,7 @@ package com.lanshifu.privacymethodhooker
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
@@ -23,20 +24,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 代理接口定义：PrivacyMethodManagerDelegate
         PrivacyMethodManager.init(this, object : DefaultPrivacyMethodManagerDelegate() {
             override fun isAgreePrivacy(): Boolean {
                 // 是否同意隐私协议
                 return isAgreePrivacy
             }
 
-            override fun isUseCache(methodName: String): Boolean {
+            override fun isUseCache(methodName: String, callerClassName:String): Boolean {
                 //自定义是否要使用缓存，methodName可以在日志找到，过滤一下onPrivacyMethodCall关键字
                 if (methodName == "getLine1Number") {
                     return true
                 }
 
-                return isUseCache
+                // 父类处理黑名单了，这里复用
+                return if(super.isUseCache(methodName, callerClassName)){
+                    isUseCache
+                } else {
+                    false
+                }
+
             }
 
             override fun isShowPrivacyMethodStack(): Boolean {
@@ -44,15 +50,23 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPrivacyMethodCallIllegal(
-                className: String,
+                callerClassName: String,
                 methodName: String,
                 methodStack: String
             ) {
-                super.onPrivacyMethodCallIllegal(className, methodName, methodStack)
+                // super 有toast，如果需要自己弹窗，可以注释掉
+//                super.onPrivacyMethodCallIllegal(className, methodName, methodStack)
+                Log.e(
+                    "PrivacyMethodManager",
+                    "onPrivacyMethodCallIllegal,className=$callerClassName，methodName=$methodName,methodStack=$methodStack"
+                )
             }
 
             override fun customCacheExpireMap(): HashMap<String, Int> {
-                return super.customCacheExpireMap()
+                return HashMap<String, Int>().apply {
+                    ///缓存60s过期
+                    this["TelephonyManager#getSimCountryIso"] = 10
+                }
             }
         })
 
@@ -134,13 +148,39 @@ class MainActivity : AppCompatActivity() {
         getName.text = "getAddress=${BlueToothUtil.getBluetoothAdapterName(this)}"
 
         //BluetoothAdapter
-        getAddress.text = "getAddress=${BlueToothUtil.getBluetoothAdapterAddress(this)}"
-        getName.text = "getAddress=${BlueToothUtil.getBluetoothAdapterName(this)}"
+        bdGetName.text = "getName=${BlueToothUtil.getBluetoothDeviceAddress(this)}"
+        bdGetAddress.text = "getAddress=${BlueToothUtil.getBluetoothDeviceName(this)}"
+
+        //Sensor
+        getSensorList.text = "getSensorList.size=${SensorUtil.getSensorList(this)?.size}"
+        getSensorName.text = "getName=${SensorUtil.getName(this)}"
+        getSensorType.text = "getType=${SensorUtil.getType(this)}"
+        getSensorVersion.text = "getVersion=${SensorUtil.getVersion(this)}"
+
+        //NetworkInterface
+        getHardwareAddress.text = "getHardwareAddress=${NetworkInterfaceUtil.getHardwareAddress(this)}"
+
+        //PackageManager
+        getInstalledApplications.text = "getInstalledApplications size=${PackageManagerUtil.getInstalledApplications(this)?.size}"
+        getInstalledPackages.text = "getInstalledPackages size=${PackageManagerUtil.getInstalledPackages(this)?.size}"
+
+        //ActivityManager
+        getRunningAppProcesses.text = "getRunningAppProcesses size=${ActivityManagerUtil.getRunningAppProcesses(this)?.size}"
+        getRunningServices.text = "getRunningServices size=${ActivityManagerUtil.getRunningServices(this)?.size}"
+        getRecentTasks.text = "getRecentTasks size=${ActivityManagerUtil.getRecentTasks(this)?.size}"
+        getRunningTasks.text = "getRunningTasks size=${ActivityManagerUtil.getRunningTasks(this)?.size}"
+
+        //LocationManager
+        getLastKnownLocation.text = "getLastKnownLocation=${LocationUtil.getLastKnownLocation(this)}"
+        getLatitude.text = "getLatitude=${LocationUtil.getLatitude(this)}"
+        getLongitude.text = "getLongitude=${LocationUtil.getLongitude(this)}"
+
 
         //Runtime.exec
-        getSerialNo.text = "getSerialNo=${RuntimeUtil.getSerialNo()}"
-        getEth0.text = "getEth0=${RuntimeUtil.getEth0()}"
-        getPackage.text = "getPackage=${RuntimeUtil.getPackage()}"
+        getSerialNo.text = "getprop ro.serialno = ${RuntimeUtil.getSerialNo()}"
+        getEth0.text = "cat /sys/class/net/eth0/address = ${RuntimeUtil.getEth0()}"
+        getPackage.text = "pm list package = ${RuntimeUtil.getPackage()}"
+        ps.text = "ps = ${RuntimeUtil.ps()}"
 
         /**
          *     NEW java/io/File

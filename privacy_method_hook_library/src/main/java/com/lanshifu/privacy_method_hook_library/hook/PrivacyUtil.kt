@@ -14,26 +14,28 @@ fun <T> checkCacheAndPrivacy(
     key: String,
     callerClassName: String
 ): CheckCacheAndPrivacyResult<T> {
-    val cache = PrivacyMethodCacheManager.get<T?>(key)
-    if (cache != null) {
-        return CheckCacheAndPrivacyResult(cache, true)
+
+    if (PrivacyMethodManager.isUseCache(key, callerClassName)) {
+        val cache = PrivacyMethodCacheManager.get<T?>(key)
+        if (cache != null) {
+            return CheckCacheAndPrivacyResult(cache, true)
+        }
     }
 
     val isAgreePrivacy = checkAgreePrivacy(key, callerClassName)
     return CheckCacheAndPrivacyResult(null, isAgreePrivacy)
 }
 
-fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
+fun checkAgreePrivacy(name: String, callerClassName: String = ""): Boolean {
     var methodStack = ""
     if (PrivacyMethodManager.isShowPrivacyMethodStack()) {
         methodStack = Log.getStackTraceString(Throwable())
     }
 
-    PrivacyMethodManager.onPrivacyMethodCall(className, name, methodStack)
+    PrivacyMethodManager.onPrivacyMethodCall(callerClassName, name, methodStack)
 
     if (!PrivacyMethodManager.isAgreePrivacy()) {
-        //没有同意隐私权限，打印堆栈，toast
-        PrivacyMethodManager.onPrivacyMethodCallIllegal(className, name, methodStack)
+        PrivacyMethodManager.onPrivacyMethodCallIllegal(callerClassName, name, methodStack)
         return false
     }
     return true
@@ -41,7 +43,7 @@ fun checkAgreePrivacy(name: String, className: String = ""): Boolean {
 
 fun <T> saveResult(key: String, value: T, callerClassName: String): T {
     LogUtil.d("saveResult,key=$key,value=$value,callerClassName=${callerClassName}")
-    if(value != null){
+    if (value != null) {
         PrivacyMethodCacheManager.put(key, value as Any)
     }
     return value

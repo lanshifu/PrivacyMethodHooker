@@ -235,7 +235,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): List<NeighboringCellInfo>? {
-        val key = "getNeighboringCellInfo"
+        val key = "TelephonyManager#getNeighboringCellInfo"
         val checkResult = checkCacheAndPrivacy<List<NeighboringCellInfo>>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
@@ -254,7 +254,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): String? {
-        val key = "getSimOperator"
+        val key = "TelephonyManager#getSimOperator"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
@@ -271,7 +271,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): String? {
-        val key = "getSimOperatorName"
+        val key = "TelephonyManager#getSimOperatorName"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
@@ -305,7 +305,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): String? {
-        val key = "getNetworkOperator"
+        val key = "TelephonyManager#getNetworkOperator"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
@@ -322,7 +322,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): String? {
-        val key = "getNetworkOperatorName"
+        val key = "TelephonyManager#getNetworkOperatorName"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
@@ -339,7 +339,7 @@ object TelephonyManagerHook {
         manager: TelephonyManager,
         callerClassName: String
     ): String? {
-        val key = "getNetworkCountryIso"
+        val key = "TelephonyManager#getNetworkCountryIso"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData

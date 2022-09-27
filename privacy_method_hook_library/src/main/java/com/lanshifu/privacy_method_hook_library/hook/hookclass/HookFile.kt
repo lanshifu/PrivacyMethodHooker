@@ -16,9 +16,9 @@ open class HookFile : File {
         LogUtil.i("HookFile:pathname=$fileName")
         //mac
         //sys/class/net/*/address
-        val matchParttern = """^\/sys\/class\/net\/\w{1,}\/address"""
-        val ismatchAddress = Regex(matchParttern).containsMatchIn(fileName)
-        if (ismatchAddress) {
+        val pattern = """^\/sys\/class\/net\/\w+\/address"""
+        val isMatchAddress = Regex(pattern).containsMatchIn(fileName)
+        if (isMatchAddress) {
             LogUtil.d("读文件 fileName=$fileName")
             if (!checkAgreePrivacy("<init>", "java.io.File")) {
                 // todo: 改成空路径？
@@ -27,7 +27,7 @@ open class HookFile : File {
 
         if (fileName.startsWith("/system/build.prop")) {
             LogUtil.d("读文件 fileName=$fileName")
-            if (!checkAgreePrivacy("<init>fileName=$fileName", "java.io.File")) {
+            if (!checkAgreePrivacy("File#<init>fileName=$fileName", "java.io.File")) {
                 // todo: 改成空路径？
             }
         }
@@ -43,7 +43,7 @@ open class HookFile : File {
 object ClassHook {
 
     /**
-     * 替换 File(fileName:String)
+     * new File(fileName:String) -> new HookFile(fileName:String)
      */
     @AsmClassReplace(oriClass = File::class, targetClass = HookFile::class)
     fun hookFile(fileName: String) {

@@ -42,10 +42,16 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
         LogUtil.d("PrivacyMethodCache:setPrivacyMethodCache,name=${iPrivacyMethodCache.javaClass::getSimpleName}")
     }
 
-    override fun <T> get(key: String): T? {
-        if (!PrivacyMethodManager.isUseCache(key)) {
+    fun <T> get(key: String, callClassName:String): T? {
+        if (!PrivacyMethodManager.isUseCache(key, callClassName)) {
             return null
         }
+        checkCacheExpire(key)
+        LogUtil.d("PrivacyMethodCache:get,key=$key,value=${mPrivacyMethodCacheImpl.get(key) as Any?}")
+        return mPrivacyMethodCacheImpl.get(key)
+    }
+
+    override fun <T> get(key: String): T? {
         checkCacheExpire(key)
         LogUtil.d("PrivacyMethodCache:get,key=$key,value=${mPrivacyMethodCacheImpl.get(key) as Any?}")
         return mPrivacyMethodCacheImpl.get(key)

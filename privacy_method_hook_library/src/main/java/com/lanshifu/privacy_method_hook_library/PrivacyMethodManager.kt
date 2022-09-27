@@ -26,8 +26,8 @@ object PrivacyMethodManager : PrivacyMethodManagerDelegate {
         return mDelegate.isAgreePrivacy()
     }
 
-    override fun isUseCache(methodName: String): Boolean {
-        return mDelegate.isUseCache(methodName)
+    override fun isUseCache(methodName: String, callerClassName: String): Boolean {
+        return mDelegate.isUseCache(methodName, callerClassName)
     }
 
     override fun isShowPrivacyMethodStack(): Boolean {
@@ -39,11 +39,11 @@ object PrivacyMethodManager : PrivacyMethodManagerDelegate {
     }
 
     override fun onPrivacyMethodCallIllegal(
-        className: String,
+        callerClassName: String,
         methodName: String,
         methodStack: String
     ) {
-        mDelegate.onPrivacyMethodCallIllegal(className, methodName, methodStack)
+        mDelegate.onPrivacyMethodCallIllegal(callerClassName, methodName, methodStack)
     }
 
     override fun onCacheExpire(methodName: String) {
