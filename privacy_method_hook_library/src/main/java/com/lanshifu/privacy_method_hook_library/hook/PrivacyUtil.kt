@@ -43,7 +43,7 @@ fun checkAgreePrivacy(name: String, callerClassName: String = ""): Boolean {
 
 fun <T> saveResult(key: String, value: T, callerClassName: String): T {
     LogUtil.d("saveResult,key=$key,value=$value,callerClassName=${callerClassName}")
-    if (value != null) {
+    if (value != null && PrivacyMethodManager.isUseCache(key, callerClassName)) {
         PrivacyMethodCacheManager.put(key, value as Any)
     }
     return value

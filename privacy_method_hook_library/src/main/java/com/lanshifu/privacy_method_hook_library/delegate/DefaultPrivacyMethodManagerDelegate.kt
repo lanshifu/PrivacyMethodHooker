@@ -11,22 +11,17 @@ import com.lanshifu.privacy_method_hook_library.log.LogUtil
 open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
 
     /**
-     * 这些是默认不缓存的方法，黑名单
-     * 黑名单中的方法如果需要缓存，可以重写 isUseCache 方法
+     * 这些是默认需要缓存的方法，
+     * 可以重写 isUseCache 方法
      */
-    private val mCacheBlackMap = HashMap<String, String>()
+    private val mCacheMethodMap = HashMap<String, String>()
 
     init {
-        mCacheBlackMap["getSimSerialNumber"] = "1"
-        mCacheBlackMap["getLine1Number"] = "1"
-        mCacheBlackMap["getCellLocation"] = "1"
-        mCacheBlackMap["getSimOperator"] = "1"
-        mCacheBlackMap["getSimOperatorName"] = "1"
-//        mCacheBlackMap["getSimCountryIso"] = "1"
-        mCacheBlackMap["getNetworkOperator"] = "1"
-        mCacheBlackMap["getNetworkOperatorName"] = "1"
-        mCacheBlackMap["getNetworkCountryIso"] = "1"
-        mCacheBlackMap["query"] = "1"
+        mCacheMethodMap["Settings\$System#getString(android_id)"] = "1"
+        mCacheMethodMap["Settings\$Secure#getString(bluetooth_address)"] = "1"
+        mCacheMethodMap["Settings\$Secure#getString(bluetooth_name)"] = "1"
+        mCacheMethodMap["WifiInfo#getMacAddress"] = "1"
+        mCacheMethodMap["NetworkInterface#getHardwareAddress"] = "1"
     }
 
     override fun isAgreePrivacy(): Boolean {
@@ -34,10 +29,10 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
     }
 
     override fun isUseCache(methodName: String, callerClassName: String): Boolean {
-        if (mCacheBlackMap.containsKey(methodName)) {
+        if (mCacheMethodMap.containsKey(methodName)) {
             return false
         }
-        return true
+        return false
     }
 
     override fun isShowPrivacyMethodStack(): Boolean {

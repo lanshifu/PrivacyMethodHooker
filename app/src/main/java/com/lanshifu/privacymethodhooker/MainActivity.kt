@@ -1,6 +1,8 @@
 package com.lanshifu.privacymethodhooker
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -30,14 +32,14 @@ class MainActivity : AppCompatActivity() {
                 return isAgreePrivacy
             }
 
-            override fun isUseCache(methodName: String, callerClassName:String): Boolean {
+            override fun isUseCache(methodName: String, callerClassName: String): Boolean {
                 //自定义是否要使用缓存，methodName可以在日志找到，过滤一下onPrivacyMethodCall关键字
                 if (methodName == "getLine1Number") {
                     return true
                 }
 
                 // 父类处理黑名单了，这里复用
-                return if(super.isUseCache(methodName, callerClassName)){
+                return if (super.isUseCache(methodName, callerClassName)) {
                     isUseCache
                 } else {
                     false
@@ -99,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("Range")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun updateData() {
 
@@ -158,23 +161,33 @@ class MainActivity : AppCompatActivity() {
         getSensorVersion.text = "getVersion=${SensorUtil.getVersion(this)}"
 
         //NetworkInterface
-        getHardwareAddress.text = "getHardwareAddress=${NetworkInterfaceUtil.getHardwareAddress(this)}"
+        getHardwareAddress.text =
+            "getHardwareAddress=${NetworkInterfaceUtil.getHardwareAddress(this)}"
 
         //PackageManager
-        getInstalledApplications.text = "getInstalledApplications size=${PackageManagerUtil.getInstalledApplications(this)?.size}"
-        getInstalledPackages.text = "getInstalledPackages size=${PackageManagerUtil.getInstalledPackages(this)?.size}"
+        getInstalledApplications.text =
+            "getInstalledApplications size=${PackageManagerUtil.getInstalledApplications(this)?.size}"
+        getInstalledPackages.text =
+            "getInstalledPackages size=${PackageManagerUtil.getInstalledPackages(this)?.size}"
 
         //ActivityManager
-        getRunningAppProcesses.text = "getRunningAppProcesses size=${ActivityManagerUtil.getRunningAppProcesses(this)?.size}"
-        getRunningServices.text = "getRunningServices size=${ActivityManagerUtil.getRunningServices(this)?.size}"
-        getRecentTasks.text = "getRecentTasks size=${ActivityManagerUtil.getRecentTasks(this)?.size}"
-        getRunningTasks.text = "getRunningTasks size=${ActivityManagerUtil.getRunningTasks(this)?.size}"
+        getRunningAppProcesses.text =
+            "getRunningAppProcesses size=${ActivityManagerUtil.getRunningAppProcesses(this)?.size}"
+        getRunningServices.text =
+            "getRunningServices size=${ActivityManagerUtil.getRunningServices(this)?.size}"
+        getRecentTasks.text =
+            "getRecentTasks size=${ActivityManagerUtil.getRecentTasks(this)?.size}"
+        getRunningTasks.text =
+            "getRunningTasks size=${ActivityManagerUtil.getRunningTasks(this)?.size}"
 
         //LocationManager
-        getLastKnownLocation.text = "getLastKnownLocation=${LocationUtil.getLastKnownLocation(this)}"
+        getLastKnownLocation.text =
+            "getLastKnownLocation=${LocationUtil.getLastKnownLocation(this)}"
         getLatitude.text = "getLatitude=${LocationUtil.getLatitude(this)}"
         getLongitude.text = "getLongitude=${LocationUtil.getLongitude(this)}"
 
+        //ContentResolver
+        query.text = "query(content://telephony/siminfo) =${query("content://telephony/siminfo")} "
 
         //Runtime.exec
         getSerialNo.text = "getprop ro.serialno = ${RuntimeUtil.getSerialNo()}"
@@ -210,6 +223,23 @@ class MainActivity : AppCompatActivity() {
             LogUtil.d("Exception")
             e.printStackTrace()
         }
+
+
+    }
+
+    @SuppressLint("Range")
+    private fun query(uri: String): String? {
+        val cursor =
+            contentResolver?.query(Uri.parse(uri), null, null, null, null)
+        if (null != cursor) {
+            if (cursor.moveToFirst()) {
+                val sim_id = cursor.getInt(cursor.getColumnIndex("sim_id"))
+                val _id = cursor.getInt(cursor.getColumnIndex("_id"))
+                LogUtil.i("siminfo sim_id=$sim_id")
+                return "$_id,$sim_id"
+            }
+        }
+        return null
     }
 
 }

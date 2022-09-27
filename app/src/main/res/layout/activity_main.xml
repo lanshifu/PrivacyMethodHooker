@@ -477,6 +477,21 @@
 
 
         <TextView
+            android:text="ContentResolver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/query"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="query"
+            android:textAllCaps="false" />
+
+
+        <TextView
             android:text="Settings.System"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -575,39 +590,6 @@
 
 
         </ScrollView>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="14dp"
-            android:text="ActivityManager" />
-
-
-        <Button
-            android:id="@+id/btnGetRunningAppProcesses"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getRunningAppProcesses"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/btnGetRecentTasks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getRecentTasks"
-            android:textAllCaps="false" />
-        <Button
-            android:id="@+id/btnGetRunningTasks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="getRunningTasks"
-            android:textAllCaps="false" />
 
 
         <Button
