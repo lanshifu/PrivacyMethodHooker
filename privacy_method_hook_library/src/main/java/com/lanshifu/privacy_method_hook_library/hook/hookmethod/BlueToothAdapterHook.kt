@@ -27,6 +27,7 @@ object BlueToothAdapterHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
         }
+        //Need BLUETOOTH permission: Neither user 10210 nor current process has android.permission.BLUETOOTH.
         return try {
             saveResult(key, bluetoothAdapter.address ?: "", callerClassName)
         } catch (e: Exception) {

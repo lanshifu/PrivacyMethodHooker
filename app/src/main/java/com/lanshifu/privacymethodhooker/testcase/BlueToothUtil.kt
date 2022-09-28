@@ -1,6 +1,7 @@
 package com.lanshifu.privacymethodhooker.testcase
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
@@ -18,6 +19,7 @@ import androidx.core.app.ActivityCompat
 object BlueToothUtil {
 
 
+    @SuppressLint("HardwareIds")
     fun getBluetoothAdapterAddress(context: Activity): String? {
         val adapter = BluetoothAdapter.getDefaultAdapter()
         return  adapter.address

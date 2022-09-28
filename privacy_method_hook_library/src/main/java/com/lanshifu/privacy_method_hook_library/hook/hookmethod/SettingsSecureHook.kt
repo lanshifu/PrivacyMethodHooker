@@ -42,7 +42,7 @@ object SettingsSecureHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: ""
         }
-        return saveResult(name, Settings.Secure.getString(resolver, name) ?: "", callerClassName)
+        return saveResult(key, Settings.Secure.getString(resolver, name) ?: "", callerClassName)
     }
 
 

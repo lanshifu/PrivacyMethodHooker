@@ -15,8 +15,8 @@ fun <T> checkCacheAndPrivacy(
     callerClassName: String
 ): CheckCacheAndPrivacyResult<T> {
 
-    if (PrivacyMethodManager.isUseCache(key, callerClassName)) {
-        val cache = PrivacyMethodCacheManager.get<T?>(key)
+    if (PrivacyMethodManager.getDelegate().isUseCache(key, callerClassName)) {
+        val cache = PrivacyMethodCacheManager.get<T?>(key, callerClassName)
         if (cache != null) {
             return CheckCacheAndPrivacyResult(cache, true)
         }
@@ -28,22 +28,24 @@ fun <T> checkCacheAndPrivacy(
 
 fun checkAgreePrivacy(name: String, callerClassName: String = ""): Boolean {
     var methodStack = ""
-    if (PrivacyMethodManager.isShowPrivacyMethodStack()) {
+    if (PrivacyMethodManager.getDelegate().isShowPrivacyMethodStack() ||
+        !PrivacyMethodManager.getDelegate().isAgreePrivacy()
+    ) {
         methodStack = Log.getStackTraceString(Throwable())
     }
 
-    PrivacyMethodManager.onPrivacyMethodCall(callerClassName, name, methodStack)
+    PrivacyMethodManager.getDelegate().onPrivacyMethodCall(callerClassName, name, methodStack)
 
-    if (!PrivacyMethodManager.isAgreePrivacy()) {
-        PrivacyMethodManager.onPrivacyMethodCallIllegal(callerClassName, name, methodStack)
+    if (!PrivacyMethodManager.getDelegate().isAgreePrivacy()) {
+        PrivacyMethodManager.getDelegate().onPrivacyMethodCallIllegal(callerClassName, name, methodStack)
         return false
     }
     return true
 }
 
 fun <T> saveResult(key: String, value: T, callerClassName: String): T {
-    LogUtil.d("saveResult,key=$key,value=$value,callerClassName=${callerClassName}")
-    if (value != null && PrivacyMethodManager.isUseCache(key, callerClassName)) {
+    LogUtil.d("saveResult,key=$key,callerClassName=${callerClassName}")
+    if (value != null && PrivacyMethodManager.getDelegate().isUseCache(key, callerClassName)) {
         PrivacyMethodCacheManager.put(key, value as Any)
     }
     return value

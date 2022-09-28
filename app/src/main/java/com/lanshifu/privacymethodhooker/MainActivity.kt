@@ -2,11 +2,15 @@ package com.lanshifu.privacymethodhooker
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.DialogInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
 import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
@@ -16,68 +20,52 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.lang.reflect.Method
 
+@SuppressLint("Range")
+@RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity() {
 
     var isAgreePrivacy = false
     var isUseCache = false
-    var showPrivacyMethodStack = false
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        PrivacyMethodManager.init(this, object : DefaultPrivacyMethodManagerDelegate() {
-            override fun isAgreePrivacy(): Boolean {
-                // 是否同意隐私协议
-                return isAgreePrivacy
-            }
 
-            override fun isUseCache(methodName: String, callerClassName: String): Boolean {
-                //自定义是否要使用缓存，methodName可以在日志找到，过滤一下onPrivacyMethodCall关键字
-                if (methodName == "getLine1Number") {
-                    return true
-                }
+        AlertDialog.Builder(this)
+            .setTitle("隐私协议")
+            .setMessage("同意隐私协议后才能调用隐私API")
+            .setPositiveButton("同意") { p0, p1 ->
+                Myapp.isAgreePrivacy = true
+                initView()
+                updateData()
 
-                // 父类处理黑名单了，这里复用
-                return if (super.isUseCache(methodName, callerClassName)) {
-                    isUseCache
-                } else {
-                    false
-                }
-
-            }
-
-            override fun isShowPrivacyMethodStack(): Boolean {
-                return showPrivacyMethodStack
-            }
-
-            override fun onPrivacyMethodCallIllegal(
-                callerClassName: String,
-                methodName: String,
-                methodStack: String
-            ) {
-                // super 有toast，如果需要自己弹窗，可以注释掉
-//                super.onPrivacyMethodCallIllegal(className, methodName, methodStack)
-                Log.e(
-                    "PrivacyMethodManager",
-                    "onPrivacyMethodCallIllegal,className=$callerClassName，methodName=$methodName,methodStack=$methodStack"
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_SMS,
+                        Manifest.permission.READ_PHONE_NUMBERS,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    ), 0
                 )
             }
-
-            override fun customCacheExpireMap(): HashMap<String, Int> {
-                return HashMap<String, Int>().apply {
-                    ///缓存60s过期
-                    this["TelephonyManager#getSimCountryIso"] = 10
-                }
+            .setNegativeButton("不同意"){p0, p1 ->
+               finish()
             }
-        })
+            .setCancelable(false)
+            .show()
+
+        var getCellLocation  = "getCellLocation=${TelePhonyManagerUtil.getCellLocation()}"
+    }
+
+    private fun initView(){
 
         setContentView(R.layout.activity_main)
 
-        cbAgree.setOnCheckedChangeListener { compoundButton, b ->
-            isAgreePrivacy = b
-            updateData()
-        }
+//        cbAgree.isChecked = true
+//        cbAgree.setOnCheckedChangeListener { compoundButton, b ->
+//            isAgreePrivacy = b
+//            updateData()
+//        }
 
         cbUseCache.setOnCheckedChangeListener { compoundButton, b ->
             isUseCache = b
@@ -88,21 +76,9 @@ class MainActivity : AppCompatActivity() {
             updateData()
         }
 
-        updateData()
 
-
-        requestPermissions(
-            arrayOf(
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.READ_SMS,
-                Manifest.permission.READ_PHONE_NUMBERS,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ), 0
-        )
     }
 
-    @SuppressLint("Range")
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun updateData() {
 
         //TelePhonyManager
@@ -189,38 +165,29 @@ class MainActivity : AppCompatActivity() {
         //ContentResolver
         query.text = "query(content://telephony/siminfo) =${query("content://telephony/siminfo")} "
 
+        //getPrimaryClip
+        getPrimaryClip.text = "getPrimaryClip=${ClipBoardUtil.paste(this)}"
+
+
         //Runtime.exec
         getSerialNo.text = "getprop ro.serialno = ${RuntimeUtil.getSerialNo()}"
         getEth0.text = "cat /sys/class/net/eth0/address = ${RuntimeUtil.getEth0()}"
         getPackage.text = "pm list package = ${RuntimeUtil.getPackage()}"
         ps.text = "ps = ${RuntimeUtil.ps()}"
 
-        /**
-         *     NEW java/io/File
-        DUP
-        LDC ""
-        INVOKESPECIAL java/io/File.<init> (Ljava/lang/String;)V
-        ASTORE 8
-         */
-        val file0 = CustomFile("/sys/class/net/etho0/address")
-
-        val file1 = File("/sys/class/net/etho0/address")
-        val file2 = File("/sys/class/net/wlan0/address")
-        val file3 = File("/system/build.prop")
-        val file4 = File(externalCacheDir?.absolutePath ?: "")
-        LogUtil.d(file0.absolutePath + ",length:${file0.length()}")
-        LogUtil.d(file2.absolutePath + ",length:${file2.length()}")
-        LogUtil.d(file3.absolutePath + ",length:${file3.length()}")
-        LogUtil.d(file4.absolutePath + ",length:${file4.length()}")
+        //File
+        file1.text = "/sys/class/net/etho0/address length=${File("/sys/class/net/etho0/address").length()}"
+        file2.text = "/sys/class/net/wlan0/address length=${File("/sys/class/net/wlan0/address").length()}"
+        file3.text = "/system/build.prop length=${File("/system/build.prop").length()}"
 
         try {
             val clazz = Class.forName("android.os.SystemProperties")
-            val methodget: Method = clazz.getMethod("get", String::class.java)
+            val methodget: Method = clazz.getMethod("get", String::class.java, String::class.java)
             methodget.setAccessible(true)
             val level = methodget.invoke(null as Any?, "ro.serialno") as String
             LogUtil.d("serialno= :$level")
         } catch (e: Exception) {
-            LogUtil.d("Exception")
+            LogUtil.d("serialno= Exception")
             e.printStackTrace()
         }
 

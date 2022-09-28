@@ -18,8 +18,12 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
 
     init {
         mCacheMethodMap["Settings\$System#getString(android_id)"] = "1"
+        mCacheMethodMap["Settings\$Secure#getString(android_id)"] = "1"
         mCacheMethodMap["Settings\$Secure#getString(bluetooth_address)"] = "1"
         mCacheMethodMap["Settings\$Secure#getString(bluetooth_name)"] = "1"
+
+        mCacheMethodMap["BluetoothAdapter#getAddress"] = "1"
+        mCacheMethodMap["SensorManager#getSensorList"] = "1"
         mCacheMethodMap["WifiInfo#getMacAddress"] = "1"
         mCacheMethodMap["NetworkInterface#getHardwareAddress"] = "1"
     }
@@ -28,9 +32,13 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         return false
     }
 
+    override fun isDebugMode(): Boolean {
+        return true
+    }
+
     override fun isUseCache(methodName: String, callerClassName: String): Boolean {
         if (mCacheMethodMap.containsKey(methodName)) {
-            return false
+            return true
         }
         return false
     }
@@ -39,9 +47,9 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         return false
     }
 
-    override fun onPrivacyMethodCall(className: String, methodName: String, methodStack: String) {
+    override fun onPrivacyMethodCall(callerClassName: String, methodName: String, methodStack: String) {
         LogUtil.d(
-            "onPrivacyMethodCall,className=$className,methodName=$methodName"
+            "onPrivacyMethodCall,className=$callerClassName,methodName=$methodName"
         )
     }
 
@@ -68,10 +76,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
     }
 
     override fun customCacheExpireMap(): HashMap<String, Int> {
-        return HashMap<String, Int>().apply {
-            ///缓存60s过期
-            this["TelephonyManager#getSimCountryIso"] = 10
-        }
+        return HashMap()
     }
 
 }

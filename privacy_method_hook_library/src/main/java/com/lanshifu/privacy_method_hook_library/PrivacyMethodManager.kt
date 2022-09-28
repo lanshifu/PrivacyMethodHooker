@@ -11,47 +11,22 @@ import com.lanshifu.privacy_method_hook_library.delegate.PrivacyMethodManagerDel
  * 提供给外部调用，设置代理
  */
 @SuppressLint("StaticFieldLeak")
-object PrivacyMethodManager : PrivacyMethodManagerDelegate {
+object PrivacyMethodManager {
 
     private var mDelegate: PrivacyMethodManagerDelegate = DefaultPrivacyMethodManagerDelegate()
 
     lateinit var mContext: Context
 
+    /**
+     * 初始化方法，在Application 的onCreate 方法第一行调用这个
+     */
     fun init(content: Context, delegate: PrivacyMethodManagerDelegate) {
         mDelegate = delegate
         mContext = content.applicationContext
     }
 
-    override fun isAgreePrivacy(): Boolean {
-        return mDelegate.isAgreePrivacy()
-    }
-
-    override fun isUseCache(methodName: String, callerClassName: String): Boolean {
-        return mDelegate.isUseCache(methodName, callerClassName)
-    }
-
-    override fun isShowPrivacyMethodStack(): Boolean {
-        return mDelegate.isShowPrivacyMethodStack()
-    }
-
-    override fun onPrivacyMethodCall(className: String, methodName: String, methodStack: String) {
-        mDelegate.onPrivacyMethodCall(className, methodName, methodStack)
-    }
-
-    override fun onPrivacyMethodCallIllegal(
-        callerClassName: String,
-        methodName: String,
-        methodStack: String
-    ) {
-        mDelegate.onPrivacyMethodCallIllegal(callerClassName, methodName, methodStack)
-    }
-
-    override fun onCacheExpire(methodName: String) {
-        mDelegate.onCacheExpire(methodName)
-    }
-
-    override fun customCacheExpireMap(): HashMap<String, Int> {
-        return mDelegate.customCacheExpireMap()
+    fun getDelegate(): PrivacyMethodManagerDelegate {
+        return mDelegate
     }
 
 }

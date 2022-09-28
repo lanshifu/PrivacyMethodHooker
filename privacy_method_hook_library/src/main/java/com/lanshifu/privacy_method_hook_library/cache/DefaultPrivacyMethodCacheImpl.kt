@@ -5,7 +5,7 @@ package com.lanshifu.privacy_method_hook_library.cache
  * @date 2022/9/19
  */
 @Suppress("UNCHECKED_CAST")
-class DefaultPrivacyMethodCache : IPrivacyMethodCache {
+class DefaultPrivacyMethodCacheImpl : IPrivacyMethodCache {
 
     private val mCache = mutableMapOf<String, Any>()
 

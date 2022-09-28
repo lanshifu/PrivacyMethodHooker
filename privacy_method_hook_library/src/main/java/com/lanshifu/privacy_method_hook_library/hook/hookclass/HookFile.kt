@@ -13,30 +13,28 @@ import java.net.URI
  */
 open class HookFile : File {
     constructor(fileName: String) : super(fileName) {
-        LogUtil.i("HookFile:pathname=$fileName")
-        //mac
-        //sys/class/net/*/address
-        val pattern = """^\/sys\/class\/net\/\w+\/address"""
-        val isMatchAddress = Regex(pattern).containsMatchIn(fileName)
-        if (isMatchAddress) {
-            LogUtil.d("读文件 fileName=$fileName")
-            if (!checkAgreePrivacy("<init>", "java.io.File")) {
-                // todo: 改成空路径？
-            }
-        }
-
-        if (fileName.startsWith("/system/build.prop")) {
-            LogUtil.d("读文件 fileName=$fileName")
-            if (!checkAgreePrivacy("File#<init>fileName=$fileName", "java.io.File")) {
-                // todo: 改成空路径？
-            }
-        }
-
+        checkFileName(fileName)
     }
 
     constructor(parent: String?, child: String?) : super(parent, child) {}
     constructor(parent: File?, child: String?) : super(parent, child) {}
     constructor(uri: URI?) : super(uri) {}
+
+    private fun checkFileName(fileName:String){
+        LogUtil.d("HookFile:fileName=$fileName")
+        //sys/class/net/*/address
+        val pattern = """^\/sys\/class\/net\/\w+\/address"""
+        val isMatchAddress = Regex(pattern).containsMatchIn(fileName)
+        if (isMatchAddress) {
+            LogUtil.d("读文件 fileName=$fileName")
+            checkAgreePrivacy("<init>fileName=$fileName", "java.io.File")
+        }
+
+        if (fileName.startsWith("/system/build.prop")) {
+            LogUtil.d("读文件 fileName=$fileName")
+            checkAgreePrivacy("<init>fileName=$fileName", "java.io.File")
+        }
+    }
 }
 
 @Keep
