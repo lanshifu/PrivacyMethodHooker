@@ -17,10 +17,6 @@ open class AbsClassTransformer : ClassTransformer {
 //        if (context.isRelease()) {
 //            return true
 //        }
-//
-//        if (!DoKitExtUtil.dokitPluginSwitchOpen()) {
-//            return true
-//        }
         //过滤kotlin module-info
         if (klass.className == "module-info") {
             return true

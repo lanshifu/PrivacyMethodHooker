@@ -20,7 +20,7 @@ class MethodReplaceTransformer : AbsClassTransformer() {
     private lateinit var logger: PrintWriter
     private val asmItems = AnnotationParserTransformer.asmMethodReplaceConfigs
     private var asmMethodItemsMap: HashMap<String, AsmMethodItem> = HashMap()
-    private var asmItemsClassMap: HashMap<String, AsmClassItem> = HashMap()
+    private var asmClassItemsMap: HashMap<String, AsmClassItem> = HashMap()
 
     override fun onPreTransform(context: TransformContext) {
         super.onPreTransform(context)
@@ -33,7 +33,7 @@ class MethodReplaceTransformer : AbsClassTransformer() {
         }
 
         AnnotationParserTransformer.asmClassReplaceConfigs.forEach {
-            asmItemsClassMap[it.oriClass] = it
+            asmClassItemsMap[it.oriClass] = it
         }
 
         logger.print("\nasmItemsMap size=${asmMethodItemsMap.size}，asmItems.size=${asmItems.size}\n\n")
@@ -110,7 +110,7 @@ class MethodReplaceTransformer : AbsClassTransformer() {
                         (insnNode.desc == findInsnNode.owner && "<init>" == findInsnNode.name)
             }?.isInstanceOf { init: MethodInsnNode ->
 
-                asmItemsClassMap[init.owner]?.let { asmItem ->
+                asmClassItemsMap[init.owner]?.let { asmItem ->
 
 
                     /// todo 有继承的情况？改superName
