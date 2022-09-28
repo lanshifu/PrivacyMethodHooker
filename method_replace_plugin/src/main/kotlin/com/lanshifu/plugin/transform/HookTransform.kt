@@ -17,14 +17,13 @@ class HookTransform(androidProject: Project) : BaseTransform(androidProject) {
     override val transformers = listOf<Transformer>(
         BaseAsmTransformer(
             listOf(
-                MethodReplaceTransformer(),
-//                ClassReplaceTransformer(),
+                MethodReplaceTransformer()
             )
         )
     )
 
     override fun getName(): String {
-        return "PrivacyMethodHookTransform"
+        return "HookTransform"
     }
 
 }
