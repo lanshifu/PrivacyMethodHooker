@@ -53,7 +53,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TelephonyManager(部分API过时返回null)" />
+                android:text="TelephonyManager(部分API需要READ_PRIVILEGED_PHONE_STATE权限返回null)" />
 
 
             <Button

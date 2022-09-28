@@ -15,7 +15,7 @@ object PrivacyMethodManager {
 
     private var mDelegate: PrivacyMethodManagerDelegate = DefaultPrivacyMethodManagerDelegate()
 
-    lateinit var mContext: Context
+    var mContext: Context? = null
 
     /**
      * 初始化方法，在Application 的onCreate 方法第一行调用这个

@@ -1,5 +1,7 @@
 package com.lanshifu.privacy_method_hook_library.delegate
 
+import com.lanshifu.privacy_method_hook_library.cache.IPrivacyMethodCache
+
 /**
  * @author lanxiaobin
  * @date 2022/9/19
@@ -53,4 +55,6 @@ interface PrivacyMethodManagerDelegate {
      * 自定义缓存过期时间，key是方法名，value是多少秒
      */
     fun customCacheExpireMap(): HashMap<String, Int>
+
+    fun customCacheImpl(): IPrivacyMethodCache?
 }

@@ -2,6 +2,7 @@ package com.lanshifu.privacy_method_hook_library.delegate
 
 import android.widget.Toast
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.cache.IPrivacyMethodCache
 import com.lanshifu.privacy_method_hook_library.log.LogUtil
 
 /**
@@ -22,10 +23,10 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         mCacheMethodMap["Settings\$Secure#getString(bluetooth_address)"] = "1"
         mCacheMethodMap["Settings\$Secure#getString(bluetooth_name)"] = "1"
 
-        mCacheMethodMap["BluetoothAdapter#getAddress"] = "1"
-        mCacheMethodMap["SensorManager#getSensorList"] = "1"
         mCacheMethodMap["WifiInfo#getMacAddress"] = "1"
         mCacheMethodMap["NetworkInterface#getHardwareAddress"] = "1"
+
+        mCacheMethodMap["SensorManager#getSensorList"] = "1"
     }
 
     override fun isAgreePrivacy(): Boolean {
@@ -47,7 +48,11 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
         return false
     }
 
-    override fun onPrivacyMethodCall(callerClassName: String, methodName: String, methodStack: String) {
+    override fun onPrivacyMethodCall(
+        callerClassName: String,
+        methodName: String,
+        methodStack: String
+    ) {
         LogUtil.d(
             "onPrivacyMethodCall,className=$callerClassName,methodName=$methodName"
         )
@@ -62,11 +67,14 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
             "onPrivacyMethodCallIllegal,callerClassName=$callerClassName，methodName=$methodName,methodStack=$methodStack"
         )
 
-        Toast.makeText(
-            PrivacyMethodManager.mContext,
-            "调用了隐私API，methodName=$methodName，className=$callerClassName",
-            Toast.LENGTH_LONG
-        ).show()
+        if (!PrivacyMethodManager.getDelegate().isDebugMode()) {
+            PrivacyMethodManager.mContext?.let {
+                Toast.makeText(
+                    it, "调用了隐私API，methodName=$methodName，className=$callerClassName",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun onCacheExpire(methodName: String) {
@@ -77,6 +85,10 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
 
     override fun customCacheExpireMap(): HashMap<String, Int> {
         return HashMap()
+    }
+
+    override fun customCacheImpl(): IPrivacyMethodCache? {
+        return null
     }
 
 }

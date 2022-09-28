@@ -82,13 +82,13 @@ class MainActivity : AppCompatActivity() {
     private fun updateData() {
 
         //TelePhonyManager
-        getImei.text = "getImei=${TelePhonyManagerUtil.getImei()}"
-        getImei2.text = "getImei2=${TelePhonyManagerUtil.getImei2()}"
-        getDeviceId.text = "getDeviceId=${TelePhonyManagerUtil.getDeviceId(this)}"
-        getDeviceId2.text = "getDeviceId=${TelePhonyManagerUtil.getDeviceIdWithSlotIndex(this)}"
-        getSubscriberId.text = "getSubscriberId=${TelePhonyManagerUtil.getSubscriberId()}"
-        getSimSerialNumber.text = "getSimSerialNumber=${TelePhonyManagerUtil.getSimSerialNumber()}"
-        getMeid.text = "getMeid=${TelePhonyManagerUtil.getMeid()}"
+        getImei.text = "getImei[返回null]=${TelePhonyManagerUtil.getImei()}"
+        getImei2.text = "getImei2[返回null]=${TelePhonyManagerUtil.getImei2()}"
+        getDeviceId.text = "getDeviceId[返回null]=${TelePhonyManagerUtil.getDeviceId(this)}"
+        getDeviceId2.text = "getDeviceId[返回null]=${TelePhonyManagerUtil.getDeviceIdWithSlotIndex(this)}"
+        getSubscriberId.text = "getSubscriberId[返回null]=${TelePhonyManagerUtil.getSubscriberId()}"
+        getSimSerialNumber.text = "getSimSerialNumber[返回null]=${TelePhonyManagerUtil.getSimSerialNumber()}"
+        getMeid.text = "getMeid[返回null]=${TelePhonyManagerUtil.getMeid()}"
         getLine1Number.text = "getLine1Number=${TelePhonyManagerUtil.getLine1Number()}"
         getCellLocation.text = "getCellLocation=${TelePhonyManagerUtil.getCellLocation()}"
         getNeighboringCellInfo.text = "getNeighboringCellInfo=没有这个了"
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         //BluetoothAdapter
         getAddress.text = "getAddress=${BlueToothUtil.getBluetoothAdapterAddress(this)}"
-        getName.text = "getAddress=${BlueToothUtil.getBluetoothAdapterName(this)}"
+        getName.text = "getName=${BlueToothUtil.getBluetoothAdapterName(this)}"
 
         //BluetoothAdapter
         bdGetName.text = "getName=${BlueToothUtil.getBluetoothDeviceAddress(this)}"
@@ -182,9 +182,9 @@ class MainActivity : AppCompatActivity() {
 
         try {
             val clazz = Class.forName("android.os.SystemProperties")
-            val methodget: Method = clazz.getMethod("get", String::class.java, String::class.java)
+            val methodget: Method = clazz.getMethod("get", String::class.java)
             methodget.setAccessible(true)
-            val level = methodget.invoke(null as Any?, "ro.serialno") as String
+            val level = methodget.invoke(null, "ro.serialno") as String
             LogUtil.d("serialno= :$level")
         } catch (e: Exception) {
             LogUtil.d("serialno= Exception")

@@ -20,8 +20,14 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
     private val mCacheExpireTimeMap = HashMap<String, Int>()
 
     init {
-        mCacheExpireTimeMap["getRunningAppProcesses"] = 10
+
         setCacheExpireTime(PrivacyMethodManager.getDelegate().customCacheExpireMap())
+
+        PrivacyMethodManager.getDelegate().customCacheImpl()?.let {
+            LogUtil.i("customCacheImpl=$it")
+            mPrivacyMethodCacheImpl = it
+        }
+
 
         LogUtil.i("mCacheExpireTimeMap=$mCacheExpireTimeMap")
     }
