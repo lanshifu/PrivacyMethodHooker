@@ -67,7 +67,7 @@ open class DefaultPrivacyMethodManagerDelegate : PrivacyMethodManagerDelegate {
             "onPrivacyMethodCallIllegal,callerClassName=$callerClassName，methodName=$methodName,methodStack=$methodStack"
         )
 
-        if (!PrivacyMethodManager.getDelegate().isDebugMode()) {
+        if (PrivacyMethodManager.getDelegate().isDebugMode()) {
             PrivacyMethodManager.mContext?.let {
                 Toast.makeText(
                     it, "调用了隐私API，methodName=$methodName，className=$callerClassName",

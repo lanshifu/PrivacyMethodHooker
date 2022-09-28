@@ -51,7 +51,7 @@
 -  getSimSerialNumber
 -  getMeid
 
-这些API只能系统App调用，target 29 以上调用会抛异常，target 28或者以下会返回null
+**以上这些API只能系统App调用，target 29 以上调用会抛异常，target 28或者以下会返回null，所以统一返回null**
 
 - getLine1Number
 - getCellLocation
@@ -108,6 +108,26 @@ Settings$Secure#getString("bluetooth_address")
 Settings$Secure#getString("bluetooth_name")
 
 ## Runtime
+- exec
+参数如下会被hook：
+getprop ro.serialno
+cat /sys/class/net/*/address
+pm list package
+
+## File
+构造方法，正则过滤：sys/class/net/*/address
+
+## 做了缓存的方法
+
+```
+Settings\$System#getString(android_id)"]
+Settings\$Secure#getString(android_id)"]
+Settings\$Secure#getString(bluetooth_address)"]
+Settings\$Secure#getString(bluetooth_name)"]
+WifiInfo#getMacAddress"]
+NetworkInterface#getHardwareAddress"]
+SensorManager#getSensorList"]
+```
 
 
 # 友情链接

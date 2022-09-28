@@ -51,11 +51,25 @@ class Myapp : Application() {
 
                 //自定义是否要使用缓存，methodName可以在日志找到，过滤一下 onPrivacyMethodCall 关键字
                 when (methodName) {
-                    "LocationManager#getLastKnownLocation" -> return true
-                    "TelephonyManager#getLine1Number" -> return true
-                    "PackageManager#getInstalledPackages" -> return true
-                    "PackageManager#getInstalledApplications" -> return true
+                    "TelephonyManager#getSimCountryIso",
+                    "TelephonyManager#getSimOperator",
+                    "TelephonyManager#getSimOperatorName",
+                    "TelephonyManager#getNetworkOperator",
+                    "TelephonyManager#getNetworkOperatorName",
+                    "TelephonyManager#getNetworkCountryIso",
+                    "TelephonyManager#getLine1Number",
+                    "TelephonyManager#getCellLocation",
+
+                    "LocationManager#getLastKnownLocation",
+
+                    "PackageManager#getInstalledPackages",
+                    "PackageManager#getInstalledApplications",
+
+                    "ActivityManager#getRunningServices",
+                    "ActivityManager#getRecentTasks",
+                    "ActivityManager#getRunningTasks",
                     "ActivityManager#getRunningAppProcesses" -> return true
+
                     "ClipboardManager#getPrimaryClip" -> {
                         if (!isAppCall(callerClassName)) {
                             return true
@@ -80,15 +94,27 @@ class Myapp : Application() {
 
             override fun customCacheExpireMap(): HashMap<String, Int> {
                 return super.customCacheExpireMap().apply {
-                    ///缓存过期时间
-                    this["TelephonyManager#getSimCountryIso"] = 10
+                    ///缓存过期时间(秒)
+                    this["TelephonyManager#getSimCountryIso"] = 30
+                    this["TelephonyManager#getSimOperator"] = 30
+                    this["TelephonyManager#getSimOperatorName"] = 30
+                    this["TelephonyManager#getNetworkOperator"] = 30
+                    this["TelephonyManager#getNetworkOperatorName"] = 30
+                    this["TelephonyManager#getNetworkCountryIso"] = 30
+                    this["TelephonyManager#getLine1Number"] = 30
+                    this["TelephonyManager#getCellLocation"] = 30
 
-                    this["ClipboardManager#getPrimaryClip"] = 20 //限制剪贴板读取频率
                     this["LocationManager#getLastKnownLocation"] = 30 //获取定位的频率
-                    this["TelephonyManager#getLine1Number"] = 30 //
+
                     this["PackageManager#getInstalledPackages"] = 30
                     this["PackageManager#getInstalledApplications"] = 30
+
                     this["ActivityManager#getRunningAppProcesses"] = 30
+                    this["ActivityManager#getRunningServices"] = 30
+                    this["ActivityManager#getRecentTasks"] = 30
+                    this["ActivityManager#getRunningTasks"] = 30
+
+                    this["ClipboardManager#getPrimaryClip"] = 10 //限制剪贴板读取频率
                 }
             }
         })
