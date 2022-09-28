@@ -3,7 +3,7 @@ package com.lanshifu.plugin
 import com.android.build.gradle.AppExtension
 import com.didiglobal.booster.gradle.getAndroid
 import com.lanshifu.plugin.transform.CommonTransform
-import com.lanshifu.plugin.transform.PrivacyMethodHookTransform
+import com.lanshifu.plugin.transform.HookTransform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -13,6 +13,11 @@ import org.gradle.api.Project
  */
 class Plugin : Plugin<Project> {
     override fun apply(project: Project) {
+
+        val availableProcessors = Runtime.getRuntime().availableProcessors()
+        print("Plugin availableProcessors=$availableProcessors")
+
+        // todo 支持白名单，设置某些类不hook？
 
         when {
             project.plugins.hasPlugin("com.android.application") ||
@@ -24,7 +29,7 @@ class Plugin : Plugin<Project> {
                         CommonTransform(project)
                     )
                     androidExt.registerTransform(
-                        PrivacyMethodHookTransform(project)
+                        HookTransform(project)
                     )
 
 

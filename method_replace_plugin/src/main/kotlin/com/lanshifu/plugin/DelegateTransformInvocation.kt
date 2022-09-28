@@ -20,8 +20,6 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Represents a delegate of TransformInvocation
- *
- * @author johnsonlee
  */
 internal class DelegateTransformInvocation(
     private val delegate: TransformInvocation,

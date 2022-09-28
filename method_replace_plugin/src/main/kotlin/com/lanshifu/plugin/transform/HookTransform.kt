@@ -4,7 +4,8 @@ import com.didiglobal.booster.transform.Transformer
 import com.didiglobal.booster.transform.asm.ClassTransformer
 import com.google.auto.service.AutoService
 import com.lanshifu.plugin.asmtransformer.BaseAsmTransformer
-import com.lanshifu.plugin.classtransformer.PrivacyMethodReplaceTransform
+import com.lanshifu.plugin.classtransformer.ClassReplaceTransformer
+import com.lanshifu.plugin.classtransformer.MethodReplaceTransformer
 import org.gradle.api.Project
 
 /**
@@ -12,12 +13,13 @@ import org.gradle.api.Project
  * @date 2021/11/13
  */
 @AutoService(ClassTransformer::class)
-class PrivacyMethodHookTransform(androidProject: Project) : BaseTransform(androidProject) {
+class HookTransform(androidProject: Project) : BaseTransform(androidProject) {
 
     override val transformers = listOf<Transformer>(
         BaseAsmTransformer(
             listOf(
-                PrivacyMethodReplaceTransform()
+                MethodReplaceTransformer(),
+//                ClassReplaceTransformer(),
             )
         )
     )
