@@ -32,8 +32,7 @@ class Myapp : Application() {
     private fun initPrivacyManager(context: Context) {
 
         fun isAppCall(callerClassName: String): Boolean {
-            return callerClassName.contains("tt") ||
-                    callerClassName.contains("quwan")
+            return callerClassName.contains("lanshifu")
         }
 
         PrivacyMethodManager.init(context, object : DefaultPrivacyMethodManagerDelegate() {
