@@ -24,7 +24,6 @@ import java.lang.reflect.Method
 @RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity() {
 
-    var isAgreePrivacy = false
     var isUseCache = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +55,21 @@ class MainActivity : AppCompatActivity() {
 
         var getCellLocation  = "getCellLocation=${TelePhonyManagerUtil.getCellLocation()}"
     }
+
+    private fun initAfterAgreePrivacy() {
+        initView()
+        updateData()
+
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.READ_SMS,
+                Manifest.permission.READ_PHONE_NUMBERS,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            ), 0
+        )
+    }
+
 
     private fun initView(){
 

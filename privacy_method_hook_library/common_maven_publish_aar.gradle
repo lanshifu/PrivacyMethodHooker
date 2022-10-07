@@ -1,0 +1,124 @@
+apply plugin: 'maven-publish'
+
+def isLocalUrl(Properties props) {
+    if (props['LOCAL_URL'] != null) {
+        println("LOCAL_URL=${props['LOCAL_URL']}")
+        return Boolean.parseBoolean(props['LOCAL_URL'])
+    } else {
+        return true
+    }
+}
+
+def getLocalRepo(Properties props) {
+    if (props['LOCAL_REPO'] != null) {
+        println("LOCAL_REPO=${props['LOCAL_REPO']}")
+        return props['LOCAL_REPO']
+    } else {
+        return "../repo"
+    }
+}
+
+static def getGroupId(Properties props) {
+    if(props['GROUP_ID'] == null){
+        throw  new Throwable('需要在project的maven_public.properties 声明 GROUP_ID')
+    }
+    return props['GROUP_ID']
+}
+
+static def getArtifactId(Properties props) {
+    if(props['ARTIFACT_ID'] == null){
+        throw  new Throwable('需要在project的maven_public.properties 声明 ARTIFACT_ID')
+    }
+    return props['ARTIFACT_ID']
+}
+
+static def getReleaseVersion(Properties props) {
+    if(props['RELEASE_VERSION'] == null){
+        throw  new Throwable('需要在project的maven_public.properties 声明 RELEASE_VERSION')
+    }
+    return props['RELEASE_VERSION']
+}
+
+def getReleaseRepositoryUrl(Properties props) {
+    if (hasProperty('RELEASE_REPOSITORY_URL')) {
+        return RELEASE_REPOSITORY_URL
+    } else if (props['RELEASE_REPOSITORY_URL'] != null) {
+        return props['RELEASE_REPOSITORY_URL']
+    } else {
+        return "xxx"
+    }
+}
+
+static def getRepositoryUsername(Properties props) {
+    if(props['NEXUS_USERNAME'] == null){
+        throw  new Throwable('需要在root project的local.properties 声明 NEXUS_USERNAME=你的密码')
+    }
+    return props['NEXUS_USERNAME']
+}
+
+static def getRepositoryPassword(Properties props) {
+    if(props['NEXUS_PASSWORD'] == null){
+        throw  new Throwable('需要在root project的local.properties 声明 NEXUS_PASSWORD=你的密码')
+    }
+    return props['NEXUS_PASSWORD']
+}
+
+//将源码打包任务
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+def localProperties = new Properties()
+def mavenPublicProperties = new Properties()
+afterEvaluate {
+
+    rootProject.file('local.properties').withInputStream { localProperties.load(it) }
+
+    File mavenPublicPropertiesFile = file(getProjectDir().absolutePath + '/maven_publish.properties')
+    if(!mavenPublicPropertiesFile.exists()){
+        throw  new Throwable('需要在library根目录（build.gradle同级目录）下创建maven_publish.properties文件，配置GROUP_ID、ARTIFACT_ID、RELEASE_VERSION')
+    }
+    mavenPublicPropertiesFile.withInputStream { mavenPublicProperties.load(it) }
+
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = getGroupId(mavenPublicProperties)
+                artifactId = getArtifactId(mavenPublicProperties)
+                version = getReleaseVersion(mavenPublicProperties)
+                artifact(androidSourcesJar)
+            }
+            debug(MavenPublication) {
+                from components.debug
+                groupId = getGroupId(mavenPublicProperties)
+                artifactId = getArtifactId(mavenPublicProperties)
+                version = getReleaseVersion(mavenPublicProperties)
+                artifact(androidSourcesJar)
+            }
+        }
+
+        repositories {
+            maven {
+
+                if(isLocalUrl(mavenPublicProperties)){
+                    url = uri(getLocalRepo(mavenPublicProperties))
+                } else {
+                    ///上传到远程仓库
+                    url = getReleaseRepositoryUrl(mavenPublicProperties)
+                    allowInsecureProtocol true
+                    credentials {
+                        username getRepositoryUsername(localProperties)
+                        password getRepositoryPassword(localProperties)
+                    }
+                    credentials {
+                        username getRepositoryUsername(localProperties)
+                        password getRepositoryPassword(localProperties)
+                    }
+                }
+
+            }
+        }
+    }
+}

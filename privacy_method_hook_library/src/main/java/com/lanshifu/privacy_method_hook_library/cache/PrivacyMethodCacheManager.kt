@@ -19,7 +19,7 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
      */
     private val mCacheExpireTimeMap = HashMap<String, Int>()
 
-    init {
+    fun init() {
 
         setCacheExpireTime(PrivacyMethodManager.getDelegate().customCacheExpireMap())
 

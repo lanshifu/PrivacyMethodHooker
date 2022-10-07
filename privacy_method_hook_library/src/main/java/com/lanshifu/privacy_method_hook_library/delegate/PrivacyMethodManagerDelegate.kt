@@ -56,5 +56,8 @@ interface PrivacyMethodManagerDelegate {
      */
     fun customCacheExpireMap(): HashMap<String, Int>
 
+    /**
+     * 自定义缓存框架实现
+     */
     fun customCacheImpl(): IPrivacyMethodCache?
 }

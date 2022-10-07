@@ -2,9 +2,13 @@ package com.lanshifu.privacymethodhooker
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
+import com.lanshifu.privacy_method_hook_library.cache.IPrivacyMethodCache
 import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
+import com.lanshifu.privacymethodhooker.mmkv.cache
+import com.lanshifu.privacymethodhooker.mmkv.getMmkvValue
+import com.lanshifu.privacymethodhooker.mmkv.putMmkvValue
+import com.tencent.mmkv.MMKV
 
 /**
  * @author lanxiaobin
@@ -15,6 +19,14 @@ class Myapp : Application() {
         lateinit var context: Context
 
         var isAgreePrivacy = false
+            get() {
+                return getMmkvValue("isAgreePrivacy", false)
+            }
+            set(value) {
+                field = value
+                putMmkvValue("isAgreePrivacy", value)
+            }
+
     }
 
     override fun attachBaseContext(base: Context) {
@@ -22,6 +34,7 @@ class Myapp : Application() {
     }
 
     override fun onCreate() {
+        MMKV.initialize(this)
         initPrivacyManager(this)
         super.onCreate()
         context = this
@@ -116,6 +129,32 @@ class Myapp : Application() {
                     this["ClipboardManager#getPrimaryClip"] = 10 //限制剪贴板读取频率
                 }
             }
+
+            override fun customCacheImpl(): IPrivacyMethodCache? {
+                return MMKVCacheImpl()
+            }
         })
+    }
+}
+
+class MMKVCacheImpl : IPrivacyMethodCache {
+
+    override fun <T> get(key: String): T? {
+        return try {
+            getMmkvValue(key, (null as T?)) as T
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
+    override fun <T> put(key: String, value: T): T {
+        putMmkvValue(key, value)
+        return value
+    }
+
+    override fun remove(key: String) {
+        cache.remove(key)
     }
 }

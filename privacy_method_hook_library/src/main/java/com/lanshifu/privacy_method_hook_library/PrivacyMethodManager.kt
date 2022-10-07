@@ -2,6 +2,7 @@ package com.lanshifu.privacy_method_hook_library
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
 import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
 import com.lanshifu.privacy_method_hook_library.delegate.PrivacyMethodManagerDelegate
 
@@ -23,6 +24,7 @@ object PrivacyMethodManager {
     fun init(content: Context, delegate: PrivacyMethodManagerDelegate) {
         mDelegate = delegate
         mContext = content.applicationContext
+        PrivacyMethodCacheManager.init()
     }
 
     fun getDelegate(): PrivacyMethodManagerDelegate {
