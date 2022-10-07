@@ -5,12 +5,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
-import android.telephony.CellInfo
 import android.telephony.CellLocation
 import android.telephony.TelephonyManager
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import com.lanshifu.privacymethodhooker.Myapp
+import com.lanshifu.privacymethodhooker.MyApp
 
 /**
  * @author lanxiaobin
@@ -19,9 +17,9 @@ import com.lanshifu.privacymethodhooker.Myapp
 @SuppressLint("NewApi", "StaticFieldLeak")
 object TelePhonyManagerUtil {
     private var manager: TelephonyManager =
-        Myapp.context.getSystemService(TelephonyManager::class.java) as TelephonyManager
+        MyApp.context.getSystemService(TelephonyManager::class.java) as TelephonyManager
 
-    private val context = Myapp.context
+    private val context = MyApp.context
 
     fun getImei(): String? {
 

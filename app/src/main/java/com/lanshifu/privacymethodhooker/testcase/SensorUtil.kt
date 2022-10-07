@@ -1,21 +1,11 @@
 package com.lanshifu.privacymethodhooker.testcase
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
-import android.content.Context
-import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.net.ConnectivityManager
-import android.net.wifi.WifiInfo
-import android.net.wifi.WifiManager
 import android.os.Build
-import android.telephony.TelephonyManager
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import com.lanshifu.privacymethodhooker.Myapp
+import com.lanshifu.privacymethodhooker.MyApp
 
 /**
  * @author lanxiaobin
@@ -27,7 +17,7 @@ object SensorUtil {
     @RequiresApi(Build.VERSION_CODES.M)
 
     private var manager: SensorManager =
-        Myapp.context.getSystemService(SensorManager::class.java) as SensorManager
+        MyApp.context.getSystemService(SensorManager::class.java) as SensorManager
 
 
     fun getSensorList(context: Activity): MutableList<Sensor>? {

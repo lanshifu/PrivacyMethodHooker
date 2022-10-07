@@ -2,18 +2,12 @@ package com.lanshifu.privacymethodhooker
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.DialogInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
-import com.lanshifu.privacy_method_hook_library.delegate.DefaultPrivacyMethodManagerDelegate
 import com.lanshifu.privacy_method_hook_library.log.LogUtil
 import com.lanshifu.privacymethodhooker.testcase.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         AlertDialog.Builder(this)
             .setTitle("隐私协议")
@@ -56,6 +49,26 @@ class MainActivity : AppCompatActivity() {
         var getCellLocation  = "getCellLocation=${TelePhonyManagerUtil.getCellLocation()}"
     }
 
+    private fun checkPrivacyDialog(){
+        LogUtil.d("MyApp.isAgreePrivacy=${MyApp.isAgreePrivacy}")
+        if(!MyApp.isAgreePrivacy){
+            AlertDialog.Builder(this)
+                .setTitle("隐私协议")
+                .setMessage("同意隐私协议后才能调用隐私API")
+                .setPositiveButton("同意") { p0, p1 ->
+                    MyApp.isAgreePrivacy = true
+                    initAfterAgreePrivacy()
+                }
+                .setNegativeButton("不同意"){p0, p1 ->
+                    finish()
+                }
+                .setCancelable(false)
+                .show()
+        } else {
+            initAfterAgreePrivacy()
+        }
+    }
+
     private fun initAfterAgreePrivacy() {
         initView()
         updateData()
@@ -75,22 +88,13 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-//        cbAgree.isChecked = true
-//        cbAgree.setOnCheckedChangeListener { compoundButton, b ->
-//            isAgreePrivacy = b
-//            updateData()
-//        }
-
-        cbUseCache.setOnCheckedChangeListener { compoundButton, b ->
-            isUseCache = b
-            updateData()
-        }
-
         refresh.setOnClickListener {
             updateData()
         }
-
-
+        notAgreePrivacy.setOnClickListener{
+            MyApp.isAgreePrivacy = false
+            finish()
+        }
     }
 
     private fun updateData() {

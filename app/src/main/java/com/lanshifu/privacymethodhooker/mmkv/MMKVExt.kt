@@ -2,6 +2,7 @@ package com.lanshifu.privacymethodhooker.mmkv
 
 import com.google.gson.Gson
 import com.lanshifu.lib.base.mmkv.MMKVDelegate
+import com.lanshifu.privacy_method_hook_library.log.LogUtil
 
 /**
  * mmkv封装一下，任何地方都可以调用 putMmkvValue 和  getMmkvValue，支持对象序列化
@@ -23,7 +24,7 @@ fun <T> Any.putMmkvValue(key: String, value: T) = cache.run {
 }
 
 
-fun <T> Any.getMmkvValue(key: String, default: T): T = cache.run {
+fun <T> Any.getMmkvValue(key: String, default: T?): T = cache.run {
     val result = when (default) {
         is Long -> getLong(key, default)
         is String -> getString(key, default)
@@ -31,7 +32,15 @@ fun <T> Any.getMmkvValue(key: String, default: T): T = cache.run {
         is Boolean -> getBoolean(key, default)
         is Float -> getFloat(key, default)
         is ByteArray -> getBytes(key, default)
-        else -> deSerialization(getString(key, serialize(default)))
+        else -> {
+            val str = getString(key, serialize(default))
+            if(str == null){
+                default
+            } else{
+                deSerialization(str)
+            }
+
+        }
     }
     result as T
 }
@@ -42,6 +51,8 @@ private fun <T> serialize(obj: T?): String {
 }
 
 private inline fun <reified T> deSerialization(str: String?): T? {
+    LogUtil.d("deSerialization,str=$str")
+
     return gson.fromJson(str, T::class.java)
 }
 

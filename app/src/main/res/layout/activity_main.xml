@@ -15,25 +15,21 @@
             android:layout_height="wrap_content"
             android:text="测试用例：" />
 
-<!--        <CheckBox-->
-<!--            android:id="@+id/cbAgree"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="同意隐私" />-->
-
-        <CheckBox
-            android:id="@+id/cbUseCache"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="使用缓存" />
 
         <Button
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="刷新"
+            android:text="刷新看日志"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/notAgreePrivacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="不同意隐私"
             android:textAllCaps="false" />
 
     </LinearLayout>

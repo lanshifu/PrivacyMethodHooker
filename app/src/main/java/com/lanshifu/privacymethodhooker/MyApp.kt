@@ -1,5 +1,6 @@
 package com.lanshifu.privacymethodhooker
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
@@ -14,11 +15,13 @@ import com.tencent.mmkv.MMKV
  * @author lanxiaobin
  * @date 2022/9/22
  */
-class Myapp : Application() {
+class MyApp : Application() {
     companion object {
+
+        @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
 
-        var isAgreePrivacy = false
+        var isAgreePrivacy: Boolean = false
             get() {
                 return getMmkvValue("isAgreePrivacy", false)
             }
@@ -44,6 +47,9 @@ class Myapp : Application() {
 
     private fun initPrivacyManager(context: Context) {
 
+        /**
+         * 通过类名可以判断是App调用还是三方sdk调用
+         */
         fun isAppCall(callerClassName: String): Boolean {
             return callerClassName.contains("lanshifu")
         }
@@ -61,7 +67,11 @@ class Myapp : Application() {
 
             override fun isUseCache(methodName: String, callerClassName: String): Boolean {
 
-                //自定义是否要使用缓存，methodName可以在日志找到，过滤一下 onPrivacyMethodCall 关键字
+                if(!isAppCall(callerClassName)){
+                    return true
+                }
+
+                //自定义是否要使用缓存，methodName可以在日志找到，过滤一下 onPrivacyMethodCall
                 when (methodName) {
                     "TelephonyManager#getSimCountryIso",
                     "TelephonyManager#getSimOperator",
@@ -87,13 +97,10 @@ class Myapp : Application() {
                             return true
                         }
                     }
-                    else -> {
-
-                    }
                 }
 
                 //app内的剪贴板，缓存，在customCacheExpireMap 中设置缓存时长
-                if (callerClassName.contains("lanshifu") &&
+                if (!isAppCall(callerClassName) &&
                     methodName == "ClipboardManager#getPrimaryClip"
                 ) {
                     return true
@@ -130,24 +137,26 @@ class Myapp : Application() {
                 }
             }
 
-            override fun customCacheImpl(): IPrivacyMethodCache? {
-                return MMKVCacheImpl()
-            }
+//            override fun customCacheImpl(): IPrivacyMethodCache {
+//                return MMKVCacheImpl()
+//            }
         })
     }
 }
 
+/**
+ * 设置缓存框架
+ */
 class MMKVCacheImpl : IPrivacyMethodCache {
 
     override fun <T> get(key: String): T? {
         return try {
-            getMmkvValue(key, (null as T?)) as T
+            getMmkvValue(key, null)
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
     }
-
 
     override fun <T> put(key: String, value: T): T {
         putMmkvValue(key, value)
