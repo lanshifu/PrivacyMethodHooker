@@ -23,9 +23,7 @@ object PrivacyMethodInitTask {
          */
         fun isAppInnerCall(callerClassName: String): Boolean {
             return false
-//            return callerClassName.contains("tt") ||
-//                    callerClassName.contains("quwan") ||
-//                    callerClassName.contains("yiyou")
+//            return callerClassName.contains("lanshifu")
         }
 
         PrivacyMethodManager.init(context, object : DefaultPrivacyMethodManagerDelegate() {

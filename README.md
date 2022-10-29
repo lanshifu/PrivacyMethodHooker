@@ -1,6 +1,6 @@
 # 概览
 
-[PrivacyMethodHooker](https://gitlab.ttyuyin.com/living-metal/android/PrivacyMethodHooker)是一个隐私API 调用监控的库。
+[PrivacyMethodHooker]是一个隐私API 调用监控的库。
 
 **（如果没有访问权限，可以飞书联系lanxiaobin（蓝师傅）开权限）**
 
@@ -40,7 +40,7 @@
 
 **version = 1.0.3**
 
-[点击查看最新版本](http://droid-repo.ttyuyin.com:8081/service/rest/repository/browse/android-private/com/quwan/tt/privacy_method_replace_library/)
+[点击查看最新版本]
 
 [ChangeLog](CHANGELOG.md)
 
@@ -58,13 +58,7 @@
    ```
    implementation 'com.lanshifu:privacy_method_replace_library:{version}'
    ```
-4. maven地址如下，要声明一下，不然下载不到依赖
-   ```
-   maven {
-       allowInsecureProtocol true
-       url "http://droid-repo.ttyuyin.com:8081/repository/all-proxy/"
-   }
-   ```
+
 
 ### 2.初始化
 
@@ -486,7 +480,7 @@ object MainActivityHook {
 
 ```
 I/PrivacyMethod: MainActivity updateData cost 452 ms,
-callerClassName=com/quwan/privacymethodhooker/MainActivity$onCreate$1
+callerClassName=MainActivity$onCreate$1
 ```
 
 ### SDK某个方法会crash，通过Hook来临时修复
@@ -721,7 +715,7 @@ pm list package
 有些三方SDK会通过反射去调用隐私API，最终堆栈信息看到是**Method#invoke()**调用，
 
 在1.0.1 版本对反射做了处理，具体参考
-[MethodHook.java](https://gitlab.ttyuyin.com/living-metal/android/PrivacyMethodHooker/-/blob/main/privacy_method_hook_library/src/main/java/com/quwan/tt/privacy_method_hook_library/hook/hookmethod/MethodHook.java)
+[MethodHook.java](privacy_method_hook_library/hook/hookmethod/MethodHook.java)
 
 通过hook Method#invoke方法，判断是隐私API就重定向到各个hook类，否则放行。
 
