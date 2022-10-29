@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -28,7 +28,7 @@ object ClipboardManagerHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
         }
-        return saveResult(key, manager.primaryClip, callerClassName)
+        return savePrivacyMethodResult(key, manager.primaryClip, callerClassName)
     }
 
 }

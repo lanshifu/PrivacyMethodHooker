@@ -4,10 +4,10 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import androidx.annotation.Keep
-import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
+import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -29,7 +29,7 @@ object PackageManagerHook {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, packageManager.getInstalledPackages(flags), callerClassName)
+            savePrivacyMethodResult(key, packageManager.getInstalledPackages(flags), callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -52,7 +52,7 @@ object PackageManagerHook {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, packageManager.getInstalledApplications(flags), callerClassName)
+            savePrivacyMethodResult(key, packageManager.getInstalledApplications(flags), callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()

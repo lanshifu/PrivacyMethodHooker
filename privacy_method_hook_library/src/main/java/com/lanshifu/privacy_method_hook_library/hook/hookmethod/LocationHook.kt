@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.location.LocationManager
 import androidx.annotation.Keep
-import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
+import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -28,7 +28,7 @@ object LocationHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: 0.0
         }
-        return saveResult(key, manager.latitude, callerClassName)
+        return savePrivacyMethodResult(key, manager.latitude, callerClassName)
     }
 
     @JvmStatic
@@ -45,7 +45,7 @@ object LocationHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: 0.0
         }
-        return saveResult(key, manager.longitude, callerClassName)
+        return savePrivacyMethodResult(key, manager.longitude, callerClassName)
     }
 
 }

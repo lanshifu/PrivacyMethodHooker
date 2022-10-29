@@ -2,13 +2,11 @@ package com.lanshifu.privacy_method_hook_library.hook.hookmethod
 
 import android.annotation.SuppressLint
 import android.net.wifi.WifiInfo
-import android.provider.Settings
-import android.telephony.TelephonyManager
 import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -30,7 +28,7 @@ object WifiInfoHook {
             return checkResult.cacheData ?: ""
         }
         return try {
-            saveResult(key, wifiInfo.macAddress ?: "", callerClassName)
+            savePrivacyMethodResult(key, wifiInfo.macAddress ?: "", callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             ""
@@ -45,14 +43,14 @@ object WifiInfoHook {
     fun getIpAddress(
         wifiInfo: WifiInfo,
         callerClassName: String
-    ): Int? {
+    ): Int {
         val key = "WifiInfo#getIpAddress"
         val checkResult = checkCacheAndPrivacy<String>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return -1
         }
         return try {
-            saveResult(key, wifiInfo.ipAddress, callerClassName)
+            savePrivacyMethodResult(key, wifiInfo.ipAddress, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             -1
@@ -74,7 +72,7 @@ object WifiInfoHook {
             return checkResult.cacheData ?: ""
         }
         return try {
-            saveResult(key, wifiInfo.ssid ?: "", callerClassName)
+            savePrivacyMethodResult(key, wifiInfo.ssid ?: "", callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             ""
@@ -96,7 +94,7 @@ object WifiInfoHook {
             return checkResult.cacheData ?: ""
         }
         return try {
-            saveResult(key, wifiInfo.bssid ?: "", callerClassName)
+            savePrivacyMethodResult(key, wifiInfo.bssid ?: "", callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             ""

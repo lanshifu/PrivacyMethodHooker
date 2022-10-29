@@ -1,12 +1,11 @@
 package com.lanshifu.privacy_method_hook_library.hook.hookmethod
 
 import android.annotation.SuppressLint
-import android.hardware.SensorManager
 import androidx.annotation.Keep
-import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
+import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 import java.net.NetworkInterface
 
 
@@ -29,7 +28,7 @@ object NetworkInterfaceHook {
             return checkResult.cacheData
         }
         return try {
-            saveResult(key, networkInterface.hardwareAddress, callerClassName)
+            savePrivacyMethodResult(key, networkInterface.hardwareAddress, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null

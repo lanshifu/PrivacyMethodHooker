@@ -1,12 +1,11 @@
 package com.lanshifu.privacy_method_hook_library.hook.hookmethod
 
 import android.app.ActivityManager
-import android.content.pm.PackageInfo
 import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -28,7 +27,7 @@ object ActivityManagerHook {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, packageManager.runningAppProcesses, callerClassName)
+            savePrivacyMethodResult(key, packageManager.runningAppProcesses, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -52,7 +51,7 @@ object ActivityManagerHook {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, packageManager.getRunningServices(maxNum), callerClassName)
+            savePrivacyMethodResult(key, packageManager.getRunningServices(maxNum), callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -77,7 +76,7 @@ object ActivityManagerHook {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, packageManager.getRecentTasks(maxNum, flags), callerClassName)
+            savePrivacyMethodResult(key, packageManager.getRecentTasks(maxNum, flags), callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -101,7 +100,7 @@ object ActivityManagerHook {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, packageManager.getRunningTasks(maxNum), callerClassName)
+            savePrivacyMethodResult(key, packageManager.getRunningTasks(maxNum), callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()

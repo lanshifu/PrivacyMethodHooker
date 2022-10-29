@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -29,7 +29,7 @@ object BlueToothAdapterHook {
         }
         //Need BLUETOOTH permission: Neither user 10210 nor current process has android.permission.BLUETOOTH.
         return try {
-            saveResult(key, bluetoothAdapter.address ?: "", callerClassName)
+            savePrivacyMethodResult(key, bluetoothAdapter.address ?: "", callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -51,7 +51,7 @@ object BlueToothAdapterHook {
             return checkResult.cacheData
         }
         return try {
-            saveResult(key, bluetoothAdapter.name, callerClassName)
+            savePrivacyMethodResult(key, bluetoothAdapter.name, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null

@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-apply from: "/Users/lanshifu/Documents/android_work_space/2022/PrivacyMethodHooker/privacy_method_hook_library/common_maven_publish_aar.gradle"
+apply from: "../config/common_maven_publish_aar.gradle"
 
 android {
     compileSdk 32

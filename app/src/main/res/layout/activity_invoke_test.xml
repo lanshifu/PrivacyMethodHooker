@@ -6,15 +6,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/reflectTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:textColor="@android:color/holo_blue_bright"
-        android:text="跳转->反射调用隐私API测试"
-        android:textAllCaps="false" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="测试用例：" />
+            android:text="反射测试用例：" />
 
         <Button
             android:id="@+id/refresh"
@@ -30,18 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:textColor="@android:color/holo_orange_dark"
             android:text="刷新看日志"
-            android:textColor="@android:color/holo_orange_dark"
-            android:textAllCaps="false" />
-
-
-        <Button
-            android:id="@+id/notAgreePrivacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="不同意隐私"
-            android:textColor="@android:color/holo_orange_dark"
             android:textAllCaps="false" />
 
 
@@ -471,7 +452,7 @@
                 android:textAllCaps="false" />
 
             <TextView
-                android:text="Location(这两个应该不算，它只是一个变量)"
+                android:text="Location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -569,35 +550,35 @@
                 android:text="getPrimaryClip"
                 android:textAllCaps="false" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="File：监控File创建，不缓存" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="File：监控File创建，不缓存" />-->
 
-            <Button
-                android:id="@+id/file1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="/sys/class/net/etho0/address"
-                android:textAllCaps="false" />
-            <Button
-                android:id="@+id/file2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="/sys/class/net/etho0/address"
-                android:textAllCaps="false" />
-            <Button
-                android:id="@+id/file3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="/sys/class/net/etho0/address"
-                android:textAllCaps="false" />
+<!--            <Button-->
+<!--                android:id="@+id/file1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:padding="8dp"-->
+<!--                android:text="/sys/class/net/etho0/address"-->
+<!--                android:textAllCaps="false" />-->
+<!--            <Button-->
+<!--                android:id="@+id/file2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:padding="8dp"-->
+<!--                android:text="/sys/class/net/etho0/address"-->
+<!--                android:textAllCaps="false" />-->
+<!--            <Button-->
+<!--                android:id="@+id/file3"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:padding="8dp"-->
+<!--                android:text="/sys/class/net/etho0/address"-->
+<!--                android:textAllCaps="false" />-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -657,15 +638,6 @@
 
             </ScrollView>
 
-
-            <Button
-                android:id="@+id/requestLocationUpdates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="requestLocationUpdates"
-                android:textAllCaps="false" />
 
 
         </LinearLayout>

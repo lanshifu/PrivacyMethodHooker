@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -28,7 +28,7 @@ object BlueToothDeviceHook {
             return checkResult.cacheData
         }
         return try {
-            saveResult(key, bluetoothDevice.address ?: "", callerClassName)
+            savePrivacyMethodResult(key, bluetoothDevice.address ?: "", callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -50,7 +50,7 @@ object BlueToothDeviceHook {
             return checkResult.cacheData
         }
         return try {
-            saveResult(key, bluetoothDevice.name, callerClassName)
+            savePrivacyMethodResult(key, bluetoothDevice.name, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null

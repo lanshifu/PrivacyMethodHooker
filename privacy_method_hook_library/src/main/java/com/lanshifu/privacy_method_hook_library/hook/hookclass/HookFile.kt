@@ -20,18 +20,18 @@ open class HookFile : File {
     constructor(parent: File?, child: String?) : super(parent, child) {}
     constructor(uri: URI?) : super(uri) {}
 
-    private fun checkFileName(fileName:String){
-        LogUtil.d("HookFile:fileName=$fileName")
+    private fun checkFileName(fileName: String) {
+        LogUtil.d("HookFile", "HookFile:fileName=$fileName")
         //sys/class/net/*/address
         val pattern = """^\/sys\/class\/net\/\w+\/address"""
         val isMatchAddress = Regex(pattern).containsMatchIn(fileName)
         if (isMatchAddress) {
-            LogUtil.d("读文件 fileName=$fileName")
+            LogUtil.d("HookFile", "读文件 fileName=$fileName")
             checkAgreePrivacy("<init>fileName=$fileName", "java.io.File")
         }
 
         if (fileName.startsWith("/system/build.prop")) {
-            LogUtil.d("读文件 fileName=$fileName")
+            LogUtil.d("HookFile", "读文件 fileName=$fileName")
             checkAgreePrivacy("<init>fileName=$fileName", "java.io.File")
         }
     }
@@ -45,7 +45,7 @@ object ClassHook {
      */
     @AsmClassReplace(oriClass = File::class, targetClass = HookFile::class)
     fun hookFile(fileName: String) {
-        LogUtil.i("new HookFile")
+        LogUtil.i("ClassHook", "new HookFile")
     }
 
 }

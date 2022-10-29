@@ -78,6 +78,6 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.5"
 
     implementation project(path: ':method_replace_annotation')
-//    implementation project(path: ':privacy_method_hook_library')
-    implementation 'com.lanshifu:privacy_method_replace_library:1.0.0-alpha01'
+    implementation project(path: ':privacy_method_hook_library')
+//    implementation 'com.lanshifu:privacy_method_replace_library:1.0.0-alpha01'
 }

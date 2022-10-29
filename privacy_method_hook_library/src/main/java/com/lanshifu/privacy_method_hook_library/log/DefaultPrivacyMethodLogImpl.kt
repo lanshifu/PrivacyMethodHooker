@@ -8,19 +8,19 @@ import android.util.Log
  */
 class DefaultPrivacyMethodLogImpl : IPrivacyMethodLog {
 
-    override fun d(message: String) {
-        Log.d("PrivacyMethod", message)
+    override fun d(tag: String, message: String) {
+        Log.d(tag, message)
     }
 
-    override fun i(message: String) {
-        Log.i("PrivacyMethod", message)
+    override fun i(tag: String, message: String) {
+        Log.i(tag, message)
     }
 
-    override fun w(message: String) {
-        Log.w("PrivacyMethod", message)
+    override fun w(tag: String, message: String) {
+        Log.w(tag, message)
     }
 
-    override fun e(message: String) {
-        Log.e("PrivacyMethod", message)
+    override fun e(tag: String, message: String) {
+        Log.e(tag, message)
     }
 }

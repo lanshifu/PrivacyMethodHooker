@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.lanshifu.privacy_method_hook_library.hook.hookmethod.MethodHook
 import com.lanshifu.privacy_method_hook_library.log.LogUtil
 import com.lanshifu.privacymethodhooker.testcase.*
 import kotlinx.android.synthetic.main.activity_main.*

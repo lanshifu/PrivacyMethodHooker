@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -42,7 +42,7 @@ object SettingsSecureHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: ""
         }
-        return saveResult(key, Settings.Secure.getString(resolver, name) ?: "", callerClassName)
+        return savePrivacyMethodResult(key, Settings.Secure.getString(resolver, name) ?: "", callerClassName)
     }
 
 

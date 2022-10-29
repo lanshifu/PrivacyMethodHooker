@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -27,7 +27,7 @@ object SensorHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
         }
-        return saveResult(key, sensor.name, callerClassName)
+        return savePrivacyMethodResult(key, sensor.name, callerClassName)
     }
 
     @JvmStatic
@@ -44,7 +44,7 @@ object SensorHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: -1
         }
-        return saveResult(key, sensor.type, callerClassName)
+        return savePrivacyMethodResult(key, sensor.type, callerClassName)
     }
 
     @JvmStatic
@@ -61,7 +61,7 @@ object SensorHook {
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: -1
         }
-        return saveResult(key, sensor.version, callerClassName)
+        return savePrivacyMethodResult(key, sensor.version, callerClassName)
     }
 
 }

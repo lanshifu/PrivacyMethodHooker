@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.os.CancellationSignal
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
+import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 /**
  * @author lanxiaobin
@@ -48,7 +48,7 @@ object ContentResolverHook {
 
 
         return try {
-            saveResult(
+            savePrivacyMethodResult(
                 key,
                 contentResolver.query(uri, projection, selection, selectionArgs, sortOrder),
                 callerClassName
@@ -92,7 +92,7 @@ object ContentResolverHook {
 
 
         return try {
-            saveResult(
+            savePrivacyMethodResult(
                 key,
                 contentResolver.query(uri, projection, queryArgs, cancellationSignal),
                 callerClassName
@@ -146,7 +146,7 @@ object ContentResolverHook {
 
 
         return try {
-            saveResult(
+            savePrivacyMethodResult(
                 key,
                 contentResolver.query(
                     uri,

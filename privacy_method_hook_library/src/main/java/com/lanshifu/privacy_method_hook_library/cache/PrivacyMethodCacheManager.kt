@@ -11,6 +11,7 @@ import com.lanshifu.privacy_method_hook_library.log.LogUtil
 object PrivacyMethodCacheManager : IPrivacyMethodCache {
 
     private const val CACHE_TIME_PERFIX = "CACHE_TIME_PERFIX_"
+    private const val TAG = "PrivacyMethodCacheManager"
 
     private var mPrivacyMethodCacheImpl: IPrivacyMethodCache = DefaultPrivacyMethodCacheImpl()
 
@@ -19,17 +20,15 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
      */
     private val mCacheExpireTimeMap = HashMap<String, Int>()
 
-    fun init() {
+    init {
 
-        setCacheExpireTime(PrivacyMethodManager.getDelegate().customCacheExpireMap())
+        setCacheExpireTime(PrivacyMethodManager.getDelegate().customCacheExpireTime())
 
         PrivacyMethodManager.getDelegate().customCacheImpl()?.let {
-            LogUtil.i("customCacheImpl=$it")
+            LogUtil.i(TAG, "customCacheImpl=$it")
             mPrivacyMethodCacheImpl = it
         }
 
-
-        LogUtil.i("mCacheExpireTimeMap=$mCacheExpireTimeMap")
     }
 
     /**
@@ -37,7 +36,7 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
      */
     private fun setCacheExpireTime(map: HashMap<String, Int>) {
         mCacheExpireTimeMap.putAll(map)
-        LogUtil.i("PrivacyMethodCache:setCacheExpireTime,map=$map")
+        LogUtil.i(TAG, "PrivacyMethodCache:setCacheExpireTime,map=$map")
     }
 
     /**
@@ -45,7 +44,10 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
      */
     fun setPrivacyMethodCacheImpl(iPrivacyMethodCache: IPrivacyMethodCache) {
         mPrivacyMethodCacheImpl = iPrivacyMethodCache
-        LogUtil.d("PrivacyMethodCache:setPrivacyMethodCache,name=${iPrivacyMethodCache.javaClass::getSimpleName}")
+        LogUtil.d(
+            TAG,
+            "PrivacyMethodCache:setPrivacyMethodCache,name=${iPrivacyMethodCache.javaClass::getSimpleName}"
+        )
     }
 
     fun <T> get(key: String, callClassName: String): T? {
@@ -57,17 +59,20 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
 
     override fun <T> get(key: String): T? {
         checkCacheExpire(key)
-        return mPrivacyMethodCacheImpl.get(key)
+        val get = mPrivacyMethodCacheImpl.get<T>(key)
+        LogUtil.d(TAG, "get,key=$key,value=${get}")
+        return get
     }
 
 
     override fun <T> put(key: String, value: T): T {
+        LogUtil.d(TAG, "put,key=$key,value=$value")
         savePutTime(key)
         return mPrivacyMethodCacheImpl.put(key, value)
     }
 
     override fun remove(key: String) {
-        LogUtil.d("PrivacyMethodCache:remove,key=$key")
+        LogUtil.d(TAG, "PrivacyMethodCache:remove,key=$key")
         mPrivacyMethodCacheImpl.remove(key)
     }
 
@@ -75,9 +80,9 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
      * 每次put的时候记录时间
      */
     private fun savePutTime(key: String) {
-        LogUtil.d("PrivacyMethodCache:savePutTime,key=$key")
+        LogUtil.d(TAG, "PrivacyMethodCache:savePutTime,key=$key")
         val cacheMethodCallTimeKey = CACHE_TIME_PERFIX + key
-        mPrivacyMethodCacheImpl.put(cacheMethodCallTimeKey, System.currentTimeMillis())
+        mPrivacyMethodCacheImpl.put(cacheMethodCallTimeKey, System.currentTimeMillis().toString())
     }
 
     /**
@@ -88,11 +93,18 @@ object PrivacyMethodCacheManager : IPrivacyMethodCache {
 
             val cacheMethodCallTimeKey = CACHE_TIME_PERFIX + key
             //判断缓存是否过期，清除
-            val prePutTime = mPrivacyMethodCacheImpl.get<Long>(cacheMethodCallTimeKey)
-                ?: System.currentTimeMillis()
-            LogUtil.d("PrivacyMethodCache:checkCacheExpire:${(System.currentTimeMillis() - prePutTime)/1000} ->${cacheSaveSecond}")
+            val prePutTime: Long =
+                mPrivacyMethodCacheImpl.get<String>(cacheMethodCallTimeKey)?.toLong()
+                    ?: System.currentTimeMillis()
+            LogUtil.d(
+                TAG,
+                "PrivacyMethodCache:checkCacheExpire $key:${(System.currentTimeMillis() - prePutTime) / 1000} ->${cacheSaveSecond}"
+            )
             if (System.currentTimeMillis() - prePutTime > cacheSaveSecond * 1000) {
-                LogUtil.i("PrivacyMethodCache:mCachePutTimeMillis.remove $key,cacheSaveSecond=$cacheSaveSecond")
+                LogUtil.i(
+                    TAG,
+                    "PrivacyMethodCache:mCachePutTimeMillis.remove $key,cacheSaveSecond=$cacheSaveSecond"
+                )
                 // 清除缓存
                 mPrivacyMethodCacheImpl.remove(key)
                 PrivacyMethodManager.getDelegate().onCacheExpire(key)

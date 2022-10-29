@@ -1,6 +1,9 @@
 package com.lanshifu.privacy_method_hook_library.hook
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import com.lanshifu.privacy_method_hook_library.PrivacyMethodManager
 import com.lanshifu.privacy_method_hook_library.cache.PrivacyMethodCacheManager
 import com.lanshifu.privacy_method_hook_library.log.LogUtil
@@ -12,13 +15,22 @@ import com.lanshifu.privacy_method_hook_library.log.LogUtil
  */
 fun <T> checkCacheAndPrivacy(
     key: String,
-    callerClassName: String
+    callerClassName: String,
 ): CheckCacheAndPrivacyResult<T> {
 
     if (PrivacyMethodManager.getDelegate().isUseCache(key, callerClassName)) {
-        val cache = PrivacyMethodCacheManager.get<T?>(key, callerClassName)
-        if (cache != null) {
-            return CheckCacheAndPrivacyResult(cache, true)
+        // 缓存框架可以自定义的，保护一下
+        try {
+            val cache = PrivacyMethodCacheManager.get<T?>(key, callerClassName)
+            if (cache != null) {
+                PrivacyMethodManager.getDelegate()
+                    .onPrivacyMethodCall(callerClassName, "$key  ->(return cache)", "")
+
+                return CheckCacheAndPrivacyResult(cache, true)
+            }
+        } catch (e: Exception) {
+            LogUtil.e("checkCacheAndPrivacy","e=${e.message}")
+            e.printStackTrace()
         }
     }
 
@@ -37,14 +49,14 @@ fun checkAgreePrivacy(name: String, callerClassName: String = ""): Boolean {
     PrivacyMethodManager.getDelegate().onPrivacyMethodCall(callerClassName, name, methodStack)
 
     if (!PrivacyMethodManager.getDelegate().isAgreePrivacy()) {
-        PrivacyMethodManager.getDelegate().onPrivacyMethodCallIllegal(callerClassName, name, methodStack)
+        PrivacyMethodManager.getDelegate()
+            .onPrivacyMethodCallIllegal(callerClassName, name, methodStack)
         return false
     }
     return true
 }
 
-fun <T> saveResult(key: String, value: T, callerClassName: String): T {
-    LogUtil.d("saveResult,key=$key,callerClassName=${callerClassName}")
+fun <T> savePrivacyMethodResult(key: String, value: T, callerClassName: String): T {
     if (value != null && PrivacyMethodManager.getDelegate().isUseCache(key, callerClassName)) {
         PrivacyMethodCacheManager.put(key, value as Any)
     }
@@ -58,4 +70,18 @@ class CheckCacheAndPrivacyResult<T>(
     fun shouldReturn(): Boolean {
         return cacheData != null || !isAgreePrivacy
     }
+}
+
+
+fun checkReadPhoneStatePermission(key: String): Boolean {
+    if (PrivacyMethodManager.mContext != null &&
+        ActivityCompat.checkSelfPermission(
+            PrivacyMethodManager.mContext!!,
+            Manifest.permission.READ_PHONE_STATE
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        LogUtil.i("PrivacyUtil", "$key, return null,no READ_PHONE_STATE permission")
+        return false
+    }
+    return true
 }

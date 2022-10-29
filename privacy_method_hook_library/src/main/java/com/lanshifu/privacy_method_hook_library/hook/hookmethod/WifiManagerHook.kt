@@ -5,13 +5,11 @@ import android.net.DhcpInfo
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.provider.Settings
-import android.telephony.TelephonyManager
 import androidx.annotation.Keep
 import com.lanshifu.asm_annotation.AsmMethodOpcodes
 import com.lanshifu.asm_annotation.AsmMethodReplace
 import com.lanshifu.privacy_method_hook_library.hook.checkCacheAndPrivacy
-import com.lanshifu.privacy_method_hook_library.hook.saveResult
+import com.lanshifu.privacy_method_hook_library.hook.savePrivacyMethodResult
 
 
 @Keep
@@ -27,13 +25,13 @@ object WifiManagerHook {
         wifiManager: WifiManager,
         callerClassName: String
     ): List<ScanResult> {
-        val key = "WifiInfo#getScanResults"
+        val key = "WifiManager#getScanResults"
         val checkResult = checkCacheAndPrivacy<List<ScanResult>>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData ?: emptyList()
         }
         return try {
-            saveResult(key, wifiManager.scanResults ?: emptyList(), callerClassName)
+            savePrivacyMethodResult(key, wifiManager.scanResults ?: emptyList(), callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -49,13 +47,13 @@ object WifiManagerHook {
         wifiManager: WifiManager,
         callerClassName: String
     ): DhcpInfo? {
-        val key = "WifiInfo#getDhcpInfo"
+        val key = "WifiManager#getDhcpInfo"
         val checkResult = checkCacheAndPrivacy<DhcpInfo>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
         }
         return try {
-            saveResult(key, wifiManager.dhcpInfo, callerClassName)
+            savePrivacyMethodResult(key, wifiManager.dhcpInfo, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -71,13 +69,13 @@ object WifiManagerHook {
         wifiManager: WifiManager,
         callerClassName: String
     ): WifiInfo? {
-        val key = "WifiInfo#getConnectionInfo"
+        val key = "WifiManager#getConnectionInfo"
         val checkResult = checkCacheAndPrivacy<WifiInfo>(key, callerClassName)
         if (checkResult.shouldReturn()) {
             return checkResult.cacheData
         }
         return try {
-            saveResult(key, wifiManager.connectionInfo, callerClassName)
+            savePrivacyMethodResult(key, wifiManager.connectionInfo, callerClassName)
         } catch (e: Exception) {
             e.printStackTrace()
             null
