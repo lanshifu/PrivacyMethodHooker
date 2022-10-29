@@ -1,8 +1,6 @@
 # 概览
 
-[PrivacyMethodHooker]是一个隐私API 调用监控的库。
-
-**（如果没有访问权限，可以飞书联系lanxiaobin（蓝师傅）开权限）**
+**PrivacyMethodHooker**是一个隐私API 调用监控的库。
 
 **功能介绍：**
 
