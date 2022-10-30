@@ -68,12 +68,12 @@ open class BaseAsmTransformer : Transformer {
             }
         }
 
-        val w1 = this.durations.keys.map {
-            it.javaClass.name.length
-        }.maxOrNull() ?: 20
-        this.durations.forEach { (transformer, ns) ->
-            println("${transformer.javaClass.name.padEnd(w1 + 1)}: ${ns / 1000000} ms")
-        }
+//        val w1 = this.durations.keys.map {
+//            it.javaClass.name.length
+//        }.maxOrNull() ?: 20
+//        this.durations.forEach { (transformer, ns) ->
+//            println("${transformer.javaClass.name.padEnd(w1 + 1)}: ${ns / 1000000} ms")
+//        }
     }
 
     private fun <R> ThreadMXBean.sumCpuTime(transformer: ClassTransformer, action: () -> R): R {

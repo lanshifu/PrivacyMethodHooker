@@ -22,7 +22,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${agp_version}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
-//        classpath 'com.lanshifu.plugin:privacy_method:1.0.0-beta01'
+        classpath 'com.lanshifu:method_replace_plugin:1.0.0'
     }
 }
 
