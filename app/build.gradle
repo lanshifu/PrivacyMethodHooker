@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.lanshifu.privacy_method'
+//apply plugin: 'com.lanshifu.privacy_method'
 
 android {
     compileSdkVersion rootProject.ext.version["compileSdkVersion"]
@@ -77,9 +77,9 @@ dependencies {
     implementation 'com.tencent:mmkv-static:1.1.1'
     implementation "com.google.code.gson:gson:2.8.5"
 
-//    implementation project(path: ':method_replace_annotation')
-//    implementation project(path: ':privacy_method_hook_library')
+    implementation project(path: ':method_replace_annotation')
+    implementation project(path: ':privacy_method_hook_library')
     
-    implementation 'com.lanshifu:privacy_method_replace_library:1.0.0'
-    implementation 'com.lanshifu:method_replace_annotation:1.0.0'
+//    implementation 'com.lanshifu:privacy_method_replace_library:1.0.0'
+//    implementation 'com.lanshifu:method_replace_annotation:1.0.0'
 }

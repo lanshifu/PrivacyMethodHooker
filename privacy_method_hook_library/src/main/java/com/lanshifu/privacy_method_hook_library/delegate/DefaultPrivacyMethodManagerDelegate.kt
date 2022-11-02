@@ -180,4 +180,8 @@ open abstract class DefaultPrivacyMethodManagerDelegate : IPrivacyMethodManagerD
     override fun isUseDiskCache(): Boolean {
         return true
     }
+
+    override fun intercept(methodName: String): Boolean {
+        return false
+    }
 }

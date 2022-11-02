@@ -71,4 +71,9 @@ interface IPrivacyMethodManagerDelegate {
      * 使用磁盘缓存，重新打开App不会重复去读隐私API
      */
     fun isUseDiskCache(): Boolean
+
+    /**
+     * 拦截某个方法替换，会直接调用原方法
+     */
+    fun intercept(methodName:String): Boolean
 }

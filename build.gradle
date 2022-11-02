@@ -6,13 +6,13 @@ buildscript {
     ext.kotlin_version = '1.7.10'
     ext.booster_version = '4.0.0'
     repositories {
-        maven {
-            url uri('repo')
-        }
-        maven {
-            url uri('../repo')
-        }
-        jcenter()
+//        maven {
+//            url uri('repo')
+//        }
+//        maven {
+//            url uri('../repo')
+//        }
+//        jcenter()
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
@@ -22,21 +22,33 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${agp_version}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
-        classpath 'com.lanshifu:method_replace_plugin:1.0.0'
+//        classpath 'com.lanshifu:method_replace_plugin:1.0.0'
     }
 }
 
 allprojects {
     repositories {
-        maven {
-            url uri('repo')
-        }
-        maven {
-            url uri('../repo')
-        }
-        jcenter()
+//        maven {
+//            url uri('repo')
+//        }
+//        maven {
+//            url uri('../repo')
+//        }
+//        jcenter()
         google()
         mavenCentral()
+//        maven {
+//            allowInsecureProtocol true
+//            url "https://maven.aliyun.com/nexus/content/repositories/google"
+//        }
+        maven {
+            allowInsecureProtocol true
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        maven {
+            allowInsecureProtocol true
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
         maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/public/' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }

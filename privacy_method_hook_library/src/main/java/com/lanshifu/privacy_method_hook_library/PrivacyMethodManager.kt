@@ -26,6 +26,13 @@ object PrivacyMethodManager {
                 return true
             }
 
+            override fun intercept(methodName: String): Boolean {
+                if (methodName == "ActivityManager#getRunningAppProcesses"){
+                    return true
+                }
+                return super.intercept(methodName)
+            }
+
         }
 
     fun init(content: Context, delegate: IPrivacyMethodManagerDelegate) {

@@ -26,7 +26,7 @@ fun <T> checkCacheAndPrivacy(
                 PrivacyMethodManager.getDelegate()
                     .onPrivacyMethodCall(callerClassName, "$key  ->(return cache)", "")
 
-                return CheckCacheAndPrivacyResult(cache, true)
+                return CheckCacheAndPrivacyResult(key, cache, true)
             }
         } catch (e: Exception) {
             LogUtil.e("checkCacheAndPrivacy","e=${e.message}")
@@ -35,7 +35,7 @@ fun <T> checkCacheAndPrivacy(
     }
 
     val isAgreePrivacy = checkAgreePrivacy(key, callerClassName)
-    return CheckCacheAndPrivacyResult(null, isAgreePrivacy)
+    return CheckCacheAndPrivacyResult(key, null, isAgreePrivacy)
 }
 
 fun checkAgreePrivacy(name: String, callerClassName: String = ""): Boolean {
@@ -64,10 +64,18 @@ fun <T> savePrivacyMethodResult(key: String, value: T, callerClassName: String):
 }
 
 class CheckCacheAndPrivacyResult<T>(
+    var methodName: String,
     var cacheData: T?,
     var isAgreePrivacy: Boolean,
 ) {
     fun shouldReturn(): Boolean {
+
+        //拦截就不处理
+        if(PrivacyMethodManager.getDelegate().intercept(methodName)){
+            LogUtil.i("CheckCacheAndPrivacyResult","intercept=true,methodName=$methodName")
+            return false
+        }
+
         return cacheData != null || !isAgreePrivacy
     }
 }

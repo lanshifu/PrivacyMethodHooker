@@ -1,4 +1,5 @@
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 def isLocalUrl(Properties props) {
     if (props['LOCAL_URL'] != null) {
@@ -36,7 +37,7 @@ def getReleaseRepositoryUrl(Properties props) {
     } else if (props['RELEASE_REPOSITORY_URL'] != null) {
         return props['RELEASE_REPOSITORY_URL']
     } else {
-        return "http://xxx:8081/repository/android-private/"
+        return "https://s01.oss.sonatype.org/content/repositories/releases/"
     }
 }
 
@@ -52,6 +53,19 @@ static def getRepositoryPassword(Properties props) {
         throw  new Throwable('需要在root project的local.properties 声明 NEXUS_PASSWORD=你的密码')
     }
     return props['NEXUS_PASSWORD']
+}
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        println "$name=$value"
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
 }
 
 def localProperties = new Properties()
@@ -113,3 +127,6 @@ publishing {
     }
 }
 
+signing {
+    sign publishing.publications
+}

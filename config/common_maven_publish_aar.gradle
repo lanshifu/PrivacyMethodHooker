@@ -1,4 +1,9 @@
+ext["signing.keyId"] = '' //签名的密钥后8位
+ext["signing.password"] = ''  //签名设置的密码
+ext["signing.secretKeyRingFile"] = '' //生成的secring.gpg文件目录
+
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 def isLocalUrl(Properties props) {
     if (props['LOCAL_URL'] != null) {
@@ -45,7 +50,7 @@ def getReleaseRepositoryUrl(Properties props) {
     } else if (props['RELEASE_REPOSITORY_URL'] != null) {
         return props['RELEASE_REPOSITORY_URL']
     } else {
-        return "xxx"
+        return "https://s01.oss.sonatype.org/content/repositories/releases/"
     }
 }
 
@@ -69,6 +74,19 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        println "$name=$value"
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
+}
+
 def localProperties = new Properties()
 def mavenPublicProperties = new Properties()
 afterEvaluate {
@@ -89,6 +107,39 @@ afterEvaluate {
                 artifactId = getArtifactId(mavenPublicProperties)
                 version = getReleaseVersion(mavenPublicProperties)
                 artifact(androidSourcesJar)
+                // Self-explanatory metadata for the most part
+                pom {
+                    //第 3 处
+                    name = getArtifactId(mavenPublicProperties)
+                    description = '隐私API监控' //项目描述
+                    // If your project has a dedicated site, use its URL here
+                    url = 'https://github.com/lanshifu/PrivacyMethodHooker' //项目github链接
+                    licenses {
+                        license {
+                            //协议类型，一般默认Apache License2.0的话不用改：
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            //第 4 处
+                            id = 'lanshifu' //你的sonatype用户名
+                            name = 'lanshifu' //你的sonatype用户名
+                            email = '404985095@qq.com' //你的sonatype注册邮箱
+                        }
+                    }
+                    // Version control info, if you're using GitHub, follow the format as seen here
+                    scm {
+                        //第 5 处
+                        //修改成你的Git地址：
+                        connection = 'scm:git@github.com:lanshifu/PrivacyMethodHooker.git'
+                        developerConnection = 'scm:git@github.com:lanshifu/PrivacyMethodHooker.git'
+                        //分支地址：
+                        url = 'https://github.com/lanshifu/PrivacyMethodHooker/tree/master'
+                    }
+
+                }
             }
             debug(MavenPublication) {
                 from components.debug
@@ -112,13 +163,12 @@ afterEvaluate {
                         username getRepositoryUsername(localProperties)
                         password getRepositoryPassword(localProperties)
                     }
-                    credentials {
-                        username getRepositoryUsername(localProperties)
-                        password getRepositoryPassword(localProperties)
-                    }
                 }
 
             }
         }
     }
+}
+signing {
+    sign publishing.publications
 }
